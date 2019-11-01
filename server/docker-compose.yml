@@ -1,1 +1,9 @@
-
+version: "3.7"
+services:
+  app:
+    build: .
+    ports:
+      - 5000:5000
+    environment:
+      # Environment is from .env file
+      - AUTH_TOKEN
