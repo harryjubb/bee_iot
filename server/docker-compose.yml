@@ -2,6 +2,7 @@ version: "3.7"
 services:
   app:
     build: .
+    restart: always
     ports:
       - 5000:5000
     environment:
