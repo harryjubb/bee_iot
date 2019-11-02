@@ -2,3 +2,5 @@
 # Copy to .env and alter accordingly
 
 AUTH_TOKEN=super_secret_authentication_token
+SERVER=server_url
+HIVE_ID=uuid_v4_string

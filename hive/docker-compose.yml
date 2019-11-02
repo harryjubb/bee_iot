@@ -8,9 +8,10 @@ services:
     environment:
       # Environment is from .env file
       - AUTH_TOKEN
+      - SERVER
+      - HIVE_ID
     # Required for GPIO access
-    devices:
-      - "/dev/gpiomem:/dev/gpiomem"
+    privileged: true
 
   # audio:
   #   build: ./services/audio
