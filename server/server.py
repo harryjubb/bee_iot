@@ -1,17 +1,22 @@
+import datetime
 import functools
 import logging
 import os
 
 from flask import Flask, request, abort
 
-app = Flask(__name__)
+from pymongo import MongoClient
 
+app = Flask(__name__)
 DEBUG = 1
 
 AUTH_TOKEN = os.environ.get("AUTH_TOKEN", None)
 
 if not AUTH_TOKEN:
     raise ValueError("AUTH_TOKEN environment variable is required")
+
+client = MongoClient("mongodb://mongo:27017")
+db = client.bees
 
 
 def authenticate(function):
@@ -38,7 +43,11 @@ def hello_world():
 @authenticate
 def heartbeat():
 
-    # TODO: Add record to DB (Harry Jubb, Fri  1 Nov 2019 23:47:47 GMT)
+    pi_time = request.get_json()["pi_time"]
+
+    db.heartbeat.insert_one(
+        {"pi_time": pi_time, "server_time_utc": datetime.datetime.utcnow()}
+    )
 
     return "Ok"
 
