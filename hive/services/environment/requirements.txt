@@ -1,0 +1,2 @@
+git+git://github.com/adafruit/Adafruit_Python_DHT.git
+requests=2.7.0

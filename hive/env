@@ -1,0 +1,4 @@
+# Example env file
+# Copy to .env and alter accordingly
+
+AUTH_TOKEN=super_secret_authentication_token
