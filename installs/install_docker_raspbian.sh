@@ -19,6 +19,8 @@ sudo usermod -aG docker pi
 sudo curl https://download.docker.com/linux/raspbian/gpg
 
 # Set up the Docker system package repository
+# The line below may give permission denied, in which case, manually add the line with a text editor
+# then continue the script manually from below
 sudo echo "deb https://download.docker.com/linux/raspbian/ stretch stable" >> /etc/apt/sources.list
 
 # System update
