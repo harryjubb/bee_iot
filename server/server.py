@@ -80,7 +80,7 @@ def heartbeat():
 def environment():
 
     db.environment.insert_one(
-        parse_request(request, keys={"temperature": float, "humidity": float})
+        parse_request(request, keys={"temperature_c": float, "humidity_pc": float})
     )
 
     return "Ok"
