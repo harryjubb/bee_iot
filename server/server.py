@@ -69,19 +69,16 @@ def heartbeat():
     return "Ok"
 
 
-@app.route("/temperature", methods=["POST"])
+@app.route("/environment", methods=["POST"])
 @authenticate
-def temperature():
+def environment():
 
-    # TODO: Add record to DB (Harry Jubb, Fri  1 Nov 2019 23:47:47 GMT)
-
-    return "Ok"
-
-
-@app.route("/humidity", methods=["POST"])
-@authenticate
-def humidity():
-
-    # TODO: Add record to DB (Harry Jubb, Fri  1 Nov 2019 23:47:47 GMT)
+    db.temperature.insert_one(
+        {
+            **parse_shared_info(request),
+            "temperature": request.get_json()["temperature"],
+            "humidity": request.get_json()["humidity"],
+        }
+    )
 
     return "Ok"
