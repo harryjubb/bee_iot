@@ -26,7 +26,7 @@ sudo apt-get update
 sudo apt-get upgrade
 
 # Start the Docker service
-systemctl start docker.service
+sudo systemctl start docker.service
 
 # Verify Docker is installed and running
 docker info
