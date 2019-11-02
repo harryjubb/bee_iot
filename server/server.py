@@ -4,6 +4,8 @@ import logging
 import os
 import uuid
 
+from typing import Dict, Callable
+
 import dateutil.parser
 
 from flask import Flask, request, abort
@@ -11,18 +13,22 @@ from flask import Flask, request, abort
 from pymongo import MongoClient
 
 # Helper functions
-def parse_shared_info(request):
+def parse_request(request, keys: Dict[str, Callable] = None):
 
     request_json = request.get_json()
 
-    hive_id = uuid.UUID(request_json["hive_id"])
-    hive_time_utc = dateutil.parser.parse(request_json["hive_time_utc"])
-
-    return {
-        "hive_id": hive_id,
-        "hive_time_utc": hive_time_utc,
+    output = {
+        "hive_id": uuid.UUID(request_json["hive_id"]),
+        "hive_time_utc": dateutil.parser.parse(request_json["hive_time_utc"]),
         "server_time_utc": datetime.datetime.utcnow(),
     }
+
+    # Handle any further provided keys using the given callable as a parser
+    if keys:
+        for key, parser in keys.items():
+            output[key] = parser(request_json[key])
+
+    return output
 
 
 # App initialisation
@@ -64,7 +70,7 @@ def hello_world():
 @authenticate
 def heartbeat():
 
-    db.heartbeat.insert_one(parse_shared_info(request))
+    db.heartbeat.insert_one(parse_request(request))
 
     return "Ok"
 
@@ -73,12 +79,28 @@ def heartbeat():
 @authenticate
 def environment():
 
-    db.temperature.insert_one(
-        {
-            **parse_shared_info(request),
-            "temperature": request.get_json()["temperature"],
-            "humidity": request.get_json()["humidity"],
-        }
+    db.environment.insert_one(
+        parse_request(request, keys={"temperature": float, "humidity": float})
+    )
+
+    return "Ok"
+
+
+@app.route("/audio", methods=["POST"])
+@authenticate
+def audio():
+
+    db.audio.insert_one(
+        parse_request(
+            request,
+            keys={
+                "hive_start_utc": dateutil.parser.parse,
+                "hive_end_utc": dateutil.parser.parse,
+                "duration_ms": int,
+                "audio_id": uuid.UUID,
+                "url": str,
+            },
+        )
     )
 
     return "Ok"
