@@ -2,4 +2,4 @@
 
 set -e
 
-python environment.py
+python -u environment.py
