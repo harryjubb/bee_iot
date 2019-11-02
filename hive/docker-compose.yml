@@ -13,9 +13,39 @@ services:
     # Required for GPIO access
     privileged: true
 
-  # audio:
-  #   build: ./services/audio
+  # audio_sampling:
+  #   build: ./services/audio_sampling
   #   restart: always
   #   environment:
   #     # Environment is from .env file
   #     - AUTH_TOKEN
+
+  audio_streaming_darkice:
+    build: ./services/audio_streaming/darkice
+    depends_on:
+      - audio_streaming_icecast
+    privileged: true
+    restart: always
+    networks:
+      - streaming_network
+
+  audio_streaming_icecast:
+    build: ./services/audio_streaming/icecast
+    ports:
+      - "8000:8000"
+    environment:
+      - "ICECAST_HOSTNAME=audio_streaming_icecast"
+      - "ICECAST_SOURCE_PASSWORD=hackme"
+      - "ICECAST_ADMIN_PASSWORD=hackme"
+      - "ICECAST_RELAY_PASSWORD=hackme"
+      - "ICECAST_ADMIN_USERNAME=admin"
+      # - "ICECAST_ADMIN_EMAIL="
+      # - "ICECAST_LOCATION="
+      # - "ICECAST_MAX_CLIENTS="
+      # - "ICECAST_MAX_SOURCES="
+    restart: always
+    networks:
+      - streaming_network
+
+networks:
+  streaming_network:
