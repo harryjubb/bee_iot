@@ -10,16 +10,29 @@ from flask import Flask, request, abort
 
 from pymongo import MongoClient
 
-app = Flask(__name__)
-DEBUG = 1
+# Helper functions
+def parse_shared_info(request):
 
+    request_json = request.get_json()
+
+    hive_id = uuid.UUID(request_json["hive_id"])
+    hive_time_utc = dateutil.parser.parse(request_json["hive_time_utc"])
+
+    return {
+        "hive_id": hive_id,
+        "hive_time_utc": hive_time_utc,
+        "server_time_utc": datetime.datetime.utcnow(),
+    }
+
+
+# App initialisation
+app = Flask(__name__)
+
+# Authentication settings
 AUTH_TOKEN = os.environ.get("AUTH_TOKEN", None)
 
 if not AUTH_TOKEN:
     raise ValueError("AUTH_TOKEN environment variable is required")
-
-client = MongoClient("mongodb://mongo:27017")
-db = client.bees
 
 
 def authenticate(function):
@@ -36,6 +49,11 @@ def authenticate(function):
     return wrapped
 
 
+# Database
+client = MongoClient("mongodb://mongo:27017")
+db = client.bees
+
+# Routes
 @app.route("/", methods=["POST"])
 @authenticate
 def hello_world():
@@ -46,16 +64,7 @@ def hello_world():
 @authenticate
 def heartbeat():
 
-    hive_id = uuid.UUID(request.get_json()["hive_id"])
-    pi_time = dateutil.parser.parse(request.get_json()["pi_time"])
-
-    db.heartbeat.insert_one(
-        {
-            "hive_id": hive_id,
-            "pi_time": pi_time,
-            "server_time_utc": datetime.datetime.utcnow(),
-        }
-    )
+    db.heartbeat.insert_one(parse_shared_info(request))
 
     return "Ok"
 
