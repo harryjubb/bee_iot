@@ -29,4 +29,8 @@ sudo apt-get upgrade
 sudo systemctl start docker.service
 
 # Verify Docker is installed and running
-docker info
+sudo docker info
+
+echo
+echo "!!! Log out and back to run Docker without sudo as the pi user !!!"
+echo
