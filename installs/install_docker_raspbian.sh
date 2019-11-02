@@ -33,6 +33,8 @@ sudo systemctl start docker.service
 # Verify Docker is installed and running
 sudo docker info
 
+rm get-docker.sh
+
 echo
 echo "!!! Log out and back to run Docker without sudo as the pi user !!!"
 echo
