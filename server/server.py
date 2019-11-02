@@ -2,6 +2,9 @@ import datetime
 import functools
 import logging
 import os
+import uuid
+
+import dateutil.parser
 
 from flask import Flask, request, abort
 
@@ -43,10 +46,15 @@ def hello_world():
 @authenticate
 def heartbeat():
 
-    pi_time = request.get_json()["pi_time"]
+    hive_id = uuid.UUID(request.get_json()["hive_id"])
+    pi_time = dateutil.parser.parse(request.get_json()["pi_time"])
 
     db.heartbeat.insert_one(
-        {"pi_time": pi_time, "server_time_utc": datetime.datetime.utcnow()}
+        {
+            "hive_id": hive_id,
+            "pi_time": pi_time,
+            "server_time_utc": datetime.datetime.utcnow(),
+        }
     )
 
     return "Ok"
