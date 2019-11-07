@@ -60,10 +60,9 @@ client = MongoClient("mongodb://mongo:27017")
 db = client.bees
 
 # Routes
-@app.route("/", methods=["POST"])
-@authenticate
-def hello_world():
-    return "Hello World"
+@app.route("/", methods=["GET"])
+def home():
+    return "Bee IOT running"
 
 
 @app.route("/heartbeat", methods=["POST"])
