@@ -6,6 +6,6 @@ WORKDIR /app
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
-COPY server.py entrypoint.sh ./
+COPY api.py entrypoint.sh ./
 
 ENTRYPOINT [ "sh", "/app/entrypoint.sh" ]
