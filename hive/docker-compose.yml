@@ -22,27 +22,7 @@ services:
 
   audio_streaming_darkice:
     build: ./services/audio_streaming/darkice
-    depends_on:
-      - audio_streaming_icecast
     privileged: true
-    restart: always
-    networks:
-      - streaming_network
-
-  audio_streaming_icecast:
-    build: ./services/audio_streaming/icecast
-    ports:
-      - "8000:8000"
-    environment:
-      - "ICECAST_HOSTNAME=audio_streaming_icecast"
-      - "ICECAST_SOURCE_PASSWORD=${ICECAST_SOURCE_PASSWORD}"
-      - "ICECAST_ADMIN_PASSWORD=${ICECAST_ADMIN_PASSWORD}"
-      - "ICECAST_RELAY_PASSWORD=${ICECAST_RELAY_PASSWORD}"
-      - "ICECAST_ADMIN_USERNAME=${ICECAST_ADMIN_USERNAME}"
-      # - "ICECAST_ADMIN_EMAIL=${ICECAST_ADMIN_EMAIL}"
-      # - "ICECAST_LOCATION=${ICECAST_LOCATION}"
-      # - "ICECAST_MAX_CLIENTS=${ICECAST_MAX_CLIENTS}"
-      # - "ICECAST_MAX_SOURCES=${ICECAST_MAX_SOURCES}"
     restart: always
     networks:
       - streaming_network
