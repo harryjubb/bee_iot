@@ -62,7 +62,7 @@ db = client.bees
 # Routes
 @app.route("/", methods=["GET"])
 def home():
-    return "Bee IOT running"
+    return "<html><body><h1>🐝</h1><body></html>"
 
 
 @app.route("/heartbeat", methods=["POST"])
