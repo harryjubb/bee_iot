@@ -20,10 +20,12 @@ version: "3.7"
       # - EXTRA_DOMAINS=extradomains #optional
       - STAGING=false #optional
     volumes:
-      - /path/to/appdata/config:/config
+      - .nginx/config:/config
     ports:
       - 443:443
       - 80:80 #optional
     networks:
       - server_network
 
+networks:
+  server_network:
