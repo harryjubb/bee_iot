@@ -11,3 +11,11 @@ ICECAST_ADMIN_USERNAME=admin
 #ICECAST_LOCATION=
 #ICECAST_MAX_CLIENTS=
 #ICECAST_MAX_SOURCES=
+
+URL=example.com
+SUBDOMAINS=api,
+TZ=Europe/London
+
+# 0 for root, 1000 for default first linux user
+PUID=1000
+PGID=1000

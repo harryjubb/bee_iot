@@ -1,0 +1,29 @@
+version: "3.7"
+
+  nginx:
+    image: linuxserver/letsencrypt
+    container_name: nginx
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID="${PUID}"
+      - PGID="${PGID}"
+      - TZ="${TZ}"
+      - URL="${URL}"
+      - SUBDOMAINS="${SUBDOMAINS}"
+      - VALIDATION=http
+      # - DNSPLUGIN=cloudflare #optional
+      # - DUCKDNSTOKEN=token #optional
+      # - EMAIL=e-mail #optional
+      # - DHLEVEL=2048 #optional
+      - ONLY_SUBDOMAINS=true #optional
+      # - EXTRA_DOMAINS=extradomains #optional
+      - STAGING=false #optional
+    volumes:
+      - /path/to/appdata/config:/config
+    ports:
+      - 443:443
+      - 80:80 #optional
+    networks:
+      - server_network
+
