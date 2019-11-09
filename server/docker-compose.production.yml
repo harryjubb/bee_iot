@@ -1,8 +1,10 @@
 version: "3.7"
 
+services:
+
   nginx:
     image: linuxserver/letsencrypt
-    container_name: nginx
+    # container_name: nginx
     cap_add:
       - NET_ADMIN
     environment:
@@ -26,6 +28,3 @@ version: "3.7"
       - 80:80 #optional
     networks:
       - server_network
-
-networks:
-  server_network:
