@@ -22,7 +22,7 @@ services:
       # - EXTRA_DOMAINS=extradomains #optional
       - STAGING=false #optional
     volumes:
-      - .nginx/config:/config
+      - ./nginx/config:/config
     ports:
       - 443:443
       - 80:80 #optional
