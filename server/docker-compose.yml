@@ -40,6 +40,8 @@ services:
       # - "ICECAST_MAX_CLIENTS=${ICECAST_MAX_CLIENTS}"
       # - "ICECAST_MAX_SOURCES=${ICECAST_MAX_SOURCES}"
     restart: always
+    networks:
+      - server_network
 
 volumes:
   mongo:

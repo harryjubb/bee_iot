@@ -32,13 +32,13 @@ server {
 
 	client_max_body_size 0;
 
-	location / {
-		proxy_pass http://api:5000;
-	}
-
 	# location / {
-	# 	try_files $uri $uri/ /index.html /index.php?$args =404;
+	# 	proxy_pass http://api:5000;
 	# }
+
+	location / {
+		try_files $uri $uri/ /index.html /index.php?$args =404;
+	}
 
 	# location ~ \.php$ {
 	# 	fastcgi_split_path_info ^(.+\.php)(/.+)$;
@@ -57,6 +57,44 @@ server {
 #		proxy_pass http://192.168.1.50:5050/cp;
 #	}
 
+}
+
+# reverse proxy config without url base, but as a subdomain
+# notice this is a new server block, you need a new server block for each subdomain
+server {
+	listen 443 ssl http2;
+	listen [::]:443 ssl http2;
+
+	root /config/www;
+	index index.html index.htm index.php;
+
+	server_name api.*;
+
+	include /config/nginx/ssl.conf;
+
+	client_max_body_size 0;
+
+	location / {
+		proxy_pass http://api:5000;
+	}
+}
+
+server {
+	listen 443 ssl http2;
+	listen [::]:443 ssl http2;
+
+	root /config/www;
+	index index.html index.htm index.php;
+
+	server_name streaming.*;
+
+	include /config/nginx/ssl.conf;
+
+	client_max_body_size 0;
+
+	location / {
+		proxy_pass http://audio_streaming_icecast:8000;
+	}
 }
 
 # sample reverse proxy config without url base, but as a subdomain "cp", ip and port same as above
