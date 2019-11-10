@@ -1,13 +1,17 @@
 FROM ubuntu:18.04
 # Adapted from https://github.com/infiniteproject/liquidsoap
 
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends \
+    software-properties-common m4 make patch git darcs mercurial \
+    libmad0-dev libmp3lame-dev
+
 RUN add-apt-repository ppa:avsm/ppa
 
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
-    software-properties-common m4 make patch git darcs mercurial \
-    libmad0-dev libmp3lame-dev \
     ocaml-nox opam
 
 ENV DEBIAN_FRONTEND noninteractive
