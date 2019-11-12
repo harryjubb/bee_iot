@@ -14,7 +14,6 @@ services:
       - AUTH_TOKEN
     networks:
       - server_network
-      - mongo_network
 
   mongo:
     image: mongo:3.4.23-xenial
@@ -25,39 +24,6 @@ services:
       - mongo:/data/db
     networks:
       - server_network
-      - mongo_network
-
-  metabase:
-    image: metabase/metabase
-    depends_on: 
-      - postgres
-    ports:
-      - 3000:3000
-    networks:
-      - server_network
-    environment:
-      # Environment is from .env file
-      - AUTH_TOKEN
-      - "MB_DB_TYPE=postgres"
-      - "MB_DB_DBNAME=metabase"
-      - "MB_DB_PORT=5432"
-      - "MB_DB_USER=metabase"
-      - "MB_DB_PASS={$MB_DB_PASS}"
-      - "MB_DB_HOST=postgres"
-    networks:
-      - server_network
-      - mongo_network
-      - postgres_network
-
-  postgres:
-    image: postgres:12.0
-    restart: always
-    volumes:
-      - ./services/postgres/init:/docker-entrypoint-initdb.d:ro
-    # environment: 
-    #   - "POSTGRES_PASSWORD=F83E34A6-E259-4A53-8B9A-6E795076F774"
-    networks:
-      - postgres_network
 
   audio_streaming_icecast:
     build: ./services/audio_streaming/icecast
@@ -82,5 +48,3 @@ volumes:
 
 networks:
   server_network:
-  mongo_network:
-  postgres_network:

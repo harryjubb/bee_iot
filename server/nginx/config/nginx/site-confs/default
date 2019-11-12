@@ -97,24 +97,6 @@ server {
 	}
 }
 
-server {
-	listen 443 ssl http2;
-	listen [::]:443 ssl http2;
-
-	root /config/www;
-	index index.html index.htm index.php;
-
-	server_name analytics.*;
-
-	include /config/nginx/ssl.conf;
-
-	client_max_body_size 0;
-
-	location / {
-		proxy_pass http://metabase:3000;
-	}
-}
-
 # sample reverse proxy config without url base, but as a subdomain "cp", ip and port same as above
 # notice this is a new server block, you need a new server block for each subdomain
 #server {
