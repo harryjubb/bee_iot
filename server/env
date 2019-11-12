@@ -3,6 +3,8 @@
 
 AUTH_TOKEN=super_secret_authentication_token
 
+MB_DB_PASS=secret_password
+
 ICECAST_SOURCE_PASSWORD=hackme
 ICECAST_ADMIN_PASSWORD=hackme
 ICECAST_RELAY_PASSWORD=hackme
