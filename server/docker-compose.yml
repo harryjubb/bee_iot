@@ -37,13 +37,16 @@ services:
       - server_network
     environment:
       # Environment is from .env file
-      - AUTH_TOKEN
+      # - AUTH_TOKEN
       - "MB_DB_TYPE=postgres"
       - "MB_DB_DBNAME=metabase"
       - "MB_DB_PORT=5432"
       - "MB_DB_USER=metabase"
+      # Postgres init script sets password from MB_DB_PASS environment variable
       - "MB_DB_PASS={$MB_DB_PASS}"
       - "MB_DB_HOST=postgres"
+      # Force Metabase to use less memory
+      - "JAVA_TOOL_OPTIONS=-Xmx300m"
     networks:
       - server_network
       - mongo_network
