@@ -1,0 +1,2 @@
+pymongo==3.9.0
+emitter-io==2.0.3

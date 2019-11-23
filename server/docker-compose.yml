@@ -13,11 +13,24 @@ services:
     environment:
       - EMITTER_LICENSE
 
+  # PubSub message handler
+  messages:
+    build: ./services/messages
+    restart: always
+    depends_on:
+      - emitter
+    networks:
+      - server_network
+    environment:
+      - MESSAGES_ALL_HIVES_KEY
+      - PYTHONUNBUFFERED=1
+
   api:
     build: ./services/api
     restart: always
     depends_on:
       - mongo
+      - messages
     ports:
       - 5000:5000
     environment:

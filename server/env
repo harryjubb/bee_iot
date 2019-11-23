@@ -3,6 +3,11 @@
 
 AUTH_TOKEN=super_secret_authentication_token
 
+EMITTER_LICENSE=emitter_license_generated_on_first_run
+EMITTER_SECRET_KEY=emitter_secret_key_generated_on_first_run
+
+MESSAGES_ALL_HIVES_KEY=key_to_pub_sub_all_hive_channels
+
 ICECAST_SOURCE_PASSWORD=hackme
 ICECAST_ADMIN_PASSWORD=hackme
 ICECAST_RELAY_PASSWORD=hackme
