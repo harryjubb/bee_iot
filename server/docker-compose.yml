@@ -2,6 +2,17 @@ version: "3.7"
 
 services:
 
+  # PubSub broker
+  emitter:
+    image: emitter/server
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - server_network
+    environment:
+      - EMITTER_LICENSE
+
   api:
     build: ./services/api
     restart: always
