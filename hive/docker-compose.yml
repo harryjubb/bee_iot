@@ -2,16 +2,16 @@ version: "3.7"
 
 services:
 
-  environment:
-    build: ./services/environment
-    restart: always
-    environment:
+  # environment:
+    # build: ./services/environment
+    # restart: always
+    # environment:
       # Environment is from .env file
-      - AUTH_TOKEN
-      - SERVER
-      - HIVE_ID
+      # - AUTH_TOKEN
+      # - SERVER
+      # - HIVE_ID
     # Required for GPIO access
-    privileged: true
+    # privileged: true
 
   # audio_sampling:
   #   build: ./services/audio_sampling
@@ -27,10 +27,26 @@ services:
   #   networks:
   #     - streaming_network
 
-  audio_streaming_liquidsoap:
-    build: ./services/audio_streaming/liquidsoap
+  # audio_streaming_liquidsoap:
+    # build: ./services/audio_streaming/liquidsoap
+    # privileged: true
+    # restart: always
+    # networks:
+      # - streaming_network
+
+  av_streaming_picam:
+    build: ./services/av_streaming/picam
     privileged: true
     restart: always
+    env_file: .env
+    networks:
+      - streaming_network
+
+  av_streaming_ffmpeg:
+    build: ./services/av_streaming/ffmpeg
+    privileged: true
+    restart: always
+    env_file: .env
     networks:
       - streaming_network
 
