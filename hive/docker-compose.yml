@@ -39,16 +39,20 @@ services:
     privileged: true
     restart: always
     env_file: .env
+    volumes:
+      - type: tmpfs
+        target: /shm
+      
     networks:
       - streaming_network
 
-  av_streaming_ffmpeg:
-    build: ./services/av_streaming/ffmpeg
-    privileged: true
-    restart: always
-    env_file: .env
-    networks:
-      - streaming_network
+  # av_streaming_ffmpeg:
+  #   build: ./services/av_streaming/ffmpeg
+  #   privileged: true
+  #   restart: always
+  #   env_file: .env
+  #   networks:
+  #     - streaming_network
 
 networks:
   streaming_network:
