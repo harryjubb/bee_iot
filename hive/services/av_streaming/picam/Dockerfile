@@ -13,7 +13,7 @@ COPY lib /opt/vc/lib
 WORKDIR /picam
 
 RUN cp /download/picam-1.4.7-binary/picam /picam/
-RUN mkdir rec && mkdir hooks && mkdir state && mkdir archive
+RUN mkdir archive
 
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/vc/lib
 

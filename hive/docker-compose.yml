@@ -42,9 +42,19 @@ services:
     volumes:
       - type: tmpfs
         target: /shm
-      
     networks:
       - streaming_network
+    # ports:
+    #   - 8181:8181
+
+  # av_streaming_picam_test_nginx:
+  #   image: tiangolo/nginx-rtmp
+  #   restart: always
+  #   env_file: .env
+  #   networks:
+  #     - streaming_network
+  #   ports:
+  #     - 1935:1935
 
   # av_streaming_ffmpeg:
   #   build: ./services/av_streaming/ffmpeg
