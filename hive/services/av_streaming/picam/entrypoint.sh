@@ -12,6 +12,4 @@ ln -sfn /shm/hooks /picam/hooks
 ln -sfn /shm/state /picam/state
 ln -sfn /shm/hls /picam/hls
 
-# ./picam --alsadev $ALSA_DEVICE -o /shm/hls
-./picam --alsadev $ALSA_DEVICE --tcpout tcp://localhost:8181
-# ./picam --alsadev $ALSA_DEVICE -o /shm/hls --tcpout tcp://localhost:8181
+./picam --alsadev $ALSA_DEVICE --tcpout tcp://av_streaming_ffmpeg:8181
