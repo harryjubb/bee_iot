@@ -8,6 +8,14 @@ services:
     networks:
       - server_network
 
+  apiary:
+    build: ./apps/apiary
+    env_file: .env
+    ports:
+      - 8000:8000
+    networks:
+      - server_network
+
   # api:
   #   build: ./services/api
   #   restart: always
