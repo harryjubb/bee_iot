@@ -53,6 +53,8 @@ services:
     env_file: .env
     networks:
       - streaming_network
+    volumes:
+      - ./logo/logo.png:/logo/logo.png
 
 networks:
   streaming_network:

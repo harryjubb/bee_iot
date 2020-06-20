@@ -1,0 +1,1 @@
+Place a "logo.png" in here to be added to the ffmpeg stream from picam.

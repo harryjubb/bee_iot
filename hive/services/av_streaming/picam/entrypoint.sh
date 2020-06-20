@@ -12,4 +12,8 @@ ln -sfn /shm/hooks /picam/hooks
 ln -sfn /shm/state /picam/state
 ln -sfn /shm/hls /picam/hls
 
+echo "Sleeping to ensure ffmpeg is up..."
+sleep 5
+echo "Sleep finished"
+
 ./picam --alsadev $ALSA_DEVICE --tcpout tcp://av_streaming_ffmpeg:8181
