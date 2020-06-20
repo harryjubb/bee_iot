@@ -27,6 +27,9 @@ services:
       - ./config/nginx/config:/config
       # Customise the nginx config with an overridden version
       - ./config/nginx/custom/site-confs/default:/config/nginx/site-confs/default
+      # Add RTMP-specific config
+      - ./config/nginx/custom/nginx.conf:/config/nginx/nginx.conf
+      - ./config/nginx/custom/rtmp:/config/nginx/rtmp/rtmp
     ports:
       - 443:443
       - 80:80
