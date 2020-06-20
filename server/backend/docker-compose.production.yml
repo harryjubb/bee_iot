@@ -3,7 +3,7 @@ version: "3.7"
 services:
 
   nginx:
-    image: linuxserver/letsencrypt
+    build: ./services/production_nginx
     depends_on:
       - rtmp_nginx
     # container_name: nginx
@@ -26,7 +26,7 @@ services:
     volumes:
       - ./config/nginx/config:/config
       # Customise the nginx config with an overridden version
-      - ./config/nginx/custom/site-confs/default:/config/nginx/site-confs/default
+      - ./config/nginx/custom/site-confs/default.template:/templates/default.template
       # Add RTMP-specific config
       - ./config/nginx/custom/nginx.conf:/config/nginx/nginx.conf
       - ./config/nginx/custom/rtmp:/config/nginx/rtmp/rtmp
@@ -36,3 +36,4 @@ services:
       - 1935:1935
     networks:
       - server_network
+    env_file: .env

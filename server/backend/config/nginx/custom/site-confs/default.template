@@ -1,6 +1,17 @@
 ## Version 2020/05/23 - Changelog: https://github.com/linuxserver/docker-letsencrypt/commits/master/root/defaults/default
 # See the example for commented
 
+# RTMP authentication endpoint
+server {
+	listen 9123;
+	location /auth {
+		if ($arg_psk = '${STREAM_SECRET_KEY}') {
+			return 201;
+		}
+		return 404;
+	}
+}
+
 # redirect all traffic to https
 server {
 	listen 80 default_server;
