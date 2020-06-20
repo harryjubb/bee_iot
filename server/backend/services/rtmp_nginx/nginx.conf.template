@@ -34,11 +34,10 @@ http {
     server {
         listen 9123;
         location /auth {
-            return 201;
-            # if ($arg_psk = "${STREAM_SECRET_KEY}") {
-            #     return 201;
-            # }
-            # return 404;
+            if ($arg_psk = "${STREAM_SECRET_KEY}") {
+                return 201;
+            }
+            return 404;
         }
     }
 }
