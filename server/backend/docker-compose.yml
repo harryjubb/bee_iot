@@ -4,8 +4,6 @@ services:
 
   rtmp_nginx:
     build: ./services/rtmp_nginx
-    ports:
-      - 1935:1935
     env_file: .env
     networks:
       - server_network
