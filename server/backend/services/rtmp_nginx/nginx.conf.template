@@ -1,0 +1,44 @@
+worker_processes auto;
+rtmp_auto_push on;
+events {}
+rtmp {
+    server {
+        # Listening on port 1936
+        # As a forward target for 1935 on SSL nginx
+        # In front of this one in production
+        listen 1936;
+        listen [::]:1936 ipv6only=on;
+
+        application publish {
+            live on;
+            record off;
+            allow publish all;
+            allow play 127.0.0.1;
+
+            notify_method get;
+            on_publish http://127.0.0.1:9123/auth;
+        }
+
+        application live {
+            live on;
+            record off;
+            deny publish all;
+            allow play all;
+
+            pull rtmp://127.0.0.1:1936/publish;
+        }
+    }
+}
+
+http {
+    # RTMP authentication endpoint
+    server {
+        listen 9123;
+        location /auth {
+            if ($arg_psk = '${STREAM_SECRET_KEY}') {
+                return 201;
+            }
+            return 404;
+        }
+    }
+}
