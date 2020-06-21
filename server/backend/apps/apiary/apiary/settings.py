@@ -60,6 +60,7 @@ if not DEVELOPMENT_MODE:
 # Application definition
 
 INSTALLED_APPS = [
+    'apiary.apps.hive',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
