@@ -11,9 +11,8 @@ class Hive(models.Model):
 
     # Unique hive ID, matching across other apiary services
     uid = models.CharField(max_length=1024, unique=True, help_text="Unique hive ID: to match the same hive across other apiary services")
-
-    # Human 
     name = models.CharField(max_length=1024, help_text="Human-friendly hive name")
+    logo = models.ImageField(upload_to="logos", blank=True, null=True, help_text="Image of the logo of the sponsor of this hive")
     active = models.BooleanField(help_text="Determines if any data or streaming should be collected from this hive")
 
     # AV streaming data
