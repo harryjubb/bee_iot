@@ -5,33 +5,36 @@ services:
   rtmp_nginx:
     build: ./services/rtmp_nginx
     env_file: .env
-    networks:
-      - server_network
-
-  apiary:
-    build: ./apps/apiary
-    env_file: .env
-    volumes: 
-      - ./apps/apiary:/app
-      - static:/static
-      - media:/media
-    depends_on: 
-      - postgres
-    restart: always
-    ports:
-      - 8000:8000
-    networks:
-      - server_network
-
-  postgres:
-    image: postgres:latest
     volumes:
-      - postgres:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_PASSWORD
-    restart: always
+      - type: tmpfs
+        target: /hlstmp
     networks:
       - server_network
+
+  # apiary:
+  #   build: ./apps/apiary
+  #   env_file: .env
+  #   volumes: 
+  #     - ./apps/apiary:/app
+  #     - static:/static
+  #     - media:/media
+  #   depends_on: 
+  #     - postgres
+  #   restart: always
+  #   ports:
+  #     - 8000:8000
+  #   networks:
+  #     - server_network
+
+  # postgres:
+  #   image: postgres:latest
+  #   volumes:
+  #     - postgres:/var/lib/postgresql/data/
+  #   environment:
+  #     - POSTGRES_PASSWORD
+  #   restart: always
+  #   networks:
+  #     - server_network
 
   # api:
   #   build: ./services/api
