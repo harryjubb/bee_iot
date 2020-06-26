@@ -45,7 +45,16 @@ if DEVELOPMENT_MODE:
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
+SUBDOMAINS = env.list("SUBDOMAINS", [])
+URL = env.str("URL")
+
+if DEVELOPMENT_MODE:
+    ALLOWED_HOSTS = ["*"]
+else:
+    ALLOWED_HOSTS = [
+        f'{subdomain}.{URL}'
+        for subdomain in SUBDOMAINS
+    ]
 
 if DEVELOPMENT_MODE:
     CORS_ORIGIN_ALLOW_ALL = True
