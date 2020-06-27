@@ -5,6 +5,9 @@ services:
   rtmp_nginx:
     build: ./services/rtmp_nginx
     env_file: .env
+    volumes:
+      - type: tmpfs
+        target: /hlstmp
     networks:
       - server_network
 
