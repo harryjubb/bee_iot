@@ -18,17 +18,13 @@ from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
 
-from rest_framework.urlpatterns import format_suffix_patterns
-from apiary.apps.hive import views
+from graphene_django.views import GraphQLView
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns = [path("admin/", admin.site.urls),] + static(
+    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+)
 
-# DRF patterns
+# GraphQL patterns
 urlpatterns = urlpatterns + [
-    path('api/hives/', views.HiveList.as_view()),
-    path('api/hives/<str:pk>/', views.HiveDetail.as_view()),
+    path("graphql", GraphQLView.as_view(graphiql=True)),
 ]
-
-urlpatterns = format_suffix_patterns(urlpatterns)

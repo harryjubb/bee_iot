@@ -1,7 +1,7 @@
 black==19.10b0
 Django==3.0.7
 django-environ==0.4.5
-djangorestframework==3.11.0
+graphene-django==2.11.0
 psycopg2==2.8.5
 pillow==7.1.2
 pylint==2.5.3
