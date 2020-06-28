@@ -33,7 +33,7 @@ class Hive(models.Model):
 
     # AV streaming data
     stream_key = models.CharField(
-        max_length=1024, help_text="AV stream name for this hive"
+        max_length=1024, help_text="AV stream name for this hive", null=True, blank=True
     )
     stream_active = models.BooleanField(
         help_text="Determines if this hive's stream should be viewable"
