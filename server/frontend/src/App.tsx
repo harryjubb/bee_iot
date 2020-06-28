@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       flexGrow: 1,
     },
+    container: {
+      marginTop: "1em",
+    },
   })
 );
 
@@ -32,7 +35,7 @@ function App() {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Container>
+      <Container className={classes.container}>
         <Router>
           <Switch>
             <Route exact path="/">
