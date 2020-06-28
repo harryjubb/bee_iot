@@ -17,6 +17,16 @@ const HIVES = gql`
   }
 `;
 
+const hiveSponsorshipLevelOrdering = ["BRONZE", "SILVER", "GOLD", "PLATINUM"];
+
+const hiveSortComparison = (hiveA: any, hiveB: any) =>
+  hiveSponsorshipLevelOrdering.indexOf(
+    hiveA.sponsor?.sponsorshipLevel ?? null
+  ) <=
+  hiveSponsorshipLevelOrdering.indexOf(hiveB.sponsor?.sponsorshipLevel ?? null)
+    ? 1
+    : -1;
+
 export default function HiveList() {
   const { loading, error, data } = useQuery(HIVES);
 
@@ -28,7 +38,7 @@ export default function HiveList() {
       <Typography variant="h2" gutterBottom>
         Hives
       </Typography>
-      {data.allHives.map((hive: any) => (
+      {data.allHives.sort(hiveSortComparison).map((hive: any) => (
         <div key={hive.id}>
           {hive.name}
           {hive.sponsor?.name}
