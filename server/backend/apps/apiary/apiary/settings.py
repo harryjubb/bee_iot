@@ -67,7 +67,7 @@ if not DEVELOPMENT_MODE:
 
 INSTALLED_APPS = [
     "apiary.apps.hive",
-    "apiary.apps.sponsor",
+    "apiary.apps.organisation",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

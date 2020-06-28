@@ -1,10 +1,12 @@
 import graphene
 import apiary.apps.hive.schema
-import apiary.apps.sponsor.schema
+import apiary.apps.organisation.schema
 
 
 class Query(
-    apiary.apps.hive.schema.Query, apiary.apps.sponsor.schema.Query, graphene.ObjectType
+    apiary.apps.hive.schema.Query,
+    apiary.apps.organisation.schema.Query,
+    graphene.ObjectType,
 ):
     pass
 

@@ -24,7 +24,7 @@ class Hive(models.Model):
 
     # Sponsor
     sponsor = models.ForeignKey(
-        "sponsor.Sponsor",
+        "organisation.Organisation",
         on_delete=models.PROTECT,
         null=True,
         blank=True,

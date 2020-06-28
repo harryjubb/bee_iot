@@ -9,9 +9,9 @@ SPONSORSHIP_LEVELS = (
 )
 
 
-class Sponsor(models.Model):
+class Organisation(models.Model):
     """
-    An organisation sponsoring one or more hives.
+    An organisation that may sponsor one or more hives.
     """
 
     # Primary key ID using a UUID
@@ -22,7 +22,7 @@ class Sponsor(models.Model):
         upload_to="logos",
         null=True,
         blank=True,
-        help_text="Image of the logo of the sponsor",
+        help_text="Image of the logo of the organisation",
     )
 
     sponsorship_level = models.CharField(
@@ -30,8 +30,8 @@ class Sponsor(models.Model):
         choices=SPONSORSHIP_LEVELS,
         null=True,
         blank=True,
-        help_text="Sponsorship level of the sponsor",
+        help_text="Sponsorship level of the organisation",
     )
 
     def __str__(self):
-        return f"{self.name} ({self.sponsorship_level})"
+        return f"{self.name} ({self.sponsorship_level or '(Non-sponsor)'})"
