@@ -19,6 +19,7 @@ const HIVES = gql`
       sponsor {
         id
         name
+        logo
         sponsorshipLevel
       }
     }
