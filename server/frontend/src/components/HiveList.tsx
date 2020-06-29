@@ -11,6 +11,7 @@ import {
   makeStyles,
   Theme,
   ListItemIcon,
+  Button,
 } from "@material-ui/core";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
@@ -47,6 +48,9 @@ const useStyles = makeStyles((theme: Theme) =>
     hiveListItem: {
       display: "flex",
     },
+    hiveName: {
+      flexGrow: 1,
+    },
     logoAvatar: {
       width: theme.spacing(6),
       height: theme.spacing(6),
@@ -78,9 +82,7 @@ export default function HiveList() {
 
   return (
     <>
-      <Typography variant="h2" gutterBottom>
-        Hives
-      </Typography>
+      <Typography variant="h2">Hives</Typography>
       <List>
         {data.allHives
           .sort(hiveSortComparison)
@@ -96,6 +98,7 @@ export default function HiveList() {
                   />
                 </ListItemAvatar>
                 <ListItemText
+                  className={classes.hiveName}
                   disableTypography
                   primary={<Typography variant="body1">{hive.name}</Typography>}
                   secondary={
@@ -112,6 +115,9 @@ export default function HiveList() {
                     ) : null
                   }
                 />
+                <Button variant="contained" color="default" size="small">
+                  View
+                </Button>
               </ListItem>
 
               {index !== data.allHives.length - 1 ? (
