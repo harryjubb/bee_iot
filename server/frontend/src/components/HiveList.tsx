@@ -7,6 +7,9 @@ import {
   Divider,
   Avatar,
   ListItemAvatar,
+  createStyles,
+  makeStyles,
+  Theme,
 } from "@material-ui/core";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
@@ -26,6 +29,14 @@ const HIVES = gql`
   }
 `;
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    logoAvatar: {
+      objectFit: "contain",
+    },
+  })
+);
+
 const hiveSponsorshipLevelOrdering = ["BRONZE", "SILVER", "GOLD", "PLATINUM"];
 
 const hiveSortComparison = (hiveA: any, hiveB: any) =>
@@ -37,6 +48,8 @@ const hiveSortComparison = (hiveA: any, hiveB: any) =>
     : -1;
 
 export default function HiveList() {
+  const classes = useStyles();
+
   const { loading, error, data } = useQuery(HIVES);
 
   if (loading) return <p>Loading...</p>;
@@ -55,17 +68,18 @@ export default function HiveList() {
               <ListItem alignItems="flex-start">
                 <ListItemAvatar>
                   {hive.sponsor?.logo ? (
-                    <Avatar alt={hive.sponsor?.name} src={hive.sponsor?.logo} />
+                    <Avatar
+                      classes={{ img: classes.logoAvatar }}
+                      alt={hive.sponsor?.name}
+                      src={hive.sponsor?.logo}
+                    />
                   ) : hive.sponsor ? (
-                    <Avatar>{hive.sponsor.name}</Avatar>
+                    <Avatar>{hive.sponsor.name.slice(0, 1)}</Avatar>
                   ) : (
-                    <Avatar />
+                    <Avatar>🐝</Avatar>
                   )}
                 </ListItemAvatar>
                 <ListItemText primary={hive.name} />
-                {/* {hive.name}
-            {hive.sponsor?.name}
-            {hive.sponsor?.sponsorshipLevel ?? "N/A"} */}
               </ListItem>
 
               {index !== data.allHives.length - 1 ? (
