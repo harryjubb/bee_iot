@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
     },
     container: {
-      marginTop: "1em",
+      marginTop: theme.spacing(1),
     },
   })
 );
