@@ -10,6 +10,7 @@ import {
   createStyles,
   makeStyles,
   Theme,
+  ListItemIcon,
 } from "@material-ui/core";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
@@ -31,7 +32,27 @@ const HIVES = gql`
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    bronze: {
+      color: "#cd7f32",
+    },
+    silver: {
+      color: "#999999",
+    },
+    gold: {
+      color: "#ccac00",
+    },
+    platinum: {
+      color: "#697998",
+    },
+    hiveListItem: {
+      display: "flex",
+    },
     logoAvatar: {
+      width: theme.spacing(6),
+      height: theme.spacing(6),
+      marginRight: theme.spacing(2),
+    },
+    logoAvatarImg: {
       objectFit: "contain",
     },
   })
@@ -65,21 +86,32 @@ export default function HiveList() {
           .sort(hiveSortComparison)
           .map((hive: any, index: number) => (
             <React.Fragment key={hive.id}>
-              <ListItem alignItems="flex-start">
+              <ListItem className={classes.hiveListItem}>
                 <ListItemAvatar>
-                  {hive.sponsor?.logo ? (
-                    <Avatar
-                      classes={{ img: classes.logoAvatar }}
-                      alt={hive.sponsor?.name}
-                      src={hive.sponsor?.logo}
-                    />
-                  ) : hive.sponsor ? (
-                    <Avatar>{hive.sponsor.name.slice(0, 1)}</Avatar>
-                  ) : (
-                    <Avatar>🐝</Avatar>
-                  )}
+                  <Avatar
+                    className={classes.logoAvatar}
+                    classes={{ img: classes.logoAvatarImg }}
+                    alt={hive.sponsor?.name ?? "🐝"}
+                    src={hive.sponsor?.logo}
+                  />
                 </ListItemAvatar>
-                <ListItemText primary={hive.name} />
+                <ListItemText
+                  disableTypography
+                  primary={<Typography variant="body1">{hive.name}</Typography>}
+                  secondary={
+                    hive.sponsor?.sponsorshipLevel ? (
+                      <Typography
+                        variant="overline"
+                        className={
+                          // @ts-ignore
+                          classes[hive.sponsor?.sponsorshipLevel?.toLowerCase()]
+                        }
+                      >
+                        {hive.sponsor?.sponsorshipLevel} Sponsor
+                      </Typography>
+                    ) : null
+                  }
+                />
               </ListItem>
 
               {index !== data.allHives.length - 1 ? (
