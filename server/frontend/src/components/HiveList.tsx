@@ -113,7 +113,7 @@ export default function HiveList() {
                 </Button>
               </ListItem>
 
-              {index !== data?.allHives?.length - 1 ? (
+              {index !== (data?.allHives?.length ?? 0) - 1 ? (
                 <Divider
                   // variant="inset"
                   component="li"
