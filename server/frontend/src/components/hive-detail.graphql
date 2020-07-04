@@ -1,0 +1,15 @@
+query HiveDetail($hiveUrlName: String) {
+  hive(hiveUrlName: $hiveUrlName) {
+    id
+    uid
+    name
+    urlName
+    streamKey
+    sponsor {
+      id
+      name
+      logo
+      sponsorshipLevel
+    }
+  }
+}

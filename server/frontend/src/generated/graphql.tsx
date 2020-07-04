@@ -1,12 +1,8 @@
 import gql from 'graphql-tag';
-import * as React from 'react';
 import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactComponents from '@apollo/react-components';
-import * as ApolloReactHoc from '@apollo/react-hoc';
 import * as ApolloReactHooks from '@apollo/react-hooks';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -23,7 +19,17 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
+  /** Retrieve a list of all hives */
   allHives?: Maybe<Array<Maybe<HiveType>>>;
+  /** Retrieve a single hive by an identifier. One and only one kind of identifier must be specified */
+  hive?: Maybe<HiveType>;
+};
+
+
+export type QueryHiveArgs = {
+  hiveId?: Maybe<Scalars['String']>;
+  hiveUid?: Maybe<Scalars['String']>;
+  hiveUrlName?: Maybe<Scalars['String']>;
 };
 
 export type HiveType = {
@@ -71,6 +77,23 @@ export enum OrganisationSponsorshipLevel {
   Platinum = 'PLATINUM'
 }
 
+export type HiveDetailQueryVariables = Exact<{
+  hiveUrlName?: Maybe<Scalars['String']>;
+}>;
+
+
+export type HiveDetailQuery = (
+  { __typename?: 'Query' }
+  & { hive?: Maybe<(
+    { __typename?: 'HiveType' }
+    & Pick<HiveType, 'id' | 'uid' | 'name' | 'urlName' | 'streamKey'>
+    & { sponsor?: Maybe<(
+      { __typename?: 'OrganisationType' }
+      & Pick<OrganisationType, 'id' | 'name' | 'logo' | 'sponsorshipLevel'>
+    )> }
+  )> }
+);
+
 export type HiveListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -87,6 +110,49 @@ export type HiveListQuery = (
 );
 
 
+export const HiveDetailDocument = gql`
+    query HiveDetail($hiveUrlName: String) {
+  hive(hiveUrlName: $hiveUrlName) {
+    id
+    uid
+    name
+    urlName
+    streamKey
+    sponsor {
+      id
+      name
+      logo
+      sponsorshipLevel
+    }
+  }
+}
+    `;
+
+/**
+ * __useHiveDetailQuery__
+ *
+ * To run a query within a React component, call `useHiveDetailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHiveDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHiveDetailQuery({
+ *   variables: {
+ *      hiveUrlName: // value for 'hiveUrlName'
+ *   },
+ * });
+ */
+export function useHiveDetailQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<HiveDetailQuery, HiveDetailQueryVariables>) {
+        return ApolloReactHooks.useQuery<HiveDetailQuery, HiveDetailQueryVariables>(HiveDetailDocument, baseOptions);
+      }
+export function useHiveDetailLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HiveDetailQuery, HiveDetailQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<HiveDetailQuery, HiveDetailQueryVariables>(HiveDetailDocument, baseOptions);
+        }
+export type HiveDetailQueryHookResult = ReturnType<typeof useHiveDetailQuery>;
+export type HiveDetailLazyQueryHookResult = ReturnType<typeof useHiveDetailLazyQuery>;
+export type HiveDetailQueryResult = ApolloReactCommon.QueryResult<HiveDetailQuery, HiveDetailQueryVariables>;
 export const HiveListDocument = gql`
     query HiveList {
   allHives {
@@ -102,25 +168,6 @@ export const HiveListDocument = gql`
   }
 }
     `;
-export type HiveListComponentProps = Omit<ApolloReactComponents.QueryComponentOptions<HiveListQuery, HiveListQueryVariables>, 'query'>;
-
-    export const HiveListComponent = (props: HiveListComponentProps) => (
-      <ApolloReactComponents.Query<HiveListQuery, HiveListQueryVariables> query={HiveListDocument} {...props} />
-    );
-    
-export type HiveListProps<TChildProps = {}, TDataName extends string = 'data'> = {
-      [key in TDataName]: ApolloReactHoc.DataValue<HiveListQuery, HiveListQueryVariables>
-    } & TChildProps;
-export function withHiveList<TProps, TChildProps = {}, TDataName extends string = 'data'>(operationOptions?: ApolloReactHoc.OperationOption<
-  TProps,
-  HiveListQuery,
-  HiveListQueryVariables,
-  HiveListProps<TChildProps, TDataName>>) {
-    return ApolloReactHoc.withQuery<TProps, HiveListQuery, HiveListQueryVariables, HiveListProps<TChildProps, TDataName>>(HiveListDocument, {
-      alias: 'hiveList',
-      ...operationOptions
-    });
-};
 
 /**
  * __useHiveListQuery__
