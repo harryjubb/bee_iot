@@ -11,6 +11,7 @@ import {
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import HiveList from "./components/HiveList";
+import HiveDetail from "./components/HiveDetail";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,7 +42,7 @@ function App() {
             <Route exact path="/">
               <HiveList />
             </Route>
-            <Route path="/:hiveId">Hive</Route>
+            <Route path="/hive/:hiveUrlName" children={<HiveDetail />} />
           </Switch>
         </Router>
       </Container>

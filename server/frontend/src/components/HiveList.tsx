@@ -13,6 +13,7 @@ import {
   ListItemIcon,
   Button,
 } from "@material-ui/core";
+import { Link as RouterLink } from "react-router-dom";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
 
@@ -21,6 +22,7 @@ const HIVES = gql`
     allHives {
       id
       name
+      urlName
       sponsor {
         id
         name
@@ -115,7 +117,13 @@ export default function HiveList() {
                     ) : null
                   }
                 />
-                <Button variant="contained" color="default" size="small">
+                <Button
+                  component={RouterLink}
+                  to={`/hive/${hive.urlName}`}
+                  variant="contained"
+                  color="default"
+                  size="small"
+                >
                   View
                 </Button>
               </ListItem>
