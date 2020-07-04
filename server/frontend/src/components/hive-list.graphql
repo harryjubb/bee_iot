@@ -1,0 +1,13 @@
+query HiveList {
+  allHives {
+    id
+    name
+    urlName
+    sponsor {
+      id
+      name
+      logo
+      sponsorshipLevel
+    }
+  }
+}

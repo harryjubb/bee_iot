@@ -14,7 +14,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
     "apollo-boost": "^0.4.9",
-    "graphql": "^15.1.0",
+    "graphql": "^15.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
@@ -25,7 +25,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "graphql-codegen": "graphql-codegen --config graphql-codegen.yml"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -41,5 +42,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "1.16.0",
+    "@graphql-codegen/typescript": "1.16.0",
+    "@graphql-codegen/typescript-operations": "1.16.0",
+    "@graphql-codegen/typescript-react-apollo": "1.16.0",
+    "@graphql-codegen/fragment-matcher": "1.16.0",
+    "@graphql-codegen/introspection": "1.16.0"
   }
 }
