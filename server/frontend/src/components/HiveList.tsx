@@ -16,22 +16,7 @@ import {
 import { Link as RouterLink } from "react-router-dom";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
-
-const HIVES = gql`
-  query {
-    allHives {
-      id
-      name
-      urlName
-      sponsor {
-        id
-        name
-        logo
-        sponsorshipLevel
-      }
-    }
-  }
-`;
+import { useHiveListQuery } from "../generated/graphql";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -77,7 +62,7 @@ const hiveSortComparison = (hiveA: any, hiveB: any) =>
 export default function HiveList() {
   const classes = useStyles();
 
-  const { loading, error, data } = useQuery(HIVES);
+  const { loading, error, data } = useHiveListQuery();
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
@@ -86,7 +71,7 @@ export default function HiveList() {
     <>
       <Typography variant="h2">Hives</Typography>
       <List>
-        {data.allHives
+        {(data?.allHives ?? [])
           .sort(hiveSortComparison)
           .map((hive: any, index: number) => (
             <React.Fragment key={hive.id}>
@@ -128,7 +113,7 @@ export default function HiveList() {
                 </Button>
               </ListItem>
 
-              {index !== data.allHives.length - 1 ? (
+              {index !== data?.allHives?.length - 1 ? (
                 <Divider
                   // variant="inset"
                   component="li"
