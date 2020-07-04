@@ -15,7 +15,11 @@ class Hive(models.Model):
         unique=True,
         help_text="Unique hive ID: to match the same hive across other apiary services",
     )
+
     name = models.CharField(max_length=1024, help_text="Human-friendly hive name")
+    
+    url_name = models.CharField(max_length=1024, unique=True, help_text="Short name used for the hive's URL")
+
     active = models.BooleanField(
         help_text="Determines if any data or streaming should be collected from this hive"
     )
