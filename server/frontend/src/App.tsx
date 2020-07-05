@@ -7,9 +7,10 @@ import {
   AppBar,
   Typography,
   Toolbar,
+  Link,
 } from "@material-ui/core";
 
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import HiveList from "./components/HiveList";
 import HiveDetail from "./components/HiveDetail";
 
@@ -32,7 +33,9 @@ function App() {
       <AppBar position="sticky">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Centaurea Apiary
+            <Link color="inherit" href="/">
+              Centaurea Apiary
+            </Link>
           </Typography>
         </Toolbar>
       </AppBar>
