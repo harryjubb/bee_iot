@@ -10,12 +10,9 @@ import {
   createStyles,
   makeStyles,
   Theme,
-  ListItemIcon,
   Button,
 } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
-import { gql } from "apollo-boost";
-import { useQuery } from "@apollo/react-hooks";
 import { useHiveListQuery } from "../generated/graphql";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -55,7 +52,7 @@ const hiveSortComparison = (hiveA: any, hiveB: any) =>
   hiveSponsorshipLevelOrdering.indexOf(
     hiveA.sponsor?.sponsorshipLevel ?? null
   ) <=
-  hiveSponsorshipLevelOrdering.indexOf(hiveB.sponsor?.sponsorshipLevel ?? null)
+    hiveSponsorshipLevelOrdering.indexOf(hiveB.sponsor?.sponsorshipLevel ?? null)
     ? 1
     : -1;
 
