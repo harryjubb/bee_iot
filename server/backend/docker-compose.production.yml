@@ -2,11 +2,27 @@ version: "3.7"
 
 services:
 
+  apiary:
+    build: ./apps/apiary
+    env_file: .env
+    volumes:
+      - static:/static
+      - media:/media
+    entrypoint: 
+      - sh
+      - entrypoint.production.sh
+    depends_on:
+      - postgres
+    restart: always
+    ports:
+      - 8000:8000
+    networks:
+      - server_network
+
   nginx:
     image: linuxserver/letsencrypt
     depends_on:
       - rtmp_nginx
-    # container_name: nginx
     cap_add:
       - NET_ADMIN
     environment:

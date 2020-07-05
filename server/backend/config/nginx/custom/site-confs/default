@@ -28,8 +28,13 @@ server {
 
 	client_max_body_size 0;
 
+	location /hls {
+		proxy_pass http://rtmp_nginx:8080/hls;
+	}
+
 	location / {
-		try_files $uri $uri/ /index.html /index.php?$args =404;
+		# try_files $uri $uri/ /index.html /index.php?$args =404;
+		proxy_pass http://apiary:8000
 	}
 
 	location /test {
@@ -43,10 +48,6 @@ server {
 	# 	fastcgi_index index.php;
 	# 	include /etc/nginx/fastcgi_params;
 	# }
-
-	location /hls {
-		proxy_pass http://rtmp_nginx:8080/hls;
-	}
 
 }
 
