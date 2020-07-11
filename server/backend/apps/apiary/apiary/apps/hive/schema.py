@@ -8,6 +8,13 @@ class HiveType(DjangoObjectType):
     class Meta:
         model = Hive
 
+    stream_url = graphene.String(description="Absolute URL for this hive's HLS stream")
+
+    def resolve_stream_url(self, info):
+        if self.stream_key:
+            return info.context.build_absolute_uri(f"/hls/{self.stream_key}.m3u8")
+        return None
+
 
 class Query(object):
     all_hives = graphene.List(HiveType, description="Retrieve a list of all hives")
