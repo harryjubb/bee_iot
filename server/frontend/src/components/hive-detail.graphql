@@ -9,6 +9,7 @@ query HiveDetail($hiveUrlName: String) {
     sponsor {
       id
       name
+      url
       logo
       sponsorshipLevel
     }

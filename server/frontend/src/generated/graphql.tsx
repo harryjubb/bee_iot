@@ -63,6 +63,8 @@ export type OrganisationType = {
   logo?: Maybe<Scalars['String']>;
   /** Sponsorship level of the organisation */
   sponsorshipLevel?: Maybe<OrganisationSponsorshipLevel>;
+  /** URL of the organisation */
+  url?: Maybe<Scalars['String']>;
   /** Sponsoring organisation of this hive */
   hiveSet: Array<HiveType>;
 };
@@ -91,7 +93,7 @@ export type HiveDetailQuery = (
     & Pick<HiveType, 'id' | 'uid' | 'name' | 'urlName' | 'streamKey' | 'streamUrl'>
     & { sponsor?: Maybe<(
       { __typename?: 'OrganisationType' }
-      & Pick<OrganisationType, 'id' | 'name' | 'logo' | 'sponsorshipLevel'>
+      & Pick<OrganisationType, 'id' | 'name' | 'url' | 'logo' | 'sponsorshipLevel'>
     )> }
   )> }
 );
@@ -124,6 +126,7 @@ export const HiveDetailDocument = gql`
     sponsor {
       id
       name
+      url
       logo
       sponsorshipLevel
     }
