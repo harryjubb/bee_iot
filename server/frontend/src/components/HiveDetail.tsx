@@ -5,6 +5,7 @@ import { useHiveDetailQuery } from "../generated/graphql";
 import Link from "@material-ui/core/Link";
 // import ReactPlayer from "react-player/file";
 import ReactPlayer from "react-player";
+import RecordIcon from "./RecordIcon";
 
 export default function HiveDetail() {
   const { hiveUrlName } = useParams();
@@ -29,7 +30,13 @@ export default function HiveDetail() {
       <Typography variant="h2" gutterBottom>
         {data?.hive?.name}
       </Typography>
-      <ReactPlayer url={`/hls/${data?.hive?.streamKey ?? "notfound"}.m3u8`} />
+      <Typography variant="h4" gutterBottom>
+        <RecordIcon /> Live
+      </Typography>
+      {
+        data?.hive?.streamUrl ? <ReactPlayer url={data.hive.streamUrl} /> : <div>No stream available for this hive.</div>
+      }
+
     </>
   );
 }
