@@ -10,7 +10,7 @@ export default function HiveDetail() {
   const { hiveUrlName } = useParams();
   const { loading, error, data } = useHiveDetailQuery({
     variables: {
-      hiveUrlName: hiveUrlName,
+      hiveUrlName,
     },
   });
 
