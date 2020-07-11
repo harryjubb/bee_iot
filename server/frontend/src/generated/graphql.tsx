@@ -49,6 +49,8 @@ export type HiveType = {
   streamKey?: Maybe<Scalars['String']>;
   /** Determines if this hive's stream should be viewable */
   streamActive: Scalars['Boolean'];
+  /** Absolute URL for this hive's HLS stream */
+  streamUrl?: Maybe<Scalars['String']>;
 };
 
 
@@ -86,7 +88,7 @@ export type HiveDetailQuery = (
   { __typename?: 'Query' }
   & { hive?: Maybe<(
     { __typename?: 'HiveType' }
-    & Pick<HiveType, 'id' | 'uid' | 'name' | 'urlName' | 'streamKey'>
+    & Pick<HiveType, 'id' | 'uid' | 'name' | 'urlName' | 'streamKey' | 'streamUrl'>
     & { sponsor?: Maybe<(
       { __typename?: 'OrganisationType' }
       & Pick<OrganisationType, 'id' | 'name' | 'logo' | 'sponsorshipLevel'>
@@ -118,6 +120,7 @@ export const HiveDetailDocument = gql`
     name
     urlName
     streamKey
+    streamUrl
     sponsor {
       id
       name

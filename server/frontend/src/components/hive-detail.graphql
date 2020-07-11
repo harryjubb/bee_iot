@@ -5,6 +5,7 @@ query HiveDetail($hiveUrlName: String) {
     name
     urlName
     streamKey
+    streamUrl
     sponsor {
       id
       name
