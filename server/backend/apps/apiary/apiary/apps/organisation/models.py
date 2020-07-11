@@ -33,5 +33,9 @@ class Organisation(models.Model):
         help_text="Sponsorship level of the organisation",
     )
 
+    url = models.CharField(
+        max_length=2048, null=True, blank=True, help_text="URL of the organisation"
+    )
+
     def __str__(self):
         return f"{self.name} ({self.sponsorship_level or '(Non-sponsor)'})"
