@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Typography, Breadcrumbs, Button } from "@material-ui/core";
 import { useHiveDetailQuery } from "../generated/graphql";
@@ -10,6 +10,10 @@ import RecordIcon from "./RecordIcon";
 
 export default function HiveDetail() {
   const { hiveSlug } = useParams();
+
+  const [streamLoading, setStreamLoading] = useState(true)
+  const [streamError, setStreamError] = useState(false)
+
   const { loading, error, data } = useHiveDetailQuery({
     variables: {
       hiveSlug,
@@ -50,13 +54,29 @@ export default function HiveDetail() {
           : null
       }
 
-      <Typography variant="h4" gutterBottom>
-        <RecordIcon /> Live
-      </Typography>
       {
-        hive?.streamUrl ? <ReactPlayer url={hive.streamUrl} /> : <div>No stream available for this hive.</div>
+        hive?.streamUrl ? <>
+          <Typography variant="h4" gutterBottom>
+            <RecordIcon /> Live stream
+        </Typography>
+          {
+            streamLoading ? <Typography variant="body1">Stream loading</Typography> : <></>
+          }
+          {
+            streamError ? <Typography variant="body1">Error loading live stream</Typography> : <></>
+          }
+          {
+            hive?.streamUrl && !streamError ? <ReactPlayer
+              url={hive.streamUrl}
+              onReady={() => setStreamLoading(false)}
+              onError={() => {
+                setStreamLoading(false)
+                setStreamError(true)
+              }}
+            /> : <></>
+          }</>
+          : <></>
       }
-
     </>
   );
 }
