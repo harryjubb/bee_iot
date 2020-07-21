@@ -31,7 +31,7 @@ export default function HiveDetail() {
         </Link>
         <Typography color="textPrimary">{hive?.name} Hive</Typography>
       </Breadcrumbs>
-      <Typography variant="h2" gutterBottom>
+      <Typography variant="h2">
         {hive?.name}
       </Typography>
 
