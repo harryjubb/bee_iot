@@ -17,11 +17,15 @@ class Hive(models.Model):
     )
 
     name = models.CharField(max_length=1024, help_text="Human-friendly hive name")
-    
-    url_name = models.CharField(max_length=1024, unique=True, help_text="Short name used for the hive's URL")
+
+    slug = models.CharField(
+        max_length=1024,
+        unique=True,
+        help_text="Short human and URL-friendly name used for the hive's URL",
+    )
 
     active = models.BooleanField(
-        help_text="Determines if any data or streaming should be collected from this hive"
+        help_text="Determines if this hive should be accessible publicly"
     )
 
     # TODO: Basic location information
@@ -40,7 +44,7 @@ class Hive(models.Model):
         max_length=1024, help_text="AV stream name for this hive", null=True, blank=True
     )
     stream_active = models.BooleanField(
-        help_text="Determines if this hive's stream should be viewable"
+        help_text="Determines if this hive's stream should be accessible publicly"
     )
 
     def __str__(self):

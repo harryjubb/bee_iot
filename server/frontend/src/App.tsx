@@ -45,7 +45,7 @@ function App() {
             <Route exact path="/">
               <HiveList />
             </Route>
-            <Route path="/hive/:hiveUrlName" children={<HiveDetail />} />
+            <Route path="/hive/:hiveSlug" children={<HiveDetail />} />
           </Switch>
         </Router>
       </Container>

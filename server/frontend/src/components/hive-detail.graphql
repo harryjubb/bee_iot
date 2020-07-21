@@ -1,9 +1,9 @@
-query HiveDetail($hiveUrlName: String) {
-  hive(hiveUrlName: $hiveUrlName) {
+query HiveDetail($hiveSlug: String) {
+  hive(hiveSlug: $hiveSlug) {
     id
     uid
     name
-    urlName
+    slug
     streamKey
     streamUrl
     sponsor {

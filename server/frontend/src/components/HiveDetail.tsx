@@ -9,10 +9,10 @@ import ReactPlayer from "react-player";
 import RecordIcon from "./RecordIcon";
 
 export default function HiveDetail() {
-  const { hiveUrlName } = useParams();
+  const { hiveSlug } = useParams();
   const { loading, error, data } = useHiveDetailQuery({
     variables: {
-      hiveUrlName,
+      hiveSlug,
     },
   });
 

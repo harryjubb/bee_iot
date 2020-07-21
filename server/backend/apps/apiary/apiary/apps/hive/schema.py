@@ -24,21 +24,19 @@ class Query(object):
         hive_uid=graphene.String(
             description="External (shared between services) unique ID of the hive"
         ),
-        hive_url_name=graphene.String(description="Unique URL identifier of the hive"),
+        hive_slug=graphene.String(description="Unique URL identifier of the hive"),
         description="Retrieve a single hive by an identifier. One and only one kind of identifier must be specified",
     )
 
     def resolve_all_hives(self, info, **kwargs):
         return Hive.objects.all()
 
-    def resolve_hive(
-        self, info, hive_id=None, hive_uid=None, hive_url_name=None, **kwargs
-    ):
+    def resolve_hive(self, info, hive_id=None, hive_uid=None, hive_slug=None, **kwargs):
         if (
             len(
                 [
                     identifier
-                    for identifier in [hive_id, hive_uid, hive_url_name]
+                    for identifier in [hive_id, hive_uid, hive_slug]
                     if identifier
                 ]
             )
@@ -52,5 +50,5 @@ class Query(object):
         if hive_uid:
             return Hive.objects.get(uid=hive_uid)
 
-        if hive_url_name:
-            return Hive.objects.get(url_name=hive_url_name)
+        if hive_slug:
+            return Hive.objects.get(slug=hive_slug)

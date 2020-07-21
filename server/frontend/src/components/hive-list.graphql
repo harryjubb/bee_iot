@@ -2,7 +2,7 @@ query HiveList {
   allHives {
     id
     name
-    urlName
+    slug
     sponsor {
       id
       name

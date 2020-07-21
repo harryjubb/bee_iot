@@ -29,7 +29,7 @@ export type Query = {
 export type QueryHiveArgs = {
   hiveId?: Maybe<Scalars['String']>;
   hiveUid?: Maybe<Scalars['String']>;
-  hiveUrlName?: Maybe<Scalars['String']>;
+  hiveSlug?: Maybe<Scalars['String']>;
 };
 
 export type HiveType = {
@@ -39,15 +39,15 @@ export type HiveType = {
   uid: Scalars['String'];
   /** Human-friendly hive name */
   name: Scalars['String'];
-  /** Short name used for the hive's URL */
-  urlName: Scalars['String'];
-  /** Determines if any data or streaming should be collected from this hive */
+  /** Short human and URL-friendly name used for the hive's URL */
+  slug: Scalars['String'];
+  /** Determines if this hive should be accessible publicly */
   active: Scalars['Boolean'];
   /** Sponsoring organisation of this hive */
   sponsor?: Maybe<OrganisationType>;
   /** AV stream name for this hive */
   streamKey?: Maybe<Scalars['String']>;
-  /** Determines if this hive's stream should be viewable */
+  /** Determines if this hive's stream should be accessible publicly */
   streamActive: Scalars['Boolean'];
   /** Absolute URL for this hive's HLS stream */
   streamUrl?: Maybe<Scalars['String']>;
@@ -82,7 +82,7 @@ export enum OrganisationSponsorshipLevel {
 }
 
 export type HiveDetailQueryVariables = Exact<{
-  hiveUrlName?: Maybe<Scalars['String']>;
+  hiveSlug?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -90,7 +90,7 @@ export type HiveDetailQuery = (
   { __typename?: 'Query' }
   & { hive?: Maybe<(
     { __typename?: 'HiveType' }
-    & Pick<HiveType, 'id' | 'uid' | 'name' | 'urlName' | 'streamKey' | 'streamUrl'>
+    & Pick<HiveType, 'id' | 'uid' | 'name' | 'slug' | 'streamKey' | 'streamUrl'>
     & { sponsor?: Maybe<(
       { __typename?: 'OrganisationType' }
       & Pick<OrganisationType, 'id' | 'name' | 'url' | 'logo' | 'sponsorshipLevel'>
@@ -105,7 +105,7 @@ export type HiveListQuery = (
   { __typename?: 'Query' }
   & { allHives?: Maybe<Array<Maybe<(
     { __typename?: 'HiveType' }
-    & Pick<HiveType, 'id' | 'name' | 'urlName'>
+    & Pick<HiveType, 'id' | 'name' | 'slug'>
     & { sponsor?: Maybe<(
       { __typename?: 'OrganisationType' }
       & Pick<OrganisationType, 'id' | 'name' | 'logo' | 'sponsorshipLevel'>
@@ -115,12 +115,12 @@ export type HiveListQuery = (
 
 
 export const HiveDetailDocument = gql`
-    query HiveDetail($hiveUrlName: String) {
-  hive(hiveUrlName: $hiveUrlName) {
+    query HiveDetail($hiveSlug: String) {
+  hive(hiveSlug: $hiveSlug) {
     id
     uid
     name
-    urlName
+    slug
     streamKey
     streamUrl
     sponsor {
@@ -146,7 +146,7 @@ export const HiveDetailDocument = gql`
  * @example
  * const { data, loading, error } = useHiveDetailQuery({
  *   variables: {
- *      hiveUrlName: // value for 'hiveUrlName'
+ *      hiveSlug: // value for 'hiveSlug'
  *   },
  * });
  */
@@ -164,7 +164,7 @@ export const HiveListDocument = gql`
   allHives {
     id
     name
-    urlName
+    slug
     sponsor {
       id
       name

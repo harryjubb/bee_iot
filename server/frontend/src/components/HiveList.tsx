@@ -101,7 +101,7 @@ export default function HiveList() {
                 />
                 <Button
                   component={RouterLink}
-                  to={`/hive/${hive.urlName}`}
+                  to={`/hive/${hive.slug}`}
                   variant="contained"
                   color="default"
                   size="small"

@@ -1,6 +1,5 @@
 {
     "python.formatting.provider": "black",
-    "python.pythonPath": "/usr/local/bin/python",
     "python.autoComplete.extraPaths": [
         "/app",
         "/workspace/server/backend/apps/apiary",
