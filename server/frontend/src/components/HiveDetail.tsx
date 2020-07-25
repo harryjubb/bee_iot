@@ -68,7 +68,14 @@ export default function HiveDetail() {
           {
             hive?.streamUrl && !streamError ? <ReactPlayer
               url={hive.streamUrl}
-              onReady={() => setStreamLoading(false)}
+              playing={false}
+              controls={true}
+              config={{ 
+                file: {
+                  forceHLS: true
+                }
+              }}
+              onReady={() => {setStreamLoading(false)}}
               onError={() => {
                 setStreamLoading(false)
                 setStreamError(true)
