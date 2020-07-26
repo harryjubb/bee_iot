@@ -12,4 +12,4 @@ ln -sfn /shm/hooks /picam/hooks
 ln -sfn /shm/state /picam/state
 ln -sfn /shm/hls /picam/hls
 
-./picam --samplerate 44100 --channels 1 --audiobitrate 96000 --videobitrate 4000000 --vfr --avclevel 3.1 --autoex --time --alsadev $ALSA_DEVICE -c $AUDIO_CHANNELS --tcpout tcp://av_streaming_ffmpeg:8181  
+./picam --autoex --time --alsadev $ALSA_DEVICE -c $AUDIO_CHANNELS --tcpout tcp://av_streaming_ffmpeg:8181  
