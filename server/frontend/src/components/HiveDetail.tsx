@@ -42,7 +42,7 @@ export default function HiveDetail() {
       {/* Sponsor link */}
       {
         sponsor ? <div>
-          <Typography variant="body1">This hive is kindly sponsored by {sponsor.name}. {
+          <Typography variant="body1">This hive is kindly sponsored{sponsor.sponsorshipLevel ? ` at ${sponsor.sponsorshipLevel} level` : ''} by {sponsor.name}. {
             sponsor.url ?
               <Button color="primary" variant="outlined" href={sponsor.url} target="_blank" rel="noopener">
                 <LinkIcon />&nbsp;Visit sponsor
