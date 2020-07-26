@@ -12,4 +12,4 @@ ln -sfn /shm/hooks /picam/hooks
 ln -sfn /shm/state /picam/state
 ln -sfn /shm/hls /picam/hls
 
-./picam --alsadev $ALSA_DEVICE -c $AUDIO_CHANNELS --tcpout tcp://av_streaming_ffmpeg:8181
+./picam --autoex --alsadev $ALSA_DEVICE -c $AUDIO_CHANNELS --tcpout tcp://av_streaming_ffmpeg:8181  
