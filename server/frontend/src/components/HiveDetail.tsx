@@ -68,9 +68,9 @@ export default function HiveDetail() {
           {
             hive?.streamUrl && !streamError ? <ReactPlayer
               url={hive.streamUrl}
-              playing={true}
+              playing={false}
               volume={1}
-              muted={true}
+              muted={false}
               controls={true}
               config={{
                 file: {
