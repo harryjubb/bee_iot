@@ -13,38 +13,9 @@ import {
   Button,
 } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
-import { useHiveListQuery } from "../generated/graphql";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    bronze: {
-      color: "#cd7f32",
-    },
-    silver: {
-      color: "#999999",
-    },
-    gold: {
-      color: "#ccac00",
-    },
-    platinum: {
-      color: "#697998",
-    },
-    hiveListItem: {
-      display: "flex",
-    },
-    hiveName: {
-      flexGrow: 1,
-    },
-    logoAvatar: {
-      width: theme.spacing(6),
-      height: theme.spacing(6),
-      marginRight: theme.spacing(2),
-    },
-    logoAvatarImg: {
-      objectFit: "contain",
-    },
-  })
-);
+import { useHiveListQuery, HiveType, HiveListQuery } from "../generated/graphql";
+import { hiveStyles } from "./HiveStyles";
+import HiveAvatar from "./HiveAvatar";
 
 const hiveSponsorshipLevelOrdering = ["BRONZE", "SILVER", "GOLD", "PLATINUM"];
 
@@ -57,7 +28,7 @@ const hiveSortComparison = (hiveA: any, hiveB: any) =>
     : -1;
 
 export default function HiveList() {
-  const classes = useStyles();
+  const classes = hiveStyles();
 
   const { loading, error, data } = useHiveListQuery();
 
@@ -70,38 +41,33 @@ export default function HiveList() {
       <List>
         {(data?.allHives ?? [])
           .sort(hiveSortComparison)
-          .map((hive: any, index: number) => (
-            <React.Fragment key={hive.id}>
+          .map((hive, index: number) => (
+            <React.Fragment key={hive?.id}>
               <ListItem className={classes.hiveListItem}>
                 <ListItemAvatar>
-                  <Avatar
-                    className={classes.logoAvatar}
-                    classes={{ img: classes.logoAvatarImg }}
-                    alt={hive.sponsor?.name ?? "🐝"}
-                    src={hive.sponsor?.logo}
-                  />
+                  <HiveAvatar hive={hive} />
                 </ListItemAvatar>
                 <ListItemText
                   className={classes.hiveName}
                   disableTypography
-                  primary={<Typography variant="body1">{hive.name}</Typography>}
+                  primary={<Typography variant="body1">{hive?.name}</Typography>}
                   secondary={
-                    hive.sponsor?.sponsorshipLevel ? (
+                    hive?.sponsor?.sponsorshipLevel ? (
                       <Typography
                         variant="overline"
                         className={
                           // @ts-ignore
-                          classes[hive.sponsor?.sponsorshipLevel?.toLowerCase()]
+                          classes[hive?.sponsor?.sponsorshipLevel?.toLowerCase()]
                         }
                       >
-                        {hive.sponsor?.sponsorshipLevel} Sponsor
+                        {hive?.sponsor?.sponsorshipLevel} Sponsor
                       </Typography>
                     ) : null
                   }
                 />
                 <Button
                   component={RouterLink}
-                  to={`/hive/${hive.slug}`}
+                  to={`/hive/${hive?.slug}`}
                   variant="contained"
                   color="default"
                   size="small"

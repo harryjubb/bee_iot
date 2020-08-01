@@ -1,14 +1,19 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Typography, Breadcrumbs, Button } from "@material-ui/core";
+import { Typography, Breadcrumbs, Button, Avatar } from "@material-ui/core";
 import { useHiveDetailQuery } from "../generated/graphql";
 import Link from "@material-ui/core/Link";
 import LinkIcon from '@material-ui/icons/Link';
 // import ReactPlayer from "react-player/file";
 import ReactPlayer from "react-player";
 import RecordIcon from "./RecordIcon";
+import { hiveStyles } from "./HiveStyles";
+import HiveAvatar from "./HiveAvatar";
+
 
 export default function HiveDetail() {
+  const classes = hiveStyles();
+
   const { hiveSlug } = useParams();
 
   const [streamLoading, setStreamLoading] = useState(true)
@@ -36,6 +41,7 @@ export default function HiveDetail() {
         <Typography color="textPrimary">{hive?.name} Hive</Typography>
       </Breadcrumbs>
       <Typography variant="h2">
+        <HiveAvatar hive={hive} />
         {hive?.name}
       </Typography>
 
