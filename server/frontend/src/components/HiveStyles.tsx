@@ -1,19 +1,4 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core";
-import { OrganisationSponsorshipLevel } from "../generated/graphql";
-
-interface SponsorshipMap {
-    [OrganisationSponsorshipLevel.Bronze]: 'bronze';
-    [OrganisationSponsorshipLevel.Silver]: 'silver';
-    [OrganisationSponsorshipLevel.Gold]: 'gold';
-    [OrganisationSponsorshipLevel.Platinum]: 'platinum';
-}
-
-export const sponsorshipMap: SponsorshipMap = {
-    [OrganisationSponsorshipLevel.Bronze]: 'bronze',
-    [OrganisationSponsorshipLevel.Silver]: 'silver',
-    [OrganisationSponsorshipLevel.Gold]: 'gold',
-    [OrganisationSponsorshipLevel.Platinum]: 'platinum',
-}
 
 export const hiveStyles = makeStyles((theme: Theme) =>
     createStyles({

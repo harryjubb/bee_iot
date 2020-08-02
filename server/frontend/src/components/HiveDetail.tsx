@@ -11,6 +11,7 @@ import RecordIcon from "./RecordIcon";
 import { hiveStyles } from "./HiveStyles";
 import HiveAvatar from "./HiveAvatar";
 import SponsorshipIcon from "./SponsorshipIcon";
+import { sponsorshipMap, sponsorshipLevelClassName } from "./sponsorship";
 
 
 export default function HiveDetail() {
@@ -33,6 +34,10 @@ export default function HiveDetail() {
   const hive = data?.hive ?? null
   const sponsor = hive?.sponsor ?? null
 
+  const sponsorshipLevel = sponsor?.sponsorshipLevel ? <>
+    {upperFirst(sponsor.sponsorshipLevel.toLowerCase())} <SponsorshipIcon sponsorshipLevel={sponsor.sponsorshipLevel} />
+  </> : null
+
   return (
     <>
       <Breadcrumbs aria-label="breadcrumb">
@@ -46,25 +51,24 @@ export default function HiveDetail() {
         <Typography variant="h2">
           {hive?.name}
         </Typography>
-
-        {
-          sponsor ? <div>
-            <SponsorshipIcon sponsorshipLevel={sponsor.sponsorshipLevel} />
-          </div> : <></>
-        }
-
       </div>
 
-      {/* Sponsor link */}
+      {/* Sponsor description */}
       {
         sponsor ? <div>
-          <Typography variant="body1">This hive is kindly sponsored{sponsor.sponsorshipLevel ? ` at ${upperFirst(sponsor.sponsorshipLevel.toLowerCase())} level` : ''} by {sponsor.name}. {
-            sponsor.url ?
-              <Button color="primary" variant="outlined" href={sponsor.url} target="_blank" rel="noopener">
-                <LinkIcon />&nbsp;Visit sponsor
-              </Button>
-              : null
-          }
+          <Typography variant="body1" style={{ display: 'flex', alignItems: 'center' }}>This hive is kindly sponsored {
+            sponsor.sponsorshipLevel ?
+              <>at {sponsorshipLevel} level</> :
+              ''
+          } by {sponsor.name}. {
+              sponsor.url ?
+                <>&nbsp;
+                <Button color="primary" variant="outlined" href={sponsor.url} target="_blank" rel="noopener">
+                    <LinkIcon />&nbsp;Visit {sponsor.name}
+                  </Button>
+                </>
+                : null
+            }
           </Typography>
         </div>
           : null
