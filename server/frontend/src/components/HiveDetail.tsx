@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Typography, Breadcrumbs, Button, Avatar } from "@material-ui/core";
+import { Typography, Breadcrumbs, Button, Avatar, Box } from "@material-ui/core";
 import { useHiveDetailQuery } from "../generated/graphql";
+import { upperFirst } from 'lodash'
 import Link from "@material-ui/core/Link";
 import LinkIcon from '@material-ui/icons/Link';
 // import ReactPlayer from "react-player/file";
@@ -9,6 +10,7 @@ import ReactPlayer from "react-player";
 import RecordIcon from "./RecordIcon";
 import { hiveStyles } from "./HiveStyles";
 import HiveAvatar from "./HiveAvatar";
+import SponsorshipIcon from "./SponsorshipIcon";
 
 
 export default function HiveDetail() {
@@ -40,15 +42,24 @@ export default function HiveDetail() {
         </Link>
         <Typography color="textPrimary">{hive?.name} Hive</Typography>
       </Breadcrumbs>
-      <Typography variant="h2">
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <HiveAvatar hive={hive} />
-        {hive?.name}
-      </Typography>
+        <Typography variant="h2">
+          {hive?.name}
+        </Typography>
+
+        {
+          sponsor ? <div>
+            <SponsorshipIcon sponsorshipLevel={sponsor.sponsorshipLevel} />
+          </div> : <></>
+        }
+
+      </div>
 
       {/* Sponsor link */}
       {
         sponsor ? <div>
-          <Typography variant="body1">This hive is kindly sponsored{sponsor.sponsorshipLevel ? ` at ${sponsor.sponsorshipLevel} level` : ''} by {sponsor.name}. {
+          <Typography variant="body1">This hive is kindly sponsored{sponsor.sponsorshipLevel ? ` at ${upperFirst(sponsor.sponsorshipLevel.toLowerCase())} level` : ''} by {sponsor.name}. {
             sponsor.url ?
               <Button color="primary" variant="outlined" href={sponsor.url} target="_blank" rel="noopener">
                 <LinkIcon />&nbsp;Visit sponsor
