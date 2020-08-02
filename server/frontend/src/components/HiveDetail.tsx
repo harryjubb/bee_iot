@@ -35,7 +35,6 @@ export default function HiveDetail() {
 
   return (
     <>
-      {/* TODO: Breadcrumbs, logo avatar, sponsorship text */}
       <Breadcrumbs aria-label="breadcrumb">
         <Link color="inherit" href="/">
           Apiary
