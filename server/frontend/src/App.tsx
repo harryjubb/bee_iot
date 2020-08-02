@@ -8,11 +8,13 @@ import {
   Typography,
   Toolbar,
   Link,
+  Button,
 } from "@material-ui/core";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import HiveList from "./components/HiveList";
 import HiveDetail from "./components/HiveDetail";
+import SponsorshipIcon from "./components/SponsorshipIcon";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,6 +39,23 @@ function App() {
               Centaurea Apiary
             </Link>
           </Typography>
+          <Link
+            href={process.env.REACT_APP_APIARY_SPONSORSHIP_LINK}
+            target="_blank"
+            rel="noopener"
+            color="inherit"
+          >
+            <Button
+              color="inherit"
+              variant="outlined"
+              style={{
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              <SponsorshipIcon />&nbsp;Sponsor a hive
+            </Button>
+          </Link>
         </Toolbar>
       </AppBar>
       <Container className={classes.container}>

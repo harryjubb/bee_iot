@@ -4,7 +4,7 @@ import { hiveStyles } from './HiveStyles'
 import { SponsorshipLevel, sponsorshipLevelClassName } from './sponsorship'
 
 type SponsorshipIconProps = {
-    sponsorshipLevel: SponsorshipLevel
+    sponsorshipLevel?: SponsorshipLevel
 }
 
 

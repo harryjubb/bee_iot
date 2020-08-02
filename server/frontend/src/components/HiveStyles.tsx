@@ -3,7 +3,7 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core";
 export const hiveStyles = makeStyles((theme: Theme) =>
     createStyles({
         nonSponsor: {
-            color: "#000"
+            color: "inherit"
         },
         bronze: {
             color: "#cd7f32",
