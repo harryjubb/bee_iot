@@ -60,7 +60,7 @@ export default function HiveList() {
                           classes[hive?.sponsor?.sponsorshipLevel?.toLowerCase()]
                         }
                       >
-                        {hive?.sponsor?.sponsorshipLevel} Sponsor
+                        {hive?.sponsor?.sponsorshipLevel} Sponsored
                       </Typography>
                     ) : null
                   }
