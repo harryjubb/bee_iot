@@ -1,10 +1,10 @@
 import React from "react"
 import { hiveStyles } from "./HiveStyles";
-import { HiveType } from "../generated/graphql";
 import { Avatar } from "@material-ui/core";
 
-type HiveAvatarProps = {
-    hive: RecursivePartial<HiveType> | null | undefined
+interface HiveAvatarProps {
+    name?: string | null;
+    logo?: string | null;
 }
 
 export default function HiveAvatar(props: HiveAvatarProps) {
@@ -13,7 +13,7 @@ export default function HiveAvatar(props: HiveAvatarProps) {
     return <Avatar
         className={classes.logoAvatar}
         classes={{ img: classes.logoAvatarImg }}
-        alt={props.hive?.sponsor?.name ?? '🐝'}
-        src={props.hive?.sponsor?.logo ?? ''}
+        alt={props.name ?? '🐝'}
+        src={props.logo ?? ''}
     />
 }

@@ -45,7 +45,7 @@ export default function HiveList() {
             <React.Fragment key={hive?.id}>
               <ListItem className={classes.hiveListItem}>
                 <ListItemAvatar>
-                  <HiveAvatar hive={hive} />
+                  <HiveAvatar name={hive?.sponsor?.name} logo={hive?.sponsor?.logo} />
                 </ListItemAvatar>
                 <ListItemText
                   className={classes.hiveName}

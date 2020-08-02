@@ -43,7 +43,7 @@ export default function HiveDetail() {
         <Typography color="textPrimary">{hive?.name} Hive</Typography>
       </Breadcrumbs>
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <HiveAvatar hive={hive} />
+        <HiveAvatar name={hive?.sponsor?.name} logo={hive?.sponsor?.logo} />
         <Typography variant="h2">
           {hive?.name}
         </Typography>
