@@ -5,15 +5,11 @@ import {
   ListItem,
   ListItemText,
   Divider,
-  Avatar,
   ListItemAvatar,
-  createStyles,
-  makeStyles,
-  Theme,
   Button,
 } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
-import { useHiveListQuery, HiveType, HiveListQuery } from "../generated/graphql";
+import { useHiveListQuery } from "../generated/graphql";
 import { hiveStyles } from "./HiveStyles";
 import HiveAvatar from "./HiveAvatar";
 
