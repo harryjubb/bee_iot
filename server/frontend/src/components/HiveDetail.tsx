@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import { isMobile } from "react-device-detect";
 import {
   Typography,
   Breadcrumbs,
@@ -118,10 +119,10 @@ export default function HiveDetail() {
               <ReactPlayer
                 className={classes.player}
                 url={streamUrl}
-                light={true}
+                light={!isMobile}
                 width="100%"
                 height="100%"
-                playing
+                playing={!isMobile}
                 volume={1}
                 muted={false}
                 controls={true}

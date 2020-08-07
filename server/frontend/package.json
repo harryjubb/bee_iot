@@ -18,6 +18,7 @@
     "graphql": "^15.2.0",
     "lodash": "^4.17.19",
     "react": "^16.13.1",
+    "react-device-detect": "^1.13.1",
     "react-dom": "^16.13.1",
     "react-player": "^2.5.0",
     "react-router-dom": "^5.2.0",
