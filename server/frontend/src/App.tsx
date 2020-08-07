@@ -40,7 +40,7 @@ function App() {
             </Link>
           </Typography>
           <Link
-            href={process.env.REACT_APP_APIARY_SPONSORSHIP_LINK}
+            href={process.env.REACT_APP_APIARY_SPONSORSHIP_URL}
             target="_blank"
             rel="noopener"
             color="inherit"

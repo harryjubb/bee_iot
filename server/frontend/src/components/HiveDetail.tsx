@@ -1,21 +1,35 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Typography, Breadcrumbs, Button } from "@material-ui/core";
+import { Typography, Breadcrumbs, Button, makeStyles, Theme, createStyles } from "@material-ui/core";
 import { useHiveDetailQuery } from "../generated/graphql";
-import { upperFirst } from 'lodash'
+import { upperFirst } from "lodash";
 import Link from "@material-ui/core/Link";
-import LinkIcon from '@material-ui/icons/Link';
-// import ReactPlayer from "react-player/file";
+import LinkIcon from "@material-ui/icons/Link";
 import ReactPlayer from "react-player";
 import RecordIcon from "./RecordIcon";
 import HiveAvatar from "./HiveAvatar";
 import SponsorshipIcon from "./SponsorshipIcon";
 
+const useStyles = makeStyles((theme: Theme) => 
+  createStyles({
+    player: {
+      backgroundColor: '#000',
+      position: 'absolute',
+      top: 0,
+      left: 0
+    },
+    playerWrapper: {
+      position: 'relative',
+      paddingTop: '56.25%' /* Player ratio: 100 / (1280 / 720) */
+    }
+  })
+)
+
 export default function HiveDetail() {
+  const classes = useStyles()
   const { hiveSlug } = useParams();
 
-  const [streamLoading, setStreamLoading] = useState(true)
-  const [streamError, setStreamError] = useState(false)
+  const [streamError, setStreamError] = useState(false);
 
   const { loading, error, data } = useHiveDetailQuery({
     variables: {
@@ -26,12 +40,19 @@ export default function HiveDetail() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  const hive = data?.hive ?? null
-  const sponsor = hive?.sponsor ?? null
+  const hive = data?.hive ?? null;
+  const sponsor = hive?.sponsor ?? null;
+  const streamUrl =
+    process.env.NODE_ENV === "development"
+      ? process.env.REACT_APP_APIARY_DEVELOPMENT_STREAM_URL
+      : hive?.streamUrl ?? null;
 
-  const sponsorshipLevel = sponsor?.sponsorshipLevel ? <>
-    {upperFirst(sponsor.sponsorshipLevel.toLowerCase())} <SponsorshipIcon sponsorshipLevel={sponsor.sponsorshipLevel} />
-  </> : null
+  const sponsorshipLevel = sponsor?.sponsorshipLevel ? (
+    <>
+      {upperFirst(sponsor.sponsorshipLevel.toLowerCase())}{" "}
+      <SponsorshipIcon sponsorshipLevel={sponsor.sponsorshipLevel} />
+    </>
+  ) : null;
 
   return (
     <>
@@ -41,66 +62,80 @@ export default function HiveDetail() {
         </Link>
         <Typography color="textPrimary">{hive?.name} Hive</Typography>
       </Breadcrumbs>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <HiveAvatar name={hive?.sponsor?.name} logo={hive?.sponsor?.logo} />
-        <Typography variant="h2">
-          {hive?.name}
-        </Typography>
+        <Typography variant="h2">{hive?.name}</Typography>
       </div>
 
       {/* Sponsor description */}
-      {
-        sponsor ? <div>
-          <Typography variant="body1" style={{ display: 'flex', alignItems: 'center' }}>This hive is kindly sponsored {
-            sponsor.sponsorshipLevel ?
-              <>at {sponsorshipLevel} level</> :
-              ''
-          } by {sponsor.name}. {
-              sponsor.url ?
-                <>&nbsp;
-                <Button color="primary" variant="outlined" href={sponsor.url} target="_blank" rel="noopener">
-                    <LinkIcon />&nbsp;Visit {sponsor.name}
-                  </Button>
-                </>
-                : null
-            }
+      {sponsor ? (
+        <div>
+          <Typography
+            variant="body1"
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            This hive is kindly sponsored{" "}
+            {sponsor.sponsorshipLevel ? <>at {sponsorshipLevel} level </> : ""}{" "}
+            by {sponsor.name}.{" "}
+            {sponsor.url ? (
+              <>
+                &nbsp;
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  href={sponsor.url}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <LinkIcon />
+                  &nbsp;Visit {sponsor.name}
+                </Button>
+              </>
+            ) : null}
           </Typography>
         </div>
-          : null
-      }
+      ) : null}
 
-      {
-        hive?.streamUrl ? <>
+      {streamUrl ? (
+        <>
           <Typography variant="h4" gutterBottom>
             <RecordIcon /> Live stream
-        </Typography>
-          {
-            streamLoading ? <Typography variant="body1">Stream loading</Typography> : <></>
-          }
-          {
-            streamError ? <Typography variant="body1">Error loading live stream</Typography> : <></>
-          }
-          {
-            hive?.streamUrl && !streamError ? <ReactPlayer
-              url={hive.streamUrl}
-              playing={false}
-              volume={1}
-              muted={false}
-              controls={true}
-              config={{
-                file: {
-                  forceHLS: true
-                }
-              }}
-              onReady={() => { setStreamLoading(false) }}
-              onError={() => {
-                setStreamLoading(false)
-                setStreamError(true)
-              }}
-            /> : <></>
-          }</>
-          : <></>
-      }
+          </Typography>
+          {streamError ? (
+            <Typography variant="body1">Error loading live stream</Typography>
+          ) : (
+            <></>
+          )}
+          {streamUrl && !streamError ? (
+            <div className={classes.playerWrapper}>
+              <ReactPlayer
+                className={classes.player}
+                url={streamUrl}
+                light={true}
+                width="100%"
+                height="100%"
+                playing={true}
+                volume={1}
+                muted={false}
+                controls={true}
+                config={{
+                  file: {
+                    forceHLS: true,
+                  },
+                }}
+
+                onError={() => {
+                  setStreamError(true);
+                }}
+              />
+            </div>
+          ) : (
+            <></>
+          )}
+        </>
+      ) : (
+        <></>
+      )}
     </>
   );
 }

@@ -53,6 +53,6 @@
     "@graphql-codegen/typescript": "1.16.0",
     "@graphql-codegen/typescript-operations": "1.16.0",
     "@graphql-codegen/typescript-react-apollo": "1.16.0",
-    "@types/lodash": "^4.14.158"
+    "@types/lodash": "^4.14.159"
   }
 }
