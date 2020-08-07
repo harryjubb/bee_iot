@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Typography, Breadcrumbs, Button, makeStyles, Theme, createStyles } from "@material-ui/core";
+import {
+  Typography,
+  Breadcrumbs,
+  Button,
+  makeStyles,
+  Theme,
+  createStyles,
+} from "@material-ui/core";
 import { useHiveDetailQuery } from "../generated/graphql";
 import { upperFirst } from "lodash";
 import Link from "@material-ui/core/Link";
@@ -10,23 +17,23 @@ import RecordIcon from "./RecordIcon";
 import HiveAvatar from "./HiveAvatar";
 import SponsorshipIcon from "./SponsorshipIcon";
 
-const useStyles = makeStyles((theme: Theme) => 
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     player: {
-      backgroundColor: '#000',
-      position: 'absolute',
+      backgroundColor: "#000",
+      position: "absolute",
       top: 0,
-      left: 0
+      left: 0,
     },
     playerWrapper: {
-      position: 'relative',
-      paddingTop: '56.25%' /* Player ratio: 100 / (1280 / 720) */
-    }
+      position: "relative",
+      paddingTop: "56.25%" /* Player ratio: 100 / (1280 / 720) */,
+    },
   })
-)
+);
 
 export default function HiveDetail() {
-  const classes = useStyles()
+  const classes = useStyles();
   const { hiveSlug } = useParams();
 
   const [streamError, setStreamError] = useState(false);
@@ -114,7 +121,7 @@ export default function HiveDetail() {
                 light={true}
                 width="100%"
                 height="100%"
-                playing={true}
+                playing
                 volume={1}
                 muted={false}
                 controls={true}
@@ -123,7 +130,6 @@ export default function HiveDetail() {
                     forceHLS: true,
                   },
                 }}
-
                 onError={() => {
                   setStreamError(true);
                 }}
