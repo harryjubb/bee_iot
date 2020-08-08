@@ -70,6 +70,14 @@ function App() {
             <HiveList />
           </Route>
           <Route path="/hive/:hiveSlug" children={<HiveDetail />} />
+          <Route>
+            <Typography variant="h2" gutterBottom>
+              Page not found
+            </Typography>
+            <Typography variant="body1">
+              There doesn't seem to bee anything here <span role="img" aria-label="bee">🐝</span>
+            </Typography>
+          </Route>
         </Switch>
       </Container>
     </Router>
