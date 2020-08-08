@@ -65,7 +65,7 @@ function App() {
       onAccept={activateAnalytics}
       >
         <Typography variant="body1">
-        This website uses cookies to help us understand your interest in the bees <span role="img" aria-label="bee">🐝</span>.
+        This website uses cookies to help us understand your interest in the bees <span role="img" aria-label="bee">🐝</span>
         </Typography>
       </CookieConsent>
       <AppBar position="sticky">
