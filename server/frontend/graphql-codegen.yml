@@ -12,6 +12,7 @@ generates:
       withComponent: false
       withHOC: false
       withHooks: true
+      reactApolloVersion: 3
   ./graphql.schema.json:
     plugins:
       - "introspection"
