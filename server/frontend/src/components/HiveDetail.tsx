@@ -20,6 +20,10 @@ import SponsorshipIcon from "./SponsorshipIcon";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    player: {
+      width: '100%',
+      height: 'auto'
+    },
     reactPlayer: {
       backgroundColor: "#000",
       position: "absolute",
@@ -113,7 +117,7 @@ export default function HiveDetail() {
           )}
           {streamUrl && !streamError && (
             isIOS || isSafari ? (
-              <video controls>
+              <video className={classes.player} controls>
                 <source src={streamUrl} type="application/x-mpegURL" />
               </video>
             ) : (
