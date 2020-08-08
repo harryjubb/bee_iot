@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link as RouterLink } from "react-router-dom";
 import { isIOS, isSafari } from "react-device-detect";
 import {
   Typography,
@@ -65,7 +65,7 @@ export default function HiveDetail() {
   return (
     <>
       <Breadcrumbs aria-label="breadcrumb">
-        <Link color="inherit" href="/">
+        <Link color="inherit" component={RouterLink} to="/">
           Apiary
         </Link>
         <Typography color="textPrimary">{hive?.name} Hive</Typography>
@@ -116,31 +116,31 @@ export default function HiveDetail() {
           )}
           {streamUrl && !streamError ? (
             <div className={classes.playerWrapper}>
-              {
-                isIOS || isSafari ?
+              {isIOS || isSafari ? (
                 <video className={classes.player} controls>
                   <source src={streamUrl} type="application/x-mpegURL" />
                 </video>
-                : <ReactPlayer
-                className={classes.player}
-                url={streamUrl}
-                light
-                width="100%"
-                height="100%"
-                playing
-                volume={1}
-                muted={false}
-                controls={true}
-                config={{
-                  file: {
-                    forceHLS: true,
-                  },
-                }}
-                onError={() => {
-                  setStreamError(true);
-                }}
-              />
-              }
+              ) : (
+                <ReactPlayer
+                  className={classes.player}
+                  url={streamUrl}
+                  light
+                  width="100%"
+                  height="100%"
+                  playing
+                  volume={1}
+                  muted={false}
+                  controls={true}
+                  config={{
+                    file: {
+                      forceHLS: true,
+                    },
+                  }}
+                  onError={() => {
+                    setStreamError(true);
+                  }}
+                />
+              )}
             </div>
           ) : (
             <></>

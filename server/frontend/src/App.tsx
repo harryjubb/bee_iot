@@ -11,7 +11,12 @@ import {
   Button,
 } from "@material-ui/core";
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link as RouterLink,
+} from "react-router-dom";
 import HiveList from "./components/HiveList";
 import HiveDetail from "./components/HiveDetail";
 import SponsorshipIcon from "./components/SponsorshipIcon";
@@ -31,12 +36,12 @@ function App() {
   const classes = useStyles();
 
   return (
-    <>
+    <Router>
       <AppBar position="sticky">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            <Link color="inherit" href="/">
-              { process.env.REACT_APP_APIARY_NAME ?? 'Apiary' }
+            <Link color="inherit" component={RouterLink} to="/">
+              {process.env.REACT_APP_APIARY_NAME ?? "Apiary"}
             </Link>
           </Typography>
           <Link
@@ -49,26 +54,25 @@ function App() {
               color="inherit"
               variant="outlined"
               style={{
-                display: 'flex',
-                alignItems: 'center'
+                display: "flex",
+                alignItems: "center",
               }}
             >
-              <SponsorshipIcon />&nbsp;Sponsor a hive
+              <SponsorshipIcon />
+              &nbsp;Sponsor a hive
             </Button>
           </Link>
         </Toolbar>
       </AppBar>
       <Container className={classes.container}>
-        <Router>
-          <Switch>
-            <Route exact path="/">
-              <HiveList />
-            </Route>
-            <Route path="/hive/:hiveSlug" children={<HiveDetail />} />
-          </Switch>
-        </Router>
+        <Switch>
+          <Route exact path="/">
+            <HiveList />
+          </Route>
+          <Route path="/hive/:hiveSlug" children={<HiveDetail />} />
+        </Switch>
       </Container>
-    </>
+    </Router>
   );
 }
 
