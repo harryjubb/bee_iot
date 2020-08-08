@@ -12,10 +12,10 @@ import {
 } from "@material-ui/core";
 
 import {
-  BrowserRouter as Router,
+  Router,
   Switch,
   Route,
-  Link as RouterLink,
+  Link as RouterLink
 } from "react-router-dom";
 
 import { createBrowserHistory } from 'history';
@@ -64,7 +64,7 @@ function App() {
   const classes = useStyles();
 
   return (
-    <Router>
+    <Router history={history}>
       <CookieConsent
       buttonText="That's ok with me"
       enableDeclineButton
