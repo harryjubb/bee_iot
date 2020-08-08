@@ -6,7 +6,7 @@ import theme from "./theme";
 import * as serviceWorker from "./serviceWorker";
 
 import { ApolloClient, InMemoryCache } from "@apollo/client";
-import { ApolloProvider } from "@apollo/react-hooks";
+import { ApolloProvider } from "@apollo/client";
 import { ThemeProvider } from "@material-ui/core";
 
 // Apollo setup
