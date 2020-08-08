@@ -36,6 +36,7 @@ export default function HiveList() {
       <Typography variant="h2">Hives</Typography>
       <List>
         {(data?.allHives ?? [])
+          .slice()
           .sort(hiveSortComparison)
           .map((hive, index: number) => (
             <React.Fragment key={hive?.id}>
