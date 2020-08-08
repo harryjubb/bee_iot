@@ -42,15 +42,10 @@ const useStyles = makeStyles((theme: Theme) =>
 const history = createBrowserHistory();
 
 const activateAnalytics = () => {
-  console.log('Calling activateAnalytics')
-  console.log('process.env.NODE_ENV', process.env.NODE_ENV)
-  console.log('process.env.REACT_APP_GA_TRACKING_ID', process.env.REACT_APP_GA_TRACKING_ID)
   if (process.env.NODE_ENV === 'production' && process.env.REACT_APP_GA_TRACKING_ID) {
-    console.log('Initalizing GA')
     ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID);
     ReactGA.pageview(window.location.pathname + window.location.search);
     history.listen((location) => {
-        console.log('GA pageview')
         ReactGA.pageview(window.location.pathname + window.location.search);
     });
   }
