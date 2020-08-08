@@ -17,6 +17,9 @@ import {
   Route,
   Link as RouterLink,
 } from "react-router-dom";
+
+import CookieConsent, { Cookies } from "react-cookie-consent";
+
 import HiveList from "./components/HiveList";
 import HiveDetail from "./components/HiveDetail";
 import SponsorshipIcon from "./components/SponsorshipIcon";
@@ -37,6 +40,15 @@ function App() {
 
   return (
     <Router>
+      <CookieConsent
+      buttonText="That's ok with me"
+      enableDeclineButton
+      declineButtonText="No thank you"
+      >
+        <Typography variant="body1">
+        This website uses cookies to help us understand your interest in the bees <span role="img" aria-label="bee">🐝</span>.
+        </Typography>
+      </CookieConsent>
       <AppBar position="sticky">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
