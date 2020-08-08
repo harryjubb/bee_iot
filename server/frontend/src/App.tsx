@@ -36,7 +36,7 @@ function App() {
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
             <Link color="inherit" href="/">
-              Centaurea Apiary
+              { process.env.REACT_APP_APIARY_NAME ?? 'Apiary' }
             </Link>
           </Typography>
           <Link
