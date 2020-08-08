@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { isMobile } from "react-device-detect";
+import { isIOS, isSafari } from "react-device-detect";
 import {
   Typography,
   Breadcrumbs,
@@ -116,13 +116,18 @@ export default function HiveDetail() {
           )}
           {streamUrl && !streamError ? (
             <div className={classes.playerWrapper}>
-              <ReactPlayer
+              {
+                isIOS || isSafari ?
+                <video controls>
+                  <source src={streamUrl} type="application/x-mpegURL" />
+                </video>
+                : <ReactPlayer
                 className={classes.player}
                 url={streamUrl}
-                light={!isMobile}
+                light
                 width="100%"
                 height="100%"
-                playing={!isMobile}
+                playing
                 volume={1}
                 muted={false}
                 controls={true}
@@ -135,6 +140,7 @@ export default function HiveDetail() {
                   setStreamError(true);
                 }}
               />
+              }
             </div>
           ) : (
             <></>
