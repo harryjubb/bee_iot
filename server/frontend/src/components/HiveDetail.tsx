@@ -118,7 +118,7 @@ export default function HiveDetail() {
             <div className={classes.playerWrapper}>
               {
                 isIOS || isSafari ?
-                <video controls>
+                <video className={classes.player} controls>
                   <source src={streamUrl} type="application/x-mpegURL" />
                 </video>
                 : <ReactPlayer
