@@ -14,6 +14,6 @@ export default function SponsorshipIcon(props: SponsorshipIconProps) {
     const sponsorshipLevelClass = classes[sponsorshipLevelClassName(props.sponsorshipLevel)]
 
     return (
-        <EmojiEventsIcon className={sponsorshipLevelClass} />
+        <EmojiEventsIcon className={sponsorshipLevelClass} style={{display: 'inline', verticalAlign: 'middle'}} />
     )
 } 

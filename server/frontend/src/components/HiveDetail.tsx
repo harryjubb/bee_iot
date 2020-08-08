@@ -80,11 +80,10 @@ export default function HiveDetail() {
         <div>
           <Typography
             variant="body1"
-            style={{ display: "flex", alignItems: "center" }}
           >
-            This hive is kindly sponsored{" "}
-            {sponsor.sponsorshipLevel ? <>at {sponsorshipLevel} level </> : ""}{" "}
-            by {sponsor.name}.{" "}
+            <span>This hive is kindly sponsored </span>
+            {sponsor.sponsorshipLevel && <>at {sponsorshipLevel} level </>}{" "}
+            <span>by {sponsor.name}. </span>
             {sponsor.url && (
               <>
                 &nbsp;
