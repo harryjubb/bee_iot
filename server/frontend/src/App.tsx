@@ -22,7 +22,7 @@ import { createBrowserHistory } from 'history';
 
 
 import ReactGA from 'react-ga';
-import CookieConsent from "react-cookie-consent";
+import CookieConsent, { Cookies } from "react-cookie-consent";
 
 import HiveList from "./components/HiveList";
 import HiveDetail from "./components/HiveDetail";
@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const history = createBrowserHistory();
 
 const activateAnalytics = () => {
+  console.log('Calling activateAnalytics')
   if (process.env.production && process.env.REACT_APP_GA_TRACKING_ID) {
     console.log('Initalizing GA')
     ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID);
@@ -53,6 +54,10 @@ const activateAnalytics = () => {
   }
 }
 
+if ( Cookies.get('CookieConsent') === 'true' || Cookies.get('CookieConsent-legacy') === 'true') {
+  activateAnalytics()
+}
+
 function App() {
   const classes = useStyles();
 
@@ -62,7 +67,7 @@ function App() {
       buttonText="That's ok with me"
       enableDeclineButton
       declineButtonText="No thank you"
-      onAccept={activateAnalytics}
+      onAccept={() => { activateAnalytics() }}
       >
         <Typography variant="body1">
         This website uses cookies to help us understand your interest in the bees <span role="img" aria-label="bee">🐝</span>
