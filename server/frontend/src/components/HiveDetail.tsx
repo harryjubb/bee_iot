@@ -20,13 +20,13 @@ import SponsorshipIcon from "./SponsorshipIcon";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    player: {
+    reactPlayer: {
       backgroundColor: "#000",
       position: "absolute",
       top: 0,
       left: 0,
     },
-    playerWrapper: {
+    reactPlayerWrapper: {
       position: "relative",
       paddingTop: "56.25%" /* Player ratio: 100 / (1280 / 720) */,
     },
@@ -85,7 +85,7 @@ export default function HiveDetail() {
             This hive is kindly sponsored{" "}
             {sponsor.sponsorshipLevel ? <>at {sponsorshipLevel} level </> : ""}{" "}
             by {sponsor.name}.{" "}
-            {sponsor.url ? (
+            {sponsor.url && (
               <>
                 &nbsp;
                 <Button
@@ -99,56 +99,48 @@ export default function HiveDetail() {
                   &nbsp;Visit {sponsor.name}
                 </Button>
               </>
-            ) : null}
+            )}
           </Typography>
         </div>
       ) : null}
 
-      {streamUrl ? (
+      {streamUrl && (
         <>
           <Typography variant="h4" gutterBottom>
             <RecordIcon /> Live stream
           </Typography>
-          {streamError ? (
+          {streamError && (
             <Typography variant="body1">Error loading live stream</Typography>
-          ) : (
-            <></>
           )}
-          {streamUrl && !streamError ? (
-            <div className={classes.playerWrapper}>
-              {isIOS || isSafari ? (
-                <video className={classes.player} controls>
-                  <source src={streamUrl} type="application/x-mpegURL" />
-                </video>
-              ) : (
-                <ReactPlayer
-                  className={classes.player}
-                  url={streamUrl}
-                  light
-                  width="100%"
-                  height="100%"
-                  playing
-                  volume={1}
-                  muted={false}
-                  controls={true}
-                  config={{
-                    file: {
-                      forceHLS: true,
-                    },
-                  }}
-                  onError={() => {
-                    setStreamError(true);
-                  }}
-                />
-              )}
+          {streamUrl && !streamError && (
+            isIOS || isSafari ? (
+              <video controls>
+                <source src={streamUrl} type="application/x-mpegURL" />
+              </video>
+            ) : (
+            <div className={classes.reactPlayerWrapper}>
+              <ReactPlayer
+                className={classes.reactPlayer}
+                url={streamUrl}
+                light
+                width="100%"
+                height="100%"
+                playing
+                volume={1}
+                muted={false}
+                controls={true}
+                config={{
+                  file: {
+                    forceHLS: true,
+                  },
+                }}
+                onError={() => {
+                  setStreamError(true);
+                }}
+              />
             </div>
-          ) : (
-            <></>
-          )}
-        </>
-      ) : (
-        <></>
-      )}
+          ))}
+    </>)}
     </>
-  );
+  )
 }
