@@ -54,11 +54,44 @@
 			/>
 		</noscript>
 
+		<style>
+			.loading-bee-container {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 100vh;
+			}
+			/* https://codepen.io/MarioDesigns/pen/woJgeo */
+			@keyframes loading-bee-float {
+				0% {
+					transform: translatey(0px);
+				}
+				50% {
+					transform: translatey(-20px);
+				}
+				100% {
+					transform: translatey(0px);
+				}
+			}
+
+			.loading-bee {
+				font-size: 7rem;
+				transform: translatey(0px);
+				animation: loading-bee-float 3s ease-in-out infinite;
+			}
+		</style>
+
 		<title>%REACT_APP_APIARY_NAME%</title>
 	</head>
 	<body>
 		<noscript>You need to enable JavaScript to run this app.</noscript>
-		<div id="root"></div>
+		<div id="root">
+			<div class="loading-bee-container">
+				<div class="loading-bee">
+					🐝
+				</div>
+			</div>
+		</div>
 		<!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
