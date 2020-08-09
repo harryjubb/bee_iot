@@ -9,7 +9,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
-import { useHiveListQuery, HiveType } from "../generated/graphql";
+import { useHiveListQuery } from "../generated/graphql";
 import { hiveStyles } from "./HiveStyles";
 import HiveAvatar from "./HiveAvatar";
 import { hiveSponsorshipLevelOrdering } from "./sponsorship";
