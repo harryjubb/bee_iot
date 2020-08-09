@@ -30,7 +30,7 @@ export const hiveStyles = makeStyles((theme: Theme) =>
             objectFit: "contain",
         },
         logoAvatarImg: {
-            objectFit: "contain",
+            objectFit: "contain!important" as "contain"
         },
     })
 );
