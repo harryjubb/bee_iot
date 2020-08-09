@@ -90,7 +90,7 @@ export type HiveDetailQuery = (
   { __typename?: 'Query' }
   & { hive?: Maybe<(
     { __typename?: 'HiveType' }
-    & Pick<HiveType, 'id' | 'uid' | 'name' | 'slug' | 'streamKey' | 'streamUrl'>
+    & Pick<HiveType, 'id' | 'uid' | 'name' | 'slug' | 'streamActive' | 'streamKey' | 'streamUrl'>
     & { sponsor?: Maybe<(
       { __typename?: 'OrganisationType' }
       & Pick<OrganisationType, 'id' | 'name' | 'url' | 'logo' | 'sponsorshipLevel'>
@@ -121,6 +121,7 @@ export const HiveDetailDocument = gql`
     uid
     name
     slug
+    streamActive
     streamKey
     streamUrl
     sponsor {

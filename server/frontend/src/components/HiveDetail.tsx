@@ -107,7 +107,7 @@ export default function HiveDetail() {
         </div>
       ) : null}
 
-      {streamUrl && (
+      {streamUrl && hive?.streamActive && (
         <>
           <Typography variant="h4" gutterBottom>
             <RecordIcon /> Live stream

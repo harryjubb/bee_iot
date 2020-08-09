@@ -4,6 +4,7 @@ query HiveDetail($hiveSlug: String) {
     uid
     name
     slug
+    streamActive
     streamKey
     streamUrl
     sponsor {
