@@ -24,7 +24,7 @@ class Organisation(models.Model):
         size=[40, 40],
         keep_meta=False,
         force_format="PNG",
-        quality=90,
+        quality=100,
         upload_to="logos",
         null=True,
         blank=True,
