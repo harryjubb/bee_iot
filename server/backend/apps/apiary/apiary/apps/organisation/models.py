@@ -21,7 +21,7 @@ class Organisation(models.Model):
 
     name = models.CharField(max_length=1024, help_text="Organisation name")
     logo = ResizedImageField(
-        size=[40, 40],
+        size=[120, 120],
         keep_meta=False,
         force_format="PNG",
         quality=100,
