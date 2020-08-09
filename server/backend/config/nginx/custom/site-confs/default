@@ -32,14 +32,27 @@ server {
 		proxy_pass http://rtmp_nginx:8080/hls;
 	}
 
-	location / {
-		# try_files $uri $uri/ /index.html /index.php?$args =404;
-		proxy_pass http://apiary:8000
-	}
-
 	location /test {
 		add_header Content-Type text/plain;
 		return 200 'buzzzzz';
+	}
+
+	location /static {
+		alias /static;
+	}
+	
+	location /media {
+		alias /media;
+	}
+
+	location / {
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Forwarded-Proto $scheme;
+		proxy_set_header Host $http_host;
+		# we don't want nginx trying to do something clever with
+		# redirects, we set the Host: header above already.
+		proxy_redirect off;
+		proxy_pass http://apiary:8000;
 	}
 
 	# location ~ \.php$ {
