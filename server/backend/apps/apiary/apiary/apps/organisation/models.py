@@ -1,5 +1,7 @@
 import uuid
 from django.db import models
+from django_resized import ResizedImageField
+
 
 SPONSORSHIP_LEVELS = (
     ("BRONZE", "Bronze"),
@@ -18,7 +20,11 @@ class Organisation(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     name = models.CharField(max_length=1024, help_text="Organisation name")
-    logo = models.ImageField(
+    logo = ResizedImageField(
+        size=[40, 40],
+        keep_meta=False,
+        force_format="PNG",
+        quality=90,
         upload_to="logos",
         null=True,
         blank=True,
