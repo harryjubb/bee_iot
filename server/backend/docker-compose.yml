@@ -35,15 +35,15 @@ services:
     networks:
       - server_network
 
-  influx:
-    image: quay.io/influxdb/influxdb:2.0.0-beta
-    ports:
-      - 9999:9999
-    volumes:
-      - influxdb:/var/lib/influxdb2
-    command: influxd run --bolt-path /var/lib/influxdb2/influxd.bolt --engine-path /var/lib/influxdb2/engine --store bolt --reporting-disabled
-    networks:
-      - server_network
+  # influx:
+  #   image: quay.io/influxdb/influxdb:2.0.0-beta
+  #   ports:
+  #     - 9999:9999
+  #   volumes:
+  #     - influxdb:/var/lib/influxdb2
+  #   command: influxd run --bolt-path /var/lib/influxdb2/influxd.bolt --engine-path /var/lib/influxdb2/engine --store bolt --reporting-disabled
+  #   networks:
+  #     - server_network
 
   # api:
   #   build: ./services/api

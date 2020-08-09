@@ -46,6 +46,8 @@ services:
       # Add RTMP-specific config
       - ./config/nginx/custom/nginx.conf:/config/nginx/nginx.conf
       - ./config/nginx/custom/rtmp:/config/nginx/rtmp/rtmp
+      - static:/static
+      - media:/media
     ports:
       - 443:443
       - 80:80
