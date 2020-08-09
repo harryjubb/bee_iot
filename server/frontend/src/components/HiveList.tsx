@@ -9,19 +9,25 @@ import {
   Button,
 } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
-import { useHiveListQuery } from "../generated/graphql";
+import { useHiveListQuery, HiveType } from "../generated/graphql";
 import { hiveStyles } from "./HiveStyles";
 import HiveAvatar from "./HiveAvatar";
+import { hiveSponsorshipLevelOrdering } from "./sponsorship";
 
-const hiveSponsorshipLevelOrdering = ["BRONZE", "SILVER", "GOLD", "PLATINUM"];
 
-const hiveSortComparison = (hiveA: any, hiveB: any) =>
-  hiveSponsorshipLevelOrdering.indexOf(
-    hiveA.sponsor?.sponsorshipLevel ?? null
-  ) <=
-    hiveSponsorshipLevelOrdering.indexOf(hiveB.sponsor?.sponsorshipLevel ?? null)
-    ? 1
-    : -1;
+const hiveSponsorshipComparison = (hiveA: any, hiveB: any) => {
+  // Sort by sponsorship level
+  if (hiveA?.sponsor?.sponsorshipLevel !== hiveB?.sponsor?.sponsorshipLevel) {
+    return hiveSponsorshipLevelOrdering.indexOf(
+      hiveA?.sponsor?.sponsorshipLevel ?? ''
+    ) <=
+      hiveSponsorshipLevelOrdering.indexOf(hiveB?.sponsor?.sponsorshipLevel ?? '')
+      ? 1
+      : -1;
+  }
+  // Sort by name as tie breaker
+  return (hiveA?.name ?? 1) >= (hiveB?.name ?? 1) ? 1 : -1
+}
 
 export default function HiveList() {
   const classes = hiveStyles();
@@ -37,7 +43,7 @@ export default function HiveList() {
       <List>
         {(data?.allHives ?? [])
           .slice()
-          .sort(hiveSortComparison)
+          .sort(hiveSponsorshipComparison)
           .map((hive, index: number) => (
             <React.Fragment key={hive?.id}>
               <ListItem className={classes.hiveListItem}>

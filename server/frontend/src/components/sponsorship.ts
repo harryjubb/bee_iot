@@ -17,3 +17,5 @@ export const sponsorshipMap: SponsorshipMap = {
 export type SponsorshipLevel = undefined | null | OrganisationSponsorshipLevel
 
 export const sponsorshipLevelClassName = (sponsorshipLevel: SponsorshipLevel) => sponsorshipLevel ? sponsorshipMap[sponsorshipLevel] : 'nonSponsor'
+
+export const hiveSponsorshipLevelOrdering = ["BRONZE", "SILVER", "GOLD", "PLATINUM"];
