@@ -11,7 +11,7 @@ class HiveType(DjangoObjectType):
     stream_url = graphene.String(description="Absolute URL for this hive's HLS stream")
 
     def resolve_stream_url(self, info):
-        if self.stream_key:
+        if self.stream_active and self.stream_key:
             return info.context.build_absolute_uri(f"/hls/{self.stream_key}.m3u8")
         return None
 
