@@ -29,7 +29,7 @@ class Query(object):
     )
 
     def resolve_all_hives(self, info, **kwargs):
-        return Hive.objects.all()
+        return Hive.objects.filter(active=True)
 
     def resolve_hive(self, info, hive_id=None, hive_uid=None, hive_slug=None, **kwargs):
         if (
@@ -45,10 +45,10 @@ class Query(object):
             raise GraphQLError("One and only one kind of identifier must be specified")
 
         if hive_id:
-            return Hive.objects.get(id=hive_id)
+            return Hive.objects.get(id=hive_id, active=True)
 
         if hive_uid:
-            return Hive.objects.get(uid=hive_uid)
+            return Hive.objects.get(uid=hive_uid, active=True)
 
         if hive_slug:
-            return Hive.objects.get(slug=hive_slug)
+            return Hive.objects.get(slug=hive_slug, active=True)
