@@ -13,6 +13,7 @@ A beekeeping IOT project: A/V streaming and sensor monitoring of hive activity.
 - Ethernet or WiFi connection to the Pi with >= 10 Mbps up / down
 - 32 GB high performance microSD card
   - Preferably a card optimised for dashcam storage, e.g. [Sandisk High Endurance](https://www.amazon.co.uk/gp/product/B07P14QHB7/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1)
+- Raspberry Pi Camera
 
 #### Setup
 
@@ -53,9 +54,43 @@ network={
     - `ssh pi@raspberrypi`
     - If the Pi cannot be found, use your router's interface or networking tools (e.g. `arp -a`) to identify the pi's IP address, and SSH in using that, e.g. `pi@192.168.1.177`
     - Log in using the default password of `raspberry`
-- TODO: Change password
-- TODO: Change hostname
-- TODO: Generate keypair and / or SSH copy ID
-- TODO: Clone repo
-- TODO: Install Docker
-- TODO: Add pi to Docker group
+- Configure the Pi
+    - Run `sudo raspi-config`
+    - Select `1 System Options`
+    - Select `S3 Password`
+    - Change the password for the Pi user. Generate a secure password with a tool like LastPass. Store the password securely in a password manager
+    - Select `1 System Options`
+    - Select `S4 Hostname`
+    - Change the hostname of the Pi to a memorable name. Store the hostname somewhere safe, as it will be needed to log in again (ideally alongside the password in a password manager)
+    - Select `3 Interface Options`
+    - Select `P1 Camera`
+    - Select `Yes` to enable the Pi camera
+    - Restart the Pi with `sudo shutdown -r now`
+    - SSH back into the Pi, using the new hostname. Test that the new password works correctly
+    - Use `exit` to disconnect from the Pi
+- Set up public key authentication
+    - If you do not already have a keypair on your computer, create one with [`ssh-keygen`](https://www.ssh.com/academy/ssh/keygen)
+    - Copy your public key onto the pi with `ssh-copy-id pi@hostname`
+    - Authenticate with the Pi's password
+    - You should now be able to SSH in without a password
+- Install Docker
+    - `curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh`
+- Install docker-compose
+    - `sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && sudo chmod +x /usr/local/bin/docker-compose`
+- Allow the `pi` user to run Docker
+    - `sudo groupadd docker && sudo usermod -aG docker $USER`
+    - Logout with `exit` and log back in
+    - Confirm the `pi` user can run Docker with `docker run --rm hello-world`
+- Confirm microphone presence and set microphone volume
+    - Run `alsamixer`
+    - Press F4: a microphone capture device should be available
+    - Use the up / down arrows to adjust the microphone volume. This can be tweaked later if needed
+    - Press `Esc` to exit
+- Clone the repository
+    - Install git with `sudo apt-get install -y git`
+    - Clone the repository: `git clone https://github.com/harryjubb/bee_iot.git`
+- Run the hive software
+    - `cd bee_iot/hive`
+    - Set up libraries for picam (only required once)
+        - `$(cd ./services/av_streaming/picam && sh copy_libs.sh)`
+    - TODO: Run
