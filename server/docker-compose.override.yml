@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+
+  # Apiary Django app
+  apiary:
+    ports:
+      # Expose Django app in dev only
+      - "8000:8000"

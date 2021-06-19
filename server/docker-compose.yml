@@ -1,6 +1,7 @@
-version: "3.7"
+version: "3.8"
 
 services:
+  # RTMP stream receiving nginx
   nginx_rtmp:
     build:
       context: ./nginx_rtmp
@@ -11,59 +12,35 @@ services:
         target: /hlstmp
     networks:
       - server_network
-    # ports:
-    #   - "8080:8080"
-    #   - "1936:1936"
 
-  # # Apiary Django app
-  # apiary:
-  #   build: ./backend/apps/apiary
-  #   env_file: .env
-  #   volumes:
-  #     - ./apps/apiary:/app
-  #     - static:/static
-  #     - media:/media
-  #   depends_on:
-  #     - postgres
-  #   restart: always
-  #   ports:
-  #     - 8000:8000
-  #   networks:
-  #     - server_network
-  #     - db_network
-
-  # postgres:
-  #   image: postgres:latest
-  #   volumes:
-  #     - postgres:/var/lib/postgresql/data/
-  #   environment:
-  #     - POSTGRES_PASSWORD
-  #   restart: always
-  #   networks:
-  #     - db_network
-
-  # Nginx with Let's Encrypt as the front facing and SSL terminating reverse proxy
-  nginx:
-    image: ghcr.io/linuxserver/swag
-    cap_add:
-      - NET_ADMIN
+  # Apiary Django app
+  apiary:
+    build:
+      context: ./backend/apiary
+      dockerfile: Dockerfile
     env_file: .env
     volumes:
-      - nginx_config:/config
-      - ./nginx/nginx.conf:/config/nginx/nginx.conf
-      - ./nginx/default:/config/nginx/site-confs/default
+      - ./apps/apiary:/app
       - static:/static
       - media:/media
-    ports:
-      - "443:443"
-      - "80:80"
-      - "1935:1935"
-    restart: unless-stopped
+    depends_on:
+      - postgres
+    restart: always
     networks:
       - server_network
+      - db_network
+
+  postgres:
+    image: postgres:latest
+    volumes:
+      - postgres:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_PASSWORD
+    restart: always
+    networks:
+      - db_network
 
 volumes:
-  nginx_config:
   postgres:
   static:
   media:

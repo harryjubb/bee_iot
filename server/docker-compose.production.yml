@@ -1,56 +1,26 @@
-version: "3.7"
+version: "3.8"
 
 services:
 
-  apiary:
-    build: ./apps/apiary
+  # Nginx with Let's Encrypt as the front facing and SSL terminating reverse proxy
+  nginx:
+    image: ghcr.io/linuxserver/swag
+    cap_add:
+      - NET_ADMIN
     env_file: .env
     volumes:
+      - nginx_config:/config
+      - ./nginx/nginx.conf:/config/nginx/nginx.conf
+      - ./nginx/default:/config/nginx/site-confs/default
       - static:/static
       - media:/media
-    entrypoint: 
-      - sh
-      - entrypoint.production.sh
-    depends_on:
-      - postgres
-    restart: always
     ports:
-      - 8000:8000
+      - "443:443"
+      - "80:80"
+      - "1935:1935"
+    restart: unless-stopped
     networks:
       - server_network
 
-  nginx:
-    image: linuxserver/letsencrypt
-    depends_on:
-      - rtmp_nginx
-    cap_add:
-      - NET_ADMIN
-    environment:
-      - PUID="${PUID}"
-      - PGID="${PGID}"
-      - TZ="${TZ}"
-      - URL="${URL}"
-      - SUBDOMAINS="${SUBDOMAINS}"
-      - VALIDATION=http
-      # - DNSPLUGIN=cloudflare #optional
-      # - DUCKDNSTOKEN=token #optional
-      # - EMAIL=e-mail #optional
-      # - DHLEVEL=2048 #optional
-      - ONLY_SUBDOMAINS=true #optional
-      # - EXTRA_DOMAINS=extradomains #optional
-      - STAGING=false #optional
-    volumes:
-      - ./config/nginx/config:/config
-      # Customise the nginx config with an overridden version
-      - ./config/nginx/custom/site-confs/default:/config/nginx/site-confs/default
-      # Add RTMP-specific config
-      - ./config/nginx/custom/nginx.conf:/config/nginx/nginx.conf
-      - ./config/nginx/custom/rtmp:/config/nginx/rtmp/rtmp
-      - static:/static
-      - media:/media
-    ports:
-      - 443:443
-      - 80:80
-      - 1935:1935
-    networks:
-      - server_network
+volumes:
+  nginx_config:
