@@ -2,16 +2,18 @@ version: "3.7"
 
 services:
   nginx_rtmp:
-    build: ./nginx_rtmp
+    build:
+      context: ./nginx_rtmp
+      dockerfile: Dockerfile
     env_file: .env
     volumes:
       - type: tmpfs
         target: /hlstmp
     networks:
       - server_network
-    ports:
-      - "8080:8080"
-      - "1936:1936"
+    # ports:
+    #   - "8080:8080"
+    #   - "1936:1936"
 
   # # Apiary Django app
   # apiary:
@@ -40,15 +42,26 @@ services:
   #   networks:
   #     - db_network
 
-  # # Caddy as the front facing and SSL terminating reverse proxy
-  # caddy:
-  #   build: ./caddy
-  #   restart: always
-
+  # Nginx with Let's Encrypt as the front facing and SSL terminating reverse proxy
+  nginx:
+    image: ghcr.io/linuxserver/swag
+    cap_add:
+      - NET_ADMIN
+    env_file: .env
+    volumes:
+      - nginx_config:/config
+      - ./nginx/nginx.conf:/config/nginx/nginx.conf
+      - ./nginx/default:/config/nginx/site-confs/default
+      - static:/static
+      - media:/media
+    ports:
+      - "443:443"
+      - "80:80"
+      - "1935:1935"
+    restart: unless-stopped
 
 volumes:
-  caddy_data:
-  caddy_config:
+  nginx_config:
   postgres:
   static:
   media:
