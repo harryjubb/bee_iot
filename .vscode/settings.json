@@ -20,6 +20,10 @@
         "titleBar.inactiveBackground": "#1857a499",
         "titleBar.inactiveForeground": "#e7e7e799"
     },
-    "peacock.remoteColor": "#1857a4",
-    "peacock.color": "#1857a4"
+    "peacock.remoteColor": "#FF0000",
+    "peacock.color": "#1857a4",
+    "python.analysis.extraPaths": [
+        "/app",
+        "/workspace/server/backend/apps/apiary"
+    ]
 }
