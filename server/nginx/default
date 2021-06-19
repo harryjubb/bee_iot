@@ -34,6 +34,11 @@ server {
 		return 200 'buzzzzz';
 	}
 
+    location /healthcheck {
+		add_header Content-Type text/plain;
+		return 200 'Ok';
+	}
+
 	location /static {
 		alias /static;
 	}
