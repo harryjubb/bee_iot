@@ -37,9 +37,13 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+interface HiveDetailParams {
+  hiveSlug: string
+}
+
 export default function HiveDetail() {
   const classes = useStyles();
-  const { hiveSlug } = useParams();
+  const { hiveSlug } = useParams<HiveDetailParams>();
 
   const [streamError, setStreamError] = useState(false);
 
