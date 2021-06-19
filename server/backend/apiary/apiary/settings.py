@@ -56,7 +56,7 @@ else:
 if DEVELOPMENT_MODE:
     CORS_ORIGIN_ALLOW_ALL = True
 else:
-    CORS_ORIGIN_WHITELIST = env.list("APIARY_CORS_ORIGIN_WHITELIST", [])
+    CORS_ALLOWED_ORIGINS = env.list("APIARY_CORS_ORIGIN_WHITELIST", [])
 
 if not DEVELOPMENT_MODE:
     # Setup support for proxy headers
