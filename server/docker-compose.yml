@@ -20,7 +20,6 @@ services:
       dockerfile: Dockerfile
     env_file: .env
     volumes:
-      - ./apps/apiary:/app
       - static:/static
       - media:/media
     depends_on:

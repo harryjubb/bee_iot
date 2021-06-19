@@ -4,6 +4,9 @@ services:
 
   # Apiary Django app
   apiary:
+    volumes:
+        # Mount the code in during development
+        - ./backend/apiary:/app
     ports:
-      # Expose Django app in dev only
+      # Expose Django app in development only
       - "8000:8000"
