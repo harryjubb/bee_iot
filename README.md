@@ -77,6 +77,8 @@ network={
     - Copy your public key onto the pi with `ssh-copy-id pi@hostname`
     - Authenticate with the Pi's password
     - You should now be able to SSH in without a password
+- Ensure the Pi is updated to the latest version
+    - `sudo apt-get update && sudo apt-get upgrade`
 - Install Docker
     - `curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh`
 - Install docker-compose
