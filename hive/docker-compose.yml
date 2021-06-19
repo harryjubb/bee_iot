@@ -14,8 +14,8 @@ services:
     # privileged: true
 
   av_streaming_picam:
-    depends_on:
-      - av_streaming_ffmpeg
+    # depends_on:
+    #   - av_streaming_ffmpeg
     build: ./services/av_streaming/picam
     privileged: true
     restart: always
@@ -29,19 +29,19 @@ services:
       test: ["CMD", "curl", "-f", "$STREAM_HEALTHCHECK_URL"]
       interval: 5s
       timeout: 5s
-      retries: 2
+      retries: 1
 
-  av_streaming_ffmpeg:
-    build: ./services/av_streaming/ffmpeg
-    restart: always
-    env_file: .env
-    networks:
-      - streaming_network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "$STREAM_HEALTHCHECK_URL"]
-      interval: 5s
-      timeout: 5s
-      retries: 2
+  # av_streaming_ffmpeg:
+  #   build: ./services/av_streaming/ffmpeg
+  #   restart: always
+  #   env_file: .env
+  #   networks:
+  #     - streaming_network
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "$STREAM_HEALTHCHECK_URL"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 2
 
 networks:
   streaming_network:
