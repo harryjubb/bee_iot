@@ -100,4 +100,5 @@ network={
     - `cd bee_iot/hive`
     - Set up libraries for picam (only required once)
         - `$(cd ./services/av_streaming/picam && sh copy_libs.sh)`
-    - TODO: Run
+    - `cp .env.example .env`
+    - Edit `.env` in accordance with the comments in that file
