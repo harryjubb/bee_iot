@@ -4,7 +4,9 @@ services:
 
   # Nginx with Let's Encrypt as the front facing and SSL terminating reverse proxy
   nginx:
-    image: ghcr.io/linuxserver/swag
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
     cap_add:
       - NET_ADMIN
     env_file: .env
