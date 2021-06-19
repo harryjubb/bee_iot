@@ -5,7 +5,7 @@ WORKDIR /download
 RUN wget https://github.com/iizukanao/picam/releases/download/v1.4.11/picam-1.4.11-binary.tar.xz
 RUN tar xvf picam-1.4.11-binary.tar.xz
 
-RUN apt-get update -y && apt-get install -y libharfbuzz0b libfontconfig1 libgles2-mesa-dev wget xz-utils libasound2 libasound-dev
+RUN apt-get update -y && apt-get install -y libharfbuzz0b libfontconfig1 libgles2-mesa-dev wget xz-utils libasound2 libasound-dev curl
 
 # Copy Rasbian specific libraries: See copy_libs.sh
 COPY lib /opt/vc/lib
