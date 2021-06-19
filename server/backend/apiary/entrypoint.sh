@@ -5,6 +5,7 @@ set -e
 python manage.py migrate
 
 if [ "$APIARY_ENVIRONMENT" = 'production' ]
+then
     python manage.py collectstatic --noinput
 fi
 
