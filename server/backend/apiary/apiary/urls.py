@@ -31,5 +31,5 @@ urlpatterns = [path("admin/", admin.site.urls),] + static(
 
 # GraphQL patterns
 urlpatterns = urlpatterns + [
-    path("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),
+    path("graphql", csrf_exempt(GraphQLView.as_view(graphiql=settings.DEBUG))),
 ]
