@@ -20,7 +20,6 @@ DEVELOPMENT_MODE = ENVIRONMENT == "development"
 
 # Domain
 DOMAIN = env.str("APIARY_API_DOMAIN")
-FRONTEND_DOMAIN = env.str("APIARY_FRONTEND_DOMAIN")
 
 MEDIA_ROOT = env.str("APIARY_MEDIA_ROOT", "/media")
 MEDIA_URL = env.str("APIARY_MEDIA_URL", "/media/")
