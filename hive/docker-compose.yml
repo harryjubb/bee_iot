@@ -13,27 +13,6 @@ services:
     # Required for GPIO access
     # privileged: true
 
-  # audio_sampling:
-  #   build: ./services/audio_sampling
-  #   restart: always
-  #   environment:
-  #     # Environment is from .env file
-  #     - AUTH_TOKEN
-
-  # audio_streaming_darkice:
-  #   build: ./services/audio_streaming/darkice
-  #   privileged: true
-  #   restart: always
-  #   networks:
-  #     - streaming_network
-
-  # audio_streaming_liquidsoap:
-    # build: ./services/audio_streaming/liquidsoap
-    # privileged: true
-    # restart: always
-    # networks:
-      # - streaming_network
-
   av_streaming_picam:
     depends_on:
       - av_streaming_ffmpeg
