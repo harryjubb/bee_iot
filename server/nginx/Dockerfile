@@ -2,7 +2,7 @@ FROM node:16.3.0 as jsbuild
 
 WORKDIR /build
 COPY ./frontend/ .
-RUN yarn run build
+RUN yarn && yarn run build
 
 FROM ghcr.io/linuxserver/swag
 
