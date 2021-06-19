@@ -67,6 +67,10 @@ network={
     - Select `Yes` to enable the Pi camera
     - Restart the Pi with `sudo shutdown -r now`
     - SSH back into the Pi, using the new hostname. Test that the new password works correctly
+    - Test that the camera is working:
+        - Take a test image with `raspistill -o test.jpg`
+        - Copy the test image to your machine with `scp pi@hostname:/home/pi/test.jpg .` (replace the last dot with the preferred destination on your machine)
+        - Open the image and verify the picture has taken
     - Use `exit` to disconnect from the Pi
 - Set up public key authentication
     - If you do not already have a keypair on your computer, create one with [`ssh-keygen`](https://www.ssh.com/academy/ssh/keygen)
@@ -83,8 +87,9 @@ network={
     - Confirm the `pi` user can run Docker with `docker run --rm hello-world`
 - Confirm microphone presence and set microphone volume
     - Run `alsamixer`
+    - Press F6: select the sound card: e.g. typically "USB PnP Sound Device" for a USB microphone
     - Press F4: a microphone capture device should be available
-    - Use the up / down arrows to adjust the microphone volume. This can be tweaked later if needed
+    - Use the up / down arrow keys to adjust the microphone volume. This can be tweaked later if needed. Recommend maxing out the white bar (but not going into the red bar)
     - Press `Esc` to exit
 - Clone the repository
     - Install git with `sudo apt-get install -y git`
