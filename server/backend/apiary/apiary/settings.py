@@ -15,7 +15,8 @@ import environ
 
 env = environ.Env()
 
-DEVELOPMENT_MODE = env.bool("APIARY_DEVELOPMENT_MODE")
+ENVIRONMENT = env.str("APIARY_ENVIRONMENT")
+DEVELOPMENT_MODE = ENVIRONMENT == "development"
 
 # Domain
 DOMAIN = env.str("APIARY_API_DOMAIN")
