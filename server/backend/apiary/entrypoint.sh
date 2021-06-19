@@ -30,7 +30,7 @@ then
 elif [ "$APIARY_ENVIRONMENT" = 'production' ]
 then
     echo "Running in production with gunicorn"
-    PYTHONUNBUFFERED=TRUE gunicorn --workers="$APIARY_NUM_GUNICORN_WORKERS" -b 0.0.0.0:8000 'apiary.wsgi' --log-level debug
+    PYTHONUNBUFFERED=TRUE gunicorn --workers="${APIARY_NUM_GUNICORN_WORKERS:-2}" -b 0.0.0.0:8000 'apiary.wsgi' --log-level debug
 else
     echo "Incorrect APIARY_ENVIRONMENT setting"
     exit 1
