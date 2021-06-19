@@ -1,0 +1,58 @@
+version: "3.7"
+
+services:
+  nginx_rtmp:
+    build: ./nginx_rtmp
+    env_file: .env
+    volumes:
+      - type: tmpfs
+        target: /hlstmp
+    networks:
+      - server_network
+    ports:
+      - "8080:8080"
+      - "1936:1936"
+
+  # # Apiary Django app
+  # apiary:
+  #   build: ./backend/apps/apiary
+  #   env_file: .env
+  #   volumes:
+  #     - ./apps/apiary:/app
+  #     - static:/static
+  #     - media:/media
+  #   depends_on:
+  #     - postgres
+  #   restart: always
+  #   ports:
+  #     - 8000:8000
+  #   networks:
+  #     - server_network
+  #     - db_network
+
+  # postgres:
+  #   image: postgres:latest
+  #   volumes:
+  #     - postgres:/var/lib/postgresql/data/
+  #   environment:
+  #     - POSTGRES_PASSWORD
+  #   restart: always
+  #   networks:
+  #     - db_network
+
+  # # Caddy as the front facing and SSL terminating reverse proxy
+  # caddy:
+  #   build: ./caddy
+  #   restart: always
+
+
+volumes:
+  caddy_data:
+  caddy_config:
+  postgres:
+  static:
+  media:
+
+networks:
+  server_network:
+  db_network:

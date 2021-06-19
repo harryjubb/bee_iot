@@ -1,0 +1,114 @@
+error_log /dev/stdout info;
+
+worker_processes auto;
+rtmp_auto_push on;
+events {}
+rtmp {
+    access_log /dev/stdout;
+
+    server {
+        # Listening on port 1936
+        # As a forward target for 1935 on SSL nginx
+        # In front of this one in production
+        listen 1936;
+        listen [::]:1936 ipv6only=on;
+
+        # Endpoint for publishing streams to
+        application publish {
+            live on;
+            record off;
+            allow publish all;
+
+            # Allow RTMP playing of the published stream from /publish
+            # only on the server itself
+            allow play 127.0.0.1;
+
+            # Check that the stream is allowed to be pushed here
+            # by verifying that it's query params include the secret key
+            notify_method get;
+            on_publish http://127.0.0.1:9123/auth;
+
+            # Turn on HLS
+            hls on;
+            hls_path /hlstmp/hls/;
+            hls_fragment 5s;
+            # hls_fragment 3;
+            # hls_playlist_length 60;
+        }
+
+        # Endpoint for viewing streams over RTMP (e.g. in VLC)
+        application live {
+            live on;
+            record off;
+            deny publish all;
+
+            # allow play all;
+            # Disable consuming the stream from nginx as RTMP(S)
+            deny play all;
+
+            pull rtmp://127.0.0.1:1936/publish;
+        }
+    }
+}
+
+http {
+    access_log /dev/stdout;
+
+    # RTMP authentication endpoint
+    server {
+        listen 9123;
+        location /auth {
+            if ($arg_psk = '${STREAM_SECRET_KEY}') {
+                return 201;
+            }
+            return 404;
+        }
+    }
+
+    # HLS specific settings
+    sendfile off;
+    tcp_nopush on;
+    # aio on;
+    directio 512;
+    default_type application/octet-stream;
+
+    # HLS output endpoint
+    server {
+        listen 8080;
+
+        location /hls {
+            types {
+                application/vnd.apple.mpegurl m3u8;
+            }
+            root /hlstmp;
+            add_header Cache-Control no-cache;
+
+            # To avoid issues with cross-domain HTTP requests (e.g. during development)
+            add_header Access-Control-Allow-Origin *;
+
+            # # Disable cache
+            # add_header 'Cache-Control' 'no-cache';
+
+            # # CORS setup
+            # add_header 'Access-Control-Allow-Origin' '*' always;
+            # add_header 'Access-Control-Expose-Headers' 'Content-Length';
+
+            # # allow CORS preflight requests
+            # if ($request_method = 'OPTIONS') {
+            #     add_header 'Access-Control-Allow-Origin' '*';
+            #     add_header 'Access-Control-Max-Age' 1728000;
+            #     add_header 'Content-Type' 'text/plain charset=UTF-8';
+            #     add_header 'Content-Length' 0;
+            #     return 204;
+            # }
+
+            # types {
+            #     application/dash+xml mpd;
+            #     application/vnd.apple.mpegurl m3u8;
+            #     video/mp2t ts;
+            # }
+
+            # root /hlstmp/;
+        }
+    }
+}
