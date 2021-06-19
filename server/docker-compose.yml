@@ -59,6 +59,8 @@ services:
       - "80:80"
       - "1935:1935"
     restart: unless-stopped
+    networks:
+      - server_network
 
 volumes:
   nginx_config:
