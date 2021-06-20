@@ -28,7 +28,7 @@ services:
     healthcheck:
       # Check if ffmpeg is running: if not, kill the container
       test: ["CMD", "ps aux | grep ffmpeg | grep --invert-match grep"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 1
 
