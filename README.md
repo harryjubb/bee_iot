@@ -103,6 +103,8 @@ network={
         - `$(cd ./services/av_streaming/picam && sh copy_libs.sh)`
     - `cp .env.example .env`
     - Edit `.env` in accordance with the comments in that file
+    - Run with `docker-compose up -d --force-recreate --build --remove-orphans`
+    - Check the logs for success with `docker-compose logs -f`
 
 ### Server setup
 
