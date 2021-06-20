@@ -26,7 +26,8 @@ services:
     networks:
       - streaming_network
     healthcheck:
-      test: ["CMD", "curl", "-f", "$STREAM_HEALTHCHECK_URL"]
+      # Check if ffmpeg is running: if not, kill the container
+      test: ["CMD", "ps aux | grep ffmpeg | grep --invert-match grep || kill 1"]
       interval: 5s
       timeout: 5s
       retries: 1
