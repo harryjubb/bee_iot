@@ -8,6 +8,10 @@ RUN tar xvf ffmpeg-git-arm64-static.tar.xz
 RUN wget https://github.com/iizukanao/picam/releases/download/v1.4.11/picam-1.4.11-binary.tar.xz
 RUN tar xvf picam-1.4.11-binary.tar.xz && mkdir -p ffmpeg && mv ffmpeg-git*/ffmpeg ffmpeg/
 
+# Test ffmpeg
+# Build will fail if ffmpeg cannot run
+RUN ./ffmpeg/ffmpeg --help
+
 RUN apt-get update -y && apt-get install -y libharfbuzz0b libfontconfig1 libgles2-mesa-dev wget xz-utils libasound2 libasound-dev curl nscd
 
 # Copy Rasbian specific libraries: See copy_libs.sh
