@@ -27,8 +27,8 @@ services:
       - streaming_network
     healthcheck:
       # Check if ffmpeg is running: if not, kill the container
-      test: ["CMD", "ps aux | grep ffmpeg | grep --invert-match grep"]
-      interval: 10s
+      test: "ps aux | grep ffmpeg | grep --invert-match grep"
+      interval: 15s
       timeout: 5s
       retries: 1
 
