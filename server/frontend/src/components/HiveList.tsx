@@ -34,8 +34,8 @@ export default function HiveList() {
 
   const { loading, error, data } = useHiveListQuery();
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
+  if (loading) return <Typography variant="body1">Loading...</Typography>;
+  if (error) return <Typography variant="body1">Error :(</Typography>;
 
   return (
     <>
