@@ -2,10 +2,13 @@ FROM raspbian/stretch
 
 WORKDIR /download
 
-RUN wget https://github.com/iizukanao/picam/releases/download/v1.4.11/picam-1.4.11-binary.tar.xz
-RUN tar xvf picam-1.4.11-binary.tar.xz
+RUN wget https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-arm64-static.tar.xz
+RUN tar xvf ffmpeg-git-arm64-static.tar.xz
 
-RUN apt-get update -y && apt-get install -y libharfbuzz0b libfontconfig1 libgles2-mesa-dev wget xz-utils libasound2 libasound-dev curl ffmpeg
+RUN wget https://github.com/iizukanao/picam/releases/download/v1.4.11/picam-1.4.11-binary.tar.xz
+RUN tar xvf picam-1.4.11-binary.tar.xz && mv ffmpeg-git* ffmpeg
+
+RUN apt-get update -y && apt-get install -y libharfbuzz0b libfontconfig1 libgles2-mesa-dev wget xz-utils libasound2 libasound-dev curl nscd
 
 # Copy Rasbian specific libraries: See copy_libs.sh
 COPY lib /opt/vc/lib
@@ -13,6 +16,7 @@ COPY lib /opt/vc/lib
 WORKDIR /picam
 
 RUN cp /download/picam-1.4.11-binary/picam /picam/
+RUN cp /download/ffmpeg/ffmpeg .
 RUN mkdir archive
 
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/vc/lib
@@ -23,7 +27,7 @@ RUN ./picam --help
 
 # Test ffmpeg
 # Build will fail if ffmpeg cannot run
-RUN ffmpeg --help
+RUN ./ffmpeg --help
 
 COPY entrypoint.sh .
 
