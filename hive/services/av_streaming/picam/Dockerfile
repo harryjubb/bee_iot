@@ -3,7 +3,8 @@ FROM raspbian/stretch
 WORKDIR /download
 
 RUN wget https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-armhf-static.tar.xz
-RUN tar xvf ffmpeg-git-armhf-static.tar.xz && mkdir -p ffmpeg && mv ffmpeg-git*/ffmpeg ffmpeg/
+RUN tar xvf ffmpeg-git-armhf-static.tar.xz && \
+  mkdir -p ffmpeg && mv ffmpeg-git*/ffmpeg ffmpeg/
 
 # Test ffmpeg
 # Build will fail if ffmpeg cannot run
@@ -12,7 +13,9 @@ RUN ./ffmpeg/ffmpeg --help
 RUN wget https://github.com/iizukanao/picam/releases/download/v1.4.11/picam-1.4.11-binary.tar.xz
 RUN tar xvf picam-1.4.11-binary.tar.xz
 
-RUN apt-get update -y && apt-get install -y libharfbuzz0b libfontconfig1 libgles2-mesa-dev wget xz-utils libasound2 libasound-dev curl nscd
+RUN apt-get update -y && apt-get install -y \
+  libharfbuzz0b libfontconfig1 libgles2-mesa-dev \
+  wget xz-utils libasound2 libasound-dev curl nscd psmisc
 
 # Copy Rasbian specific libraries: See copy_libs.sh
 COPY lib /opt/vc/lib
