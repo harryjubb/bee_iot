@@ -117,7 +117,18 @@ export default function HiveDetail() {
             <RecordIcon /> Live stream
           </Typography>
           {streamError && (
-            <Typography variant="body1">Error loading live stream</Typography>
+            <>
+              <Typography variant="body1">
+                Error loading live stream&nbsp;
+              <Button
+                color="primary"
+                variant="outlined"
+                onClick={() => setStreamError(false)}
+              >
+                Retry
+              </Button>
+              </Typography>
+            </>
           )}
           {streamUrl && !streamError && (
             isIOS || isSafari ? (
