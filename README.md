@@ -84,7 +84,7 @@ network={
 - Install docker-compose
     - `sudo apt-get install -y libffi-dev python python-pip python3 python3-pip && sudo pip3 install docker-compose`
 - Allow the `pi` user to run Docker
-    - `sudo groupadd docker && sudo usermod -aG docker $USER`
+    - `sudo groupadd docker ; sudo usermod -aG docker $USER`
     - Logout with `exit` and log back in
     - Confirm the `pi` user can run Docker with `docker run --rm hello-world`
 - Confirm microphone presence and set microphone volume
