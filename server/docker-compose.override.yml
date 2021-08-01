@@ -10,3 +10,11 @@ services:
     ports:
       # Expose Django app in development only
       - "8000:8000"
+
+  thingsboard:
+    ports:
+      - "8080:9090"
+      - "1883:1883"
+      - "5683:5683/udp"
+    environment:
+      TB_QUEUE_TYPE: in-memory
