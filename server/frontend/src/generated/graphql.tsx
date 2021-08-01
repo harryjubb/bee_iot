@@ -1,8 +1,10 @@
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: any }> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+const defaultOptions =  {}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -15,6 +17,62 @@ export type Scalars = {
    * in fields, resolvers and input.
    */
   UUID: any;
+};
+
+export type HiveType = {
+  __typename?: 'HiveType';
+  id: Scalars['UUID'];
+  /** Unique hive ID */
+  uid: Scalars['String'];
+  /** Human-friendly hive name */
+  name: Scalars['String'];
+  /** Short human and URL-friendly name used for the hive's URL */
+  slug: Scalars['String'];
+  /** Determines if this hive should be accessible publicly */
+  active: Scalars['Boolean'];
+  /** Sponsoring organisation of this hive */
+  sponsor?: Maybe<OrganisationType>;
+  /** AV stream name for this hive */
+  streamKey?: Maybe<Scalars['String']>;
+  /** Determines if this hive's stream should be accessible publicly */
+  streamActive: Scalars['Boolean'];
+  /** ID of the Thingsboard dashboard for this hive (if it exists) */
+  dashboardId?: Maybe<Scalars['UUID']>;
+  /** Public ID of the Thingsboard dashboard for this hive (if it exists) */
+  dashboardPublicId?: Maybe<Scalars['UUID']>;
+  /** Determines if this hive's dashboard should be accessible publicly through the apiary interface */
+  dashboardActive: Scalars['Boolean'];
+  /** Absolute URL for this hive's HLS stream */
+  streamUrl?: Maybe<Scalars['String']>;
+  /** Absolute URL for this hive's sensor dashboard */
+  dashboardUrl?: Maybe<Scalars['String']>;
+};
+
+/** An enumeration. */
+export enum OrganisationSponsorshipLevel {
+  /** Bronze */
+  Bronze = 'BRONZE',
+  /** Silver */
+  Silver = 'SILVER',
+  /** Gold */
+  Gold = 'GOLD',
+  /** Platinum */
+  Platinum = 'PLATINUM'
+}
+
+export type OrganisationType = {
+  __typename?: 'OrganisationType';
+  id: Scalars['UUID'];
+  /** Organisation name */
+  name: Scalars['String'];
+  /** Image of the logo of the organisation */
+  logo?: Maybe<Scalars['String']>;
+  /** Sponsorship level of the organisation */
+  sponsorshipLevel?: Maybe<OrganisationSponsorshipLevel>;
+  /** URL of the organisation */
+  url?: Maybe<Scalars['String']>;
+  /** Sponsoring organisation of this hive */
+  hiveSet: Array<HiveType>;
 };
 
 export type Query = {
@@ -32,54 +90,6 @@ export type QueryHiveArgs = {
   hiveSlug?: Maybe<Scalars['String']>;
 };
 
-export type HiveType = {
-  __typename?: 'HiveType';
-  id: Scalars['UUID'];
-  /** Unique hive ID: to match the same hive across other apiary services */
-  uid: Scalars['String'];
-  /** Human-friendly hive name */
-  name: Scalars['String'];
-  /** Short human and URL-friendly name used for the hive's URL */
-  slug: Scalars['String'];
-  /** Determines if this hive should be accessible publicly */
-  active: Scalars['Boolean'];
-  /** Sponsoring organisation of this hive */
-  sponsor?: Maybe<OrganisationType>;
-  /** AV stream name for this hive */
-  streamKey?: Maybe<Scalars['String']>;
-  /** Determines if this hive's stream should be accessible publicly */
-  streamActive: Scalars['Boolean'];
-  /** Absolute URL for this hive's HLS stream */
-  streamUrl?: Maybe<Scalars['String']>;
-};
-
-
-export type OrganisationType = {
-  __typename?: 'OrganisationType';
-  id: Scalars['UUID'];
-  /** Organisation name */
-  name: Scalars['String'];
-  /** Image of the logo of the organisation */
-  logo?: Maybe<Scalars['String']>;
-  /** Sponsorship level of the organisation */
-  sponsorshipLevel?: Maybe<OrganisationSponsorshipLevel>;
-  /** URL of the organisation */
-  url?: Maybe<Scalars['String']>;
-  /** Sponsoring organisation of this hive */
-  hiveSet: Array<HiveType>;
-};
-
-/** An enumeration. */
-export enum OrganisationSponsorshipLevel {
-  /** Bronze */
-  Bronze = 'BRONZE',
-  /** Silver */
-  Silver = 'SILVER',
-  /** Gold */
-  Gold = 'GOLD',
-  /** Platinum */
-  Platinum = 'PLATINUM'
-}
 
 export type HiveDetailQueryVariables = Exact<{
   hiveSlug?: Maybe<Scalars['String']>;
@@ -90,7 +100,7 @@ export type HiveDetailQuery = (
   { __typename?: 'Query' }
   & { hive?: Maybe<(
     { __typename?: 'HiveType' }
-    & Pick<HiveType, 'id' | 'uid' | 'name' | 'slug' | 'streamActive' | 'streamKey' | 'streamUrl'>
+    & Pick<HiveType, 'id' | 'uid' | 'name' | 'slug' | 'streamActive' | 'streamKey' | 'streamUrl' | 'dashboardActive' | 'dashboardUrl'>
     & { sponsor?: Maybe<(
       { __typename?: 'OrganisationType' }
       & Pick<OrganisationType, 'id' | 'name' | 'url' | 'logo' | 'sponsorshipLevel'>
@@ -124,6 +134,8 @@ export const HiveDetailDocument = gql`
     streamActive
     streamKey
     streamUrl
+    dashboardActive
+    dashboardUrl
     sponsor {
       id
       name
@@ -151,15 +163,17 @@ export const HiveDetailDocument = gql`
  *   },
  * });
  */
-export function useHiveDetailQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<HiveDetailQuery, HiveDetailQueryVariables>) {
-        return ApolloReactHooks.useQuery<HiveDetailQuery, HiveDetailQueryVariables>(HiveDetailDocument, baseOptions);
+export function useHiveDetailQuery(baseOptions?: Apollo.QueryHookOptions<HiveDetailQuery, HiveDetailQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<HiveDetailQuery, HiveDetailQueryVariables>(HiveDetailDocument, options);
       }
-export function useHiveDetailLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HiveDetailQuery, HiveDetailQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<HiveDetailQuery, HiveDetailQueryVariables>(HiveDetailDocument, baseOptions);
+export function useHiveDetailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HiveDetailQuery, HiveDetailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<HiveDetailQuery, HiveDetailQueryVariables>(HiveDetailDocument, options);
         }
 export type HiveDetailQueryHookResult = ReturnType<typeof useHiveDetailQuery>;
 export type HiveDetailLazyQueryHookResult = ReturnType<typeof useHiveDetailLazyQuery>;
-export type HiveDetailQueryResult = ApolloReactCommon.QueryResult<HiveDetailQuery, HiveDetailQueryVariables>;
+export type HiveDetailQueryResult = Apollo.QueryResult<HiveDetailQuery, HiveDetailQueryVariables>;
 export const HiveListDocument = gql`
     query HiveList {
   allHives {
@@ -191,31 +205,25 @@ export const HiveListDocument = gql`
  *   },
  * });
  */
-export function useHiveListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<HiveListQuery, HiveListQueryVariables>) {
-        return ApolloReactHooks.useQuery<HiveListQuery, HiveListQueryVariables>(HiveListDocument, baseOptions);
+export function useHiveListQuery(baseOptions?: Apollo.QueryHookOptions<HiveListQuery, HiveListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<HiveListQuery, HiveListQueryVariables>(HiveListDocument, options);
       }
-export function useHiveListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HiveListQuery, HiveListQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<HiveListQuery, HiveListQueryVariables>(HiveListDocument, baseOptions);
+export function useHiveListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HiveListQuery, HiveListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<HiveListQuery, HiveListQueryVariables>(HiveListDocument, options);
         }
 export type HiveListQueryHookResult = ReturnType<typeof useHiveListQuery>;
 export type HiveListLazyQueryHookResult = ReturnType<typeof useHiveListLazyQuery>;
-export type HiveListQueryResult = ApolloReactCommon.QueryResult<HiveListQuery, HiveListQueryVariables>;
+export type HiveListQueryResult = Apollo.QueryResult<HiveListQuery, HiveListQueryVariables>;
 
-      export interface IntrospectionResultData {
-        __schema: {
-          types: {
-            kind: string;
-            name: string;
-            possibleTypes: {
-              name: string;
-            }[];
-          }[];
-        };
+      export interface PossibleTypesResultData {
+        possibleTypes: {
+          [key: string]: string[]
+        }
       }
-      const result: IntrospectionResultData = {
-  "__schema": {
-    "types": []
-  }
+      const result: PossibleTypesResultData = {
+  "possibleTypes": {}
 };
       export default result;
     

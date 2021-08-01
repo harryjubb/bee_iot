@@ -13,7 +13,7 @@ class Hive(models.Model):
     uid = models.CharField(
         max_length=1024,
         unique=True,
-        help_text="Unique hive ID: to match the same hive across other apiary services",
+        help_text="Unique hive ID",
     )
 
     name = models.CharField(max_length=1024, help_text="Human-friendly hive name")
@@ -43,10 +43,27 @@ class Hive(models.Model):
     stream_key = models.CharField(
         max_length=1024, help_text="AV stream name for this hive", null=True, blank=True
     )
+
     stream_active = models.BooleanField(
         help_text="Determines if this hive's stream should be accessible publicly"
     )
 
+    # Sensor dashboard data
+    dashboard_id = models.UUIDField(
+        null=True,
+        blank=True,
+        help_text="ID of the Thingsboard dashboard for this hive (if it exists)",
+    )
+
+    dashboard_public_id = models.UUIDField(
+        null=True,
+        blank=True,
+        help_text="Public ID of the Thingsboard dashboard for this hive (if it exists)",
+    )
+
+    dashboard_active = models.BooleanField(
+        help_text="Determines if this hive's dashboard should be accessible publicly through the apiary interface"
+    )
+
     def __str__(self):
         return f"{self.name}{' (inactive)' if not self.active else ''}"
-

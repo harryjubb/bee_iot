@@ -7,6 +7,8 @@ query HiveDetail($hiveSlug: String) {
     streamActive
     streamKey
     streamUrl
+    dashboardActive
+    dashboardUrl
     sponsor {
       id
       name
