@@ -29,6 +29,7 @@ services:
       - server_network
       - db_network
 
+  # Postgres backing the Django app
   postgres:
     image: postgres:latest
     volumes:
@@ -52,6 +53,8 @@ volumes:
   postgres:
   static:
   media:
+  thingsboard_data:
+  thingsboard_logs:
 
 networks:
   server_network:

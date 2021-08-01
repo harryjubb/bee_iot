@@ -63,6 +63,11 @@ export default function HiveDetail() {
       ? process.env.REACT_APP_APIARY_DEVELOPMENT_STREAM_URL
       : hive?.streamUrl ?? null;
 
+  const dashboardUrl =
+    process.env.NODE_ENV === "development"
+      ? process.env.REACT_APP_APIARY_DEVELOPMENT_DASHBOARD_URL
+      : hive?.dashboardUrl ?? null;
+
   const sponsorshipLevel = sponsor?.sponsorshipLevel ? (
     <>
       {upperFirst(sponsor.sponsorshipLevel.toLowerCase())}{" "}
@@ -120,13 +125,13 @@ export default function HiveDetail() {
             <>
               <Typography variant="body1">
                 Error loading live stream&nbsp;
-              <Button
-                color="primary"
-                variant="outlined"
-                onClick={() => setStreamError(false)}
-              >
-                Retry
-              </Button>
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  onClick={() => setStreamError(false)}
+                >
+                  Retry
+                </Button>
               </Typography>
             </>
           )}
@@ -136,29 +141,39 @@ export default function HiveDetail() {
                 <source src={streamUrl} type="application/x-mpegURL" />
               </video>
             ) : (
-            <div className={classes.reactPlayerWrapper}>
-              <ReactPlayer
-                className={classes.reactPlayer}
-                url={streamUrl}
-                light
-                width="100%"
-                height="100%"
-                playing
-                volume={1}
-                muted={false}
-                controls={true}
-                config={{
-                  file: {
-                    forceHLS: true,
-                  },
-                }}
-                onError={() => {
-                  setStreamError(true);
-                }}
-              />
-            </div>
-          ))}
-    </>)}
+              <div className={classes.reactPlayerWrapper}>
+                <ReactPlayer
+                  className={classes.reactPlayer}
+                  url={streamUrl}
+                  light
+                  width="100%"
+                  height="100%"
+                  playing
+                  volume={1}
+                  muted={false}
+                  controls={true}
+                  config={{
+                    file: {
+                      forceHLS: true,
+                    },
+                  }}
+                  onError={() => {
+                    setStreamError(true);
+                  }}
+                />
+              </div>
+            ))}
+        </>)}
+
+      {/* Sensor dashboards */}
+      {
+        dashboardUrl && hive?.dashboardActive ? <>
+          <Typography variant="h4" gutterBottom>
+            Sensor data
+          </Typography>
+          <iframe title="graf" width="100%" height="500px" src={dashboardUrl}></iframe>
+        </> : <></>
+      }
     </>
   )
 }

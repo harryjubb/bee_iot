@@ -10,9 +10,16 @@ class HiveType(DjangoObjectType):
 
     stream_url = graphene.String(description="Absolute URL for this hive's HLS stream")
 
+    dashboard_url = graphene.String(description="Absolute URL for this hive's sensor dashboard")
+
     def resolve_stream_url(self, info):
         if self.stream_active and self.stream_key:
             return info.context.build_absolute_uri(f"/hls/{self.stream_key}.m3u8")
+        return None
+
+    def resolve_dashboard_url(self, info):
+        if self.dashboard_active and self.dashboard_id and self.dashboard_public_id:
+            return info.context.build_absolute_uri(f"/dashboard/dashboard/{str(self.dashboard_id)}?publicId={str(self.dashboard_public_id)}")
         return None
 
 
