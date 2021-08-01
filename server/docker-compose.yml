@@ -48,6 +48,9 @@ services:
       - thingsboard_logs:/var/log/thingsboard
     expose:
       - "9090"
+    restart: always
+    networks:
+      - server_network
 
 volumes:
   postgres:
