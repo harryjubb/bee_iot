@@ -47,8 +47,8 @@ server {
 		alias /media;
 	}
 
-    location /dashboard {
-        proxy_pass http://thingsboard:9090;
+    location /dashboard/ {
+        proxy_pass http://thingsboard:9090/;
     }
 
 	location / {
