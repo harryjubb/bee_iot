@@ -14,6 +14,10 @@ services:
       - ./nginx/default:/config/nginx/site-confs/default
       - static:/static
       - media:/media
+    depends_on:
+      - nginx_rtmp
+      - apiary
+      - thingsboard
     ports:
       - "443:443"
       - "80:80"
