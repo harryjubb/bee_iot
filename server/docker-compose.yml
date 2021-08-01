@@ -40,17 +40,17 @@ services:
     networks:
       - db_network
 
-  thingsboard:
-    restart: always
-    image: "thingsboard/tb-postgres"
-    volumes:
-      - thingsboard_data:/data
-      - thingsboard_logs:/var/log/thingsboard
-    expose:
-      - "9090"
-    restart: always
-    networks:
-      - server_network
+  # thingsboard:
+  #   restart: always
+  #   image: "thingsboard/tb-postgres"
+  #   volumes:
+  #     - thingsboard_data:/data
+  #     - thingsboard_logs:/var/log/thingsboard
+  #   expose:
+  #     - "9090"
+  #   restart: always
+  #   networks:
+  #     - server_network
 
 volumes:
   postgres:

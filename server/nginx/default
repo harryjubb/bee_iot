@@ -47,9 +47,9 @@ server {
 		alias /media;
 	}
 
-    location /dashboard/ {
-        proxy_pass http://thingsboard:9090/;
-    }
+    # location /dashboard/ {
+    #     proxy_pass http://thingsboard:9090/;
+    # }
 
 	location / {
 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
