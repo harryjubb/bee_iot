@@ -75,6 +75,7 @@ server {
     client_max_body_size 0;
 
     location / {
+		add_header Content-Type text/plain;
         return 200 "dashboard";
         # proxy_pass http://thingsboard:9090/;
     }
