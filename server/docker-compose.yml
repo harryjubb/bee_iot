@@ -40,17 +40,31 @@ services:
     networks:
       - db_network
 
-  # thingsboard:
-  #   restart: always
-  #   image: "thingsboard/tb-postgres"
-  #   volumes:
-  #     - thingsboard_data:/data
-  #     - thingsboard_logs:/var/log/thingsboard
-  #   expose:
-  #     - "9090"
-  #   restart: always
-  #   networks:
-  #     - server_network
+  # ThingsBoard IOT sensor database and dashboards
+  thingsboard:
+    restart: always
+    image: thingsboard/tb-postgres
+    volumes:
+      - thingsboard_data:/data
+      - thingsboard_logs:/var/log/thingsboard
+    expose:
+      - "9090"
+    restart: always
+    networks:
+      - server_network
+      - thingsboard_network
+    env_file:
+      - .env
+
+  # RabbitMQ message broker for ThingsBoard
+  rabbitmq:
+    restart: always
+    image: rabbitmq
+    expose:
+      - "5672"
+    networks:
+      - thingsboard_network
+
 
 volumes:
   postgres:
@@ -62,3 +76,4 @@ volumes:
 networks:
   server_network:
   db_network:
+  thingsboard_network:
