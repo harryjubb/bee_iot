@@ -23,7 +23,7 @@
             "limits": {},
             "name": "rabbitmq",
             "password_hash": "______PASSWORD_HASH______",
-            "tags": []
+            "tags": ["administrator"]
         }
     ],
     "vhosts": [
