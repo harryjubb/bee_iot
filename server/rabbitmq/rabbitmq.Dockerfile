@@ -1,4 +1,4 @@
-FROM rabbitmq:3.9.1
+FROM rabbitmq:3.9.1-management
 
 RUN apt-get update && \
 apt-get install -y xxd && \
