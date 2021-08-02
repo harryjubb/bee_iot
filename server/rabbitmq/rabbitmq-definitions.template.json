@@ -22,7 +22,7 @@
             "hashing_algorithm": "rabbit_password_hashing_sha256",
             "limits": {},
             "name": "rabbitmq",
-            "password_hash": "::::::PASSWORD_HASH::::::",
+            "password_hash": "______PASSWORD_HASH______",
             "tags": []
         }
     ],

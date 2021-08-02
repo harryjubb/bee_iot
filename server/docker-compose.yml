@@ -53,17 +53,23 @@ services:
     networks:
       - server_network
       - thingsboard_network
+    depends_on:
+      - rabbitmq
     env_file:
       - .env
 
   # RabbitMQ message broker for ThingsBoard
   rabbitmq:
     restart: always
-    image: rabbitmq
+    build:
+      context: ./rabbitmq
+      dockerfile: rabbitmq.Dockerfile
     expose:
       - "5672"
     networks:
       - thingsboard_network
+    env_file:
+      - .env
 
 
 volumes:

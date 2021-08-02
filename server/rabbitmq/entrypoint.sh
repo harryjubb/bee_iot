@@ -11,9 +11,18 @@ function encode_password()
     echo $PASS
 }
 
-HASHED_PASSWORD=$(encode_password $RABBITMQ_PASSWORD)
+echo "PASSWORD:"
+echo "$RABBITMQ_PASSWORD"
+
+HASHED_PASSWORD=$(encode_password "$RABBITMQ_PASSWORD")
+
+echo "HASHED_PASSWORD:"
+echo "$HASHED_PASSWORD"
 
 # Substitute the hashed password into the built-in definitions file template
-sed "s/::::::PASSWORD_HASH::::::/$HASHED_PASSWORD/g" /conf/rabbitmq-definitions.template.json > /conf/rabbitmq-definitions.json
+sed "s/______PASSWORD_HASH______/$HASHED_PASSWORD/" /conf/rabbitmq-definitions.template.json > /conf/rabbitmq-definitions.json
+
+echo "Conf:"
+cat /conf/rabbitmq-definitions.json
 
 docker-entrypoint.sh rabbitmq-server
