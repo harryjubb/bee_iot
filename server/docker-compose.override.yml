@@ -18,3 +18,7 @@ services:
       - "5683:5683/udp"
     environment:
       TB_QUEUE_TYPE: in-memory
+
+  rabbitmq:
+    ports:
+      - "8081:15672""
