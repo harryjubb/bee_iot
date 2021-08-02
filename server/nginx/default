@@ -61,8 +61,8 @@ server {
 
 # Dashboard server block
 server {
-    listen 443 ssl http2 default_server;
-    listen [::]:443 ssl http2 default_server;
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
 
     server_name dashboard.*;
 
