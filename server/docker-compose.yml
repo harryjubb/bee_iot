@@ -43,7 +43,7 @@ services:
   # ThingsBoard IOT sensor database and dashboards
   thingsboard:
     restart: always
-    image: thingsboard/tb-postgres
+    image: thingsboard/tb-postgres:3.2.2
     volumes:
       - thingsboard_data:/data
       - thingsboard_logs:/var/log/thingsboard
@@ -70,6 +70,8 @@ services:
       - thingsboard_network
     env_file:
       - .env
+    ports:
+      - "8081:15672"
 
 
 volumes:
