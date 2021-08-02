@@ -21,4 +21,4 @@ services:
 
   rabbitmq:
     ports:
-      - "8081:15672""
+      - "8081:15672"
