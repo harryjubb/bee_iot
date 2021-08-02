@@ -10,12 +10,12 @@ server {
     return 301 https://$host$request_uri;
 }
 
-# main server block
+# API server block
 server {
     listen 443 ssl http2 default_server;
     listen [::]:443 ssl http2 default_server;
 
-    server_name _;
+    server_name api.*;
 
     # enable subfolder method reverse proxy confs
     include /config/nginx/proxy-confs/*.subfolder.conf;
@@ -25,6 +25,7 @@ server {
 
     client_max_body_size 0;
 
+    # TODO: Cleaner to move this to a rtmp.* virtual server
     location /hls {
 		proxy_pass http://nginx_rtmp:8080/hls;
 	}
@@ -47,10 +48,6 @@ server {
 		alias /media;
 	}
 
-    # location /dashboard/ {
-    #     proxy_pass http://thingsboard:9090/;
-    # }
-
 	location / {
 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 		proxy_set_header X-Forwarded-Proto $scheme;
@@ -60,6 +57,27 @@ server {
 		proxy_redirect off;
 		proxy_pass http://apiary:8000;
 	}
+}
+
+# Dashboard server block
+server {
+    listen 443 ssl http2 default_server;
+    listen [::]:443 ssl http2 default_server;
+
+    server_name dashboard.*;
+
+    # enable subfolder method reverse proxy confs
+    include /config/nginx/proxy-confs/*.subfolder.conf;
+
+    # all ssl related config moved to ssl.conf
+    include /config/nginx/ssl.conf;
+
+    client_max_body_size 0;
+
+    location / {
+        return 200 "dashboard";
+        # proxy_pass http://thingsboard:9090/;
+    }
 }
 
 # enable subdomain method reverse proxy confs
