@@ -40,10 +40,19 @@ services:
     networks:
       - db_network
 
+  # InfluxDB for sensor data storage
+  influxdb:
+    image: influxdb:2.0.7
+    command: --reporting-disabled
+    volumes:
+      - influxdb:/var/lib/influxdb2
+    restart: always
+
 volumes:
   postgres:
   static:
   media:
+  influxdb:
 
 networks:
   server_network:
