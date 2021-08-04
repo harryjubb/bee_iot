@@ -17,7 +17,6 @@ services:
     depends_on:
       - nginx_rtmp
       - apiary
-      - thingsboard
     ports:
       - "443:443"
       - "80:80"
