@@ -2,20 +2,14 @@ version: "3.7"
 
 services:
 
-  # environment:
-    # build: ./services/environment
-    # restart: always
-    # environment:
-      # Environment is from .env file
-      # - AUTH_TOKEN
-      # - SERVER
-      # - HIVE_ID
+  environment:
+    build: ./services/environment
+    restart: always
+    env_file: .env
     # Required for GPIO access
-    # privileged: true
+    privileged: true
 
   av_streaming_picam:
-    # depends_on:
-    #   - av_streaming_ffmpeg
     build: ./services/av_streaming/picam
     privileged: true
     restart: always
