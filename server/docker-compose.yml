@@ -47,6 +47,8 @@ services:
     volumes:
       - influxdb:/var/lib/influxdb2
     restart: always
+    networks:
+      - server_network
 
 volumes:
   postgres:
