@@ -77,6 +77,7 @@ function App() {
               {process.env.REACT_APP_APIARY_NAME ?? "Apiary"}
             </Link>
           </Typography>
+          { process.env.REACT_APP_APIARY_SPONSORSHIP_URL ?
           <Link
             href={process.env.REACT_APP_APIARY_SPONSORSHIP_URL}
             target="_blank"
@@ -95,6 +96,8 @@ function App() {
               &nbsp;Sponsor a hive
             </Button>
           </Link>
+          : <></>
+          }
         </Toolbar>
       </AppBar>
       <Container className={classes.container}>
