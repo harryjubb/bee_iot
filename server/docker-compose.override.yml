@@ -15,3 +15,8 @@ services:
   influxdb:
     ports:
       - 8086:8086
+
+  # Grafana for public data dashboards
+  grafana:
+    ports:
+      - 3080:3000

@@ -50,11 +50,21 @@ services:
     networks:
       - server_network
 
+  # Grafana for public data dashboards
+  grafana:
+    image: grafana/grafana:8.0.6
+    volumes:
+      - grafana:/var/lib/grafana
+    restart: always
+    networks:
+      - server_network
+
 volumes:
   postgres:
   static:
   media:
   influxdb:
+  grafana:
 
 networks:
   server_network:
