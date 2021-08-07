@@ -14,9 +14,8 @@ services:
     privileged: true
     restart: always
     env_file: .env
-    volumes:
-      - type: tmpfs
-        target: /shm
+    tmpfs:
+      - /picam_tmpfs
     networks:
       - streaming_network
     healthcheck:
