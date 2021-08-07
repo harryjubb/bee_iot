@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # Allow this service to be toggled on / off
-if [ $HIVE_STREAMING_ENABLED != 'true' ]
-then
+if [ "$HIVE_STREAMING_ENABLED" != "true" ] ; then
     while true; do
         echo '*** A/V streaming is disabled.'
         echo '*** Set the environment variable HIVE_STREAMING_ENABLED=true to enable this service.'
