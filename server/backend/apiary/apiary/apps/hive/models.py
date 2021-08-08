@@ -49,16 +49,10 @@ class Hive(models.Model):
     )
 
     # Sensor dashboard data
-    dashboard_id = models.UUIDField(
+    dashboard_url = models.URLField(
         null=True,
         blank=True,
-        help_text="ID of the Thingsboard dashboard for this hive (if it exists)",
-    )
-
-    dashboard_public_id = models.UUIDField(
-        null=True,
-        blank=True,
-        help_text="Public ID of the Thingsboard dashboard for this hive (if it exists)",
+        help_text="URL of the Grafana dashboard template to display sensor data for this hive",
     )
 
     dashboard_active = models.BooleanField(

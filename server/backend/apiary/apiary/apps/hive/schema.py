@@ -18,8 +18,8 @@ class HiveType(DjangoObjectType):
         return None
 
     def resolve_dashboard_url(self, info):
-        if self.dashboard_active and self.dashboard_id and self.dashboard_public_id:
-            return info.context.build_absolute_uri(f"/dashboard/dashboard/{str(self.dashboard_id)}?publicId={str(self.dashboard_public_id)}")
+        if self.dashboard_active and self.dashboard_url:
+            return self.dashboard_url + f"&var-hive={self.uid}&from=now-24h&to=now&refresh=30s"
         return None
 
 
