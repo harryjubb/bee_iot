@@ -19,7 +19,7 @@ class HiveType(DjangoObjectType):
 
     def resolve_dashboard_url(self, info):
         if self.dashboard_active and self.dashboard_url:
-            return self.dashboard_url + f"&var-hive={self.uid}&from=now-24h&to=now&refresh=30s"
+            return self.dashboard_url + f"&var-hive={self.uid}&from=now-24h&to=now&refresh=30s&kiosk"
         return None
 
 
