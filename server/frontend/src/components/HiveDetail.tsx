@@ -166,7 +166,7 @@ export default function HiveDetail() {
           <Typography variant="h4" gutterBottom>
             Sensor data
           </Typography>
-          <iframe title={`${hive.name} sensor data`} width="100%" height="500px" src={hive.dashboardUrl}></iframe>
+          <iframe title={`${hive.name} sensor data`} style={{width: '100%', height: '50vh', border: 'none'}} src={hive.dashboardUrl}></iframe>
         </> : <></>
       }
     </>
