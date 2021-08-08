@@ -65,6 +65,10 @@ network={
     - Select `3 Interface Options`
     - Select `P1 Camera`
     - Select `Yes` to enable the Pi camera
+    - Select 3 Interface Options
+    - Select P5 I2C
+    - Select Yes to enable I2C (for environment sensing)
+    - Exit `raspi-config`
     - Restart the Pi with `sudo shutdown -r now`
     - SSH back into the Pi, using the new hostname. Test that the new password works correctly
     - Test that the camera is working:
