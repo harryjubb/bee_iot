@@ -63,11 +63,6 @@ export default function HiveDetail() {
       ? process.env.REACT_APP_APIARY_DEVELOPMENT_STREAM_URL
       : hive?.streamUrl ?? null;
 
-  const dashboardUrl =
-    process.env.NODE_ENV === "development"
-      ? process.env.REACT_APP_APIARY_DEVELOPMENT_DASHBOARD_URL
-      : hive?.dashboardUrl ?? null;
-
   const sponsorshipLevel = sponsor?.sponsorshipLevel ? (
     <>
       {upperFirst(sponsor.sponsorshipLevel.toLowerCase())}{" "}
@@ -167,11 +162,11 @@ export default function HiveDetail() {
 
       {/* Sensor dashboards */}
       {
-        dashboardUrl && hive?.dashboardActive ? <>
+        hive?.dashboardUrl && hive?.dashboardActive ? <>
           <Typography variant="h4" gutterBottom>
             Sensor data
           </Typography>
-          <iframe title="graf" width="100%" height="500px" src={dashboardUrl}></iframe>
+          <iframe title={`${hive.name} sensor data`} width="100%" height="500px" src={hive.dashboardUrl}></iframe>
         </> : <></>
       }
     </>

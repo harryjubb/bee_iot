@@ -36,16 +36,12 @@ export type HiveType = {
   streamKey?: Maybe<Scalars['String']>;
   /** Determines if this hive's stream should be accessible publicly */
   streamActive: Scalars['Boolean'];
-  /** ID of the Thingsboard dashboard for this hive (if it exists) */
-  dashboardId?: Maybe<Scalars['UUID']>;
-  /** Public ID of the Thingsboard dashboard for this hive (if it exists) */
-  dashboardPublicId?: Maybe<Scalars['UUID']>;
+  /** Absolute URL for this hive's sensor dashboard */
+  dashboardUrl?: Maybe<Scalars['String']>;
   /** Determines if this hive's dashboard should be accessible publicly through the apiary interface */
   dashboardActive: Scalars['Boolean'];
   /** Absolute URL for this hive's HLS stream */
   streamUrl?: Maybe<Scalars['String']>;
-  /** Absolute URL for this hive's sensor dashboard */
-  dashboardUrl?: Maybe<Scalars['String']>;
 };
 
 /** An enumeration. */
