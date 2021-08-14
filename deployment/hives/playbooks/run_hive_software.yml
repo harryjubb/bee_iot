@@ -1,0 +1,12 @@
+---
+- name: Run the hive software
+  hosts: hives
+  remote_user: pi
+
+  tasks:
+
+  - name: Set up .env file for the hive
+    ansible.builtin.template:
+      src: hive_env.j2
+      dest: /home/pi/bee_iot/hive/.env
+      mode: 0644

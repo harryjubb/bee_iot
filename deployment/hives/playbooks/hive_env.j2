@@ -1,0 +1,41 @@
+# Unique hive name
+# Must be all lowercase, one word
+# Used for environment readings
+HIVE_NAME={{ hive_name }}
+
+# Enable / disable services
+# Set to `true` or `false`
+HIVE_STREAMING_ENABLED={{ hive_streaming_enabled }}
+HIVE_ENVIRONMENT_ENABLED={{ hive_environment_enabled }}
+
+# Picam settings
+
+# Hardware recording device
+# Use arecord -l to see capture devices
+# Format is card,device
+# Typically set as hw:1,0
+# Avoid using plughw and stick to hw
+ALSA_DEVICE={{ hive_alsa_device }}
+
+# Number of audio channels to record from
+# Typically set to 1
+# May be able to use more for multi-channel mics, e.g. respeaker,
+# but this may not play well with picam
+AUDIO_CHANNELS={{ hive_audio_channels }}
+
+# RTMP endpoint to push the stream to
+RTMP_URL={{ hive_rtmp_url }}
+
+# Name of the stream URL to push to
+STREAM_KEY={{ hive_stream_key }}
+
+# Authentication key used by the backend to check that we are allowed
+# to push streams
+# Must match the setting on the backend
+STREAM_SECRET_KEY={{ hive_stream_secret_key }}
+
+# Environment sensor settings
+INFLUXDB_API_TOKEN={{ hive_influxdb_api_token }}
+INFLUXDB_ORG={{ hive_influxdb_org }}
+INFLUXDB_BUCKET={{ hive_influxdb_bucket }}
+INFLUXDB_URL={{ hive_influxdb_url }}

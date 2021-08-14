@@ -5,5 +5,20 @@ hives:
       pi_hostname: desiredhostname
       # Password for the pi user
       pi_password: thepassword
+      # Hive environment variables for this hive
+      # Used to set the environment for Dockerised hive services
+      # Details of how to set values in bee_iot/hive/.env.example
+      hive_name: hivename
+      hive_streaming_enabled: true
+      hive_environment_enabled: true
+      hive_alsa_device: hw:1,0
+      hive_audio_channels: "1"
+      hive_rtmp_url: rtmps://example.com:1935/publish
+      hive_stream_key: hivename
+      hive_stream_secret_key: secretkey
+      hive_influxdb_api_token: yourtoken
+      hive_influxdb_org: yourorgoninfluxdb
+      hive_influxdb_bucket: bucketname
+      hive_influxdb_url: https://influxdb.example.com
   vars:
     ansible_user: pi
