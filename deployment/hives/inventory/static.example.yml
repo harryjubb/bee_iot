@@ -4,6 +4,6 @@ hives:
       # Hostname to set this Pi to
       pi_hostname: desiredhostname
       # Password for the pi user
-      password: thepassword
+      pi_password: thepassword
   vars:
     ansible_user: pi
