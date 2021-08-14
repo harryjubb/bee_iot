@@ -76,8 +76,6 @@
       - Reboot on config changes
 
   handlers:
-    - name: Logout and back in
-      ansible.builtin.meta: reset_connection
     - name: Reboot on config changes
       become: true
       ansible.builtin.reboot:
