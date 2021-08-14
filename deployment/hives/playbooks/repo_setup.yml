@@ -10,3 +10,8 @@
       repo: 'https://github.com/harryjubb/bee_iot.git'
       dest: /home/pi/bee_iot
       version: HEAD
+    notify: Copy libraries for picam
+
+  handlers:
+    - name: Copy libraries for picam
+      ansible.builtin.command: "$(cd /home/pi/bee_iot/services/av_streaming/picam && sh copy_libs.sh)"
