@@ -10,3 +10,5 @@
       src: hive_env.j2
       dest: /home/pi/bee_iot/hive/.env
       mode: 0644
+
+  # TODO: Run compose; force recreate if env has changed (Ansible when)
