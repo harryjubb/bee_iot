@@ -84,6 +84,12 @@
     become: true
     command: sh /home/pi/get-docker.sh
 
+  # docker-compose setup
+  - name: Install docker-compose
+    ansible.builtin.pip:
+      name: docker-compose
+      executable: pip3
+
   # Reboot if any config was changed
   handlers:
     - name: Reboot on config changes
