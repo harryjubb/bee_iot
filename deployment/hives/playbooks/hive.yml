@@ -20,6 +20,19 @@
     notify:
       - Reboot on config changes
 
+  # I2C setup
+  - name: Get I2C enabled / disabled status
+    changed_when: false
+    become: true
+    command: raspi-config nonint get_i2c
+    register: i2c_enabled_status
+  - name: Enable I2C via raspi-config
+    when: i2c_enabled_status.stdout == "1"
+    become: true
+    command: raspi-config nonint do_i2c 0
+    notify:
+      - Reboot on config changes
+
   # Reboot if any config was changed
   handlers:
     - name: Reboot on config changes
