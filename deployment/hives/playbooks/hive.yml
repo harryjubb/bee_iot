@@ -1,0 +1,28 @@
+---
+- name: Pi configuration
+  hosts: hives
+  remote_user: pi
+
+  tasks:
+  - name: Test connection
+    ansible.builtin.ping:
+
+  # Camera setup
+  - name: Get camera enabled / disabled status
+    changed_when: false
+    become: true
+    command: raspi-config nonint get_camera
+    register: camera_enabled_status
+  - name: Enable the camera via raspi-config
+    when: camera_enabled_status.stdout == "1"
+    become: true
+    command: raspi-config nonint do_camera 0
+    notify:
+      - Reboot on config changes
+
+  # Reboot if any config was changed
+  handlers:
+    - name: Reboot on config changes
+      become: true
+      ansible.builtin.reboot:
+        connect_timeout: 600
