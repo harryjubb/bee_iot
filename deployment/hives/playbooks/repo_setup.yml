@@ -14,4 +14,6 @@
 
   handlers:
     - name: Copy libraries for picam
-      ansible.builtin.command: "cd /home/pi/bee_iot/hive/services/av_streaming/picam && sh copy_libs.sh"
+      ansible.builtin.command:
+        chdir: /home/pi/bee_iot/hive/services/av_streaming/picam
+        cmd: sh copy_libs.sh
