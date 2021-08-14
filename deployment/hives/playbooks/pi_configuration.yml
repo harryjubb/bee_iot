@@ -28,7 +28,13 @@
   - name: Package installs
     become: true
     ansible.builtin.apt:
-      name: curl
+      name:
+        - curl
+        - libffi-dev
+        - python
+        - python-pip
+        - python3
+        - python3-pip
       state: present
 
   # Hostname
@@ -84,14 +90,23 @@
     become: true
     command: sh /home/pi/get-docker.sh
 
-  # docker-compose setup
   - name: Install docker-compose
     ansible.builtin.pip:
       name: docker-compose
       executable: pip3
 
-  # Reboot if any config was changed
+  - name: Add pi user to the Docker group
+    become: true
+    ansible.builtin.user:
+      name: pi
+      groups: docker
+      append: true
+    notify:
+      - Logout and back in
+
   handlers:
+    - name: Logout and back in
+      ansible.builtin.meta: reset_connection
     - name: Reboot on config changes
       become: true
       ansible.builtin.reboot:
