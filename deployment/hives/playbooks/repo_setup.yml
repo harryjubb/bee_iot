@@ -1,0 +1,12 @@
+---
+- name: bee_iot repository setup
+  hosts: hives
+  remote_user: pi
+
+  tasks:
+
+  - name: Git checkout of bee_iot
+    ansible.builtin.git:
+      repo: 'https://github.com/harryjubb/bee_iot.git'
+      dest: /home/pi/bee_iot
+      version: HEAD

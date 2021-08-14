@@ -3,3 +3,5 @@
   import_playbook: pi_configuration.yml
 - name: Set up Docker on Raspberry Pis
   import_playbook: docker_setup.yml
+- name: Checkout the latest bee_iot codebase
+  import_playbook: repo_setup.yml
