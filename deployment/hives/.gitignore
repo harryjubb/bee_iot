@@ -169,3 +169,7 @@ cython_debug/
 
 # Ansible virtualenv
 /ansible
+
+# Ansible inventory
+/inventory/*.yml
+!/inventory/static.example.yml
