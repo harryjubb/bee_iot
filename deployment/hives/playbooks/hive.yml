@@ -5,3 +5,8 @@
   import_playbook: docker_setup.yml
 - name: Checkout the latest bee_iot codebase
   import_playbook: repo_setup.yml
+
+# TODO:
+# - Microphone setup
+# - Set up envs for compose
+# - Run compose
