@@ -1,0 +1,9 @@
+hives:
+  hosts:
+    currenthostname:
+      # Hostname to set this Pi to
+      pi_hostname: desiredhostname
+      # Password for the pi user
+      password: thepassword
+  vars:
+    ansible_user: pi
