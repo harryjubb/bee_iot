@@ -1,0 +1,70 @@
+---
+- name: Pi configuration
+  hosts: hives
+  remote_user: pi
+
+  tasks:
+  - name: Test connection
+    ansible.builtin.ping:
+
+  # Set the `pi` user password
+  # Creates password salts that are idempotent between runs
+  # https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#encrypting-and-checksumming-strings-and-passwords
+  - name: Set pi user password
+    become: true
+    ansible.builtin.user:
+      name: pi
+      password: "{{ pi_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}"
+      update_password: always
+
+  # Apt update / upgrade
+  - name: Package updates
+    become: true
+    ansible.builtin.apt:
+      update_cache: true
+      upgrade: safe
+
+  # Hostname
+  - name: Get hostname
+    changed_when: false
+    become: true
+    ansible.builtin.command: raspi-config nonint get_hostname
+    register: existing_hostname
+  - name: Set hostname
+    when: pi_hostname != existing_hostname.stdout
+    become: true
+    ansible.builtin.command: raspi-config nonint do_hostname {{ pi_hostname | quote }}
+    register: existing_hostname
+
+  # Camera setup
+  - name: Get camera enabled / disabled status
+    changed_when: false
+    become: true
+    ansible.builtin.command: raspi-config nonint get_camera
+    register: camera_enabled_status
+  - name: Enable the camera via raspi-config
+    when: camera_enabled_status.stdout == "1"
+    become: true
+    ansible.builtin.command: raspi-config nonint do_camera 0
+    notify:
+      - Reboot on config changes
+
+  # I2C setup
+  - name: Get I2C enabled / disabled status
+    changed_when: false
+    become: true
+    command: raspi-config nonint get_i2c
+    register: i2c_enabled_status
+  - name: Enable I2C via raspi-config
+    when: i2c_enabled_status.stdout == "1"
+    become: true
+    ansible.builtin.command: raspi-config nonint do_i2c 0
+    notify:
+      - Reboot on config changes
+
+  # Reboot if any config was changed
+  handlers:
+    - name: Reboot on config changes
+      become: true
+      ansible.builtin.reboot:
+        connect_timeout: 600
