@@ -1,3 +1,5 @@
 ---
 - name: Configure Raspberry Pis for hive usage
   import_playbook: pi_configuration.yml
+- name: Set up Docker on Raspberry Pis
+  import_playbook: docker_setup.yml

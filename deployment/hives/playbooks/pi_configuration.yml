@@ -75,35 +75,6 @@
     notify:
       - Reboot on config changes
 
-  # Docker setup
-  - name: Check if Docker is installed
-    ansible.builtin.stat:
-      path: /usr/bin/docker
-    register: docker_stat
-  - name: Get Docker install script
-    when: not docker_stat.stat.exists
-    ansible.builtin.get_url:
-      url: https://get.docker.com
-      dest: /home/pi/get-docker.sh
-  - name: Install Docker
-    when: not docker_stat.stat.exists
-    become: true
-    command: sh /home/pi/get-docker.sh
-
-  - name: Install docker-compose
-    ansible.builtin.pip:
-      name: docker-compose
-      executable: pip3
-
-  - name: Add pi user to the Docker group
-    become: true
-    ansible.builtin.user:
-      name: pi
-      groups: docker
-      append: true
-    notify:
-      - Logout and back in
-
   handlers:
     - name: Logout and back in
       ansible.builtin.meta: reset_connection
