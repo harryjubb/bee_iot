@@ -7,6 +7,18 @@
   - name: Test connection
     ansible.builtin.ping:
 
+  # Hostname
+  - name: Get hostname
+    changed_when: false
+    become: true
+    ansible.builtin.command: raspi-config nonint get_hostname
+    register: existing_hostname
+  - name: Set hostname
+    when: pi_hostname != existing_hostname.stdout
+    become: true
+    ansible.builtin.command: raspi-config nonint do_hostname {{ pi_hostname | quote }}
+    register: existing_hostname
+
   # Camera setup
   - name: Get camera enabled / disabled status
     changed_when: false
