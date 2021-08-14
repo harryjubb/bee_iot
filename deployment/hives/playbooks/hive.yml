@@ -11,12 +11,12 @@
   - name: Get camera enabled / disabled status
     changed_when: false
     become: true
-    command: raspi-config nonint get_camera
+    ansible.builtin.command: raspi-config nonint get_camera
     register: camera_enabled_status
   - name: Enable the camera via raspi-config
     when: camera_enabled_status.stdout == "1"
     become: true
-    command: raspi-config nonint do_camera 0
+    ansible.builtin.command: raspi-config nonint do_camera 0
     notify:
       - Reboot on config changes
 
@@ -29,7 +29,7 @@
   - name: Enable I2C via raspi-config
     when: i2c_enabled_status.stdout == "1"
     become: true
-    command: raspi-config nonint do_i2c 0
+    ansible.builtin.command: raspi-config nonint do_i2c 0
     notify:
       - Reboot on config changes
 
