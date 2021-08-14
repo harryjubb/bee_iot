@@ -7,6 +7,10 @@
   - name: Test connection
     ansible.builtin.ping:
 
+  # TODO: pi user password
+  # TODO: Public key auth
+  # TODO: Apt update / upgrade
+
   # Hostname
   - name: Get hostname
     changed_when: false
