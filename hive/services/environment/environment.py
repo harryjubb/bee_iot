@@ -1,5 +1,5 @@
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 
 import bme680
 from influxdb_client import InfluxDBClient, Point, WritePrecision
@@ -86,7 +86,7 @@ try:
                     Point("environment")
                     .tag("hive", settings.hive_name)
                     .field(reading, value)
-                    .time(datetime.utcnow(), WritePrecision.S)
+                    .time(datetime.now(timezone.utc), WritePrecision.S)
                 )
 
                 write_api.write(settings.bucket, settings.org, point)
