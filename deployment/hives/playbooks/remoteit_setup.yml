@@ -24,6 +24,7 @@
     register: connectd_install
 
   # Copy over the registration script
+  # *** Registration only runs the first time we install connectd
   - name: Copy over the registration script
     when: remoteit_enabled and connectd_install.changed
     ansible.builtin.template:
@@ -37,6 +38,39 @@
     when: remoteit_enabled and registration_script.changed
     become: true
     ansible.builtin.command: sh /tmp/connectd_register.sh
+
+    # Set up cron entries to keep connectd running
+    # https://support.remote.it/hc/en-us/articles/360053139091-Keeping-your-services-running-connectd-package-
+  - name: Ensure connectd doesn't drop
+    when: remoteit_enabled
+    ansible.builtin.cron:
+      name: "start connectd"
+      minute: "5"
+      job: "/usr/bin/connectd start"
+      cron_file: start_connectd
+
+  - name: Ensure connectd_schannel doesn't drop
+    when: remoteit_enabled
+    ansible.builtin.cron:
+      name: "start connectd_schannel"
+      minute: "5"
+      job: "/usr/bin/connectd_schannel start"
+      cron_file: start_connectd_schannel
+
+  # Remove cron entries if we're not running remote.it
+  - name: Remove connectd cron job
+    when: not remoteit_enabled
+    ansible.builtin.cron:
+      name: "start connectd"
+      cron_file: start_connectd
+      state: absent
+
+  - name: Remove connectd_schannel cron job
+    when: not remoteit_enabled
+    ansible.builtin.cron:
+      name: "start connectd_schannel"
+      cron_file: start_connectd_schannel
+      state: absent
 
   # Ensure the registration script containing credentials is removed
   - name: Remove the registration script
