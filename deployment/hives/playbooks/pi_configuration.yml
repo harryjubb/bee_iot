@@ -117,9 +117,13 @@
       - Reboot
 
   # Microphone volume adjustment
-  - name: Get given sound card number from config
+  - name: List sound cards
+    changed_when: false
+    ansible.builtin.command: cat /proc/asound/cards
+    register: sound_cards
+  - name: Get USB audio device number
     set_fact:
-      alsa_device_number: "{{ hive_alsa_device.split(':')[1].split(',')[0] }}"
+      alsa_device_number: '{{ sound_cards.stdout | regex_search("\s+(\d+)\s+\[Device.*USB.*", "\1", multiline=True) | first }}'
   - name: Get microphone volume
     changed_when: false
     ansible.builtin.command: amixer -c {{ alsa_device_number }} sget Mic
