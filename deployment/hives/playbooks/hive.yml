@@ -7,6 +7,3 @@
   import_playbook: repo_setup.yml
 - name: Run the hive software
   import_playbook: run_hive_software.yml
-
-# TODO:
-# - Detect mic sound card automatically

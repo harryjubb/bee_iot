@@ -18,7 +18,10 @@ hives:
       hive_name: hivename
       hive_streaming_enabled: "true"
       hive_environment_enabled: "true"
-      hive_alsa_device: hw:1,0
+      # `hive_alsa_device` is auto-detected if not set
+      # Must have a USB sound card with capture capability
+      # plugged in to the Pi
+      # hive_alsa_device: hw:1,0
       hive_audio_channels: "1"
       hive_rtmp_url: rtmps://example.com:1935/publish
       hive_stream_key: hivename

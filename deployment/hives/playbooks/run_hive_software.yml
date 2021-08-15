@@ -5,6 +5,34 @@
 
   tasks:
 
+  # Microphone device / card number and volume adjustment if we're A/V streaming
+  - name: List audio capture devices
+    when: hive_streaming_enabled
+    changed_when: false
+    ansible.builtin.command: arecord -l
+    register: capture_devices
+  - name: Get USB audio device number
+    when: hive_streaming_enabled
+    set_fact:
+      alsa_device_number: '{{ capture_devices.stdout | regex_search("card (\d+): Device \[USB.*", "\1", multiline=True) | first }}'
+      alsa_card_number: '{{ capture_devices.stdout | regex_search("card \d+: Device \[USB.*device (\d+)", "\1", multiline=True) | first }}'
+  - name: Get microphone volume
+    when: hive_streaming_enabled
+    changed_when: false
+    ansible.builtin.command: amixer -c {{ alsa_device_number }} sget Mic
+    register: mic_volume
+  - name: Set microphone volume
+    when: hive_streaming_enabled and (not (mic_volume | regex_search('Capture\s\d+\s\[80%\]')))
+    ansible.builtin.command: amixer -c {{ alsa_device_number }} sset Mic 80%
+
+  # Set the `hive_alsa_device` if it hasn't been set by a variable
+  # Ansible variables take precedence over facts:
+  # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/set_fact_module.html
+  - name: Set microphone ALSA device string
+    when: hive_streaming_enabled
+    set_fact:
+      hive_alsa_device: "hw:{{ alsa_device_number }},{{ alsa_card_number }}"
+
   - name: Set up .env file for the hive
     ansible.builtin.template:
       src: hive_env.j2
