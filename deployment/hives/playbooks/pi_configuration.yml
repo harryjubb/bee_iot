@@ -60,6 +60,9 @@
     when: existing_hostname.stdout != pi_hostname
     become: true
     ansible.builtin.command: raspi-config nonint do_hostname {{ pi_hostname | quote }}
+    notify:
+      - Update inventory with new hostname
+      - Reboot
 
   # WiFi country
   - name: Get WiFi country
@@ -71,6 +74,7 @@
     when: existing_wifi_country.stdout != wpa_wifi_country
     become: true
     ansible.builtin.command: raspi-config nonint do_wifi_country {{ wpa_wifi_country | quote }}
+    notify: Reboot
 
   # Ensure wpa_supplicant.conf doesn't get updated elsewhere
   - name: Ensure wpa_supplicant.conf doesn't get updated elsewhere
@@ -79,6 +83,7 @@
       path: /etc/wpa_supplicant/wpa_supplicant.conf
       regexp: '^update_config='
       line: update_config=0
+    notify: Reboot
 
   # Set up the WPA supplicant file for WiFi connections
   - name: Set up the WPA supplicant file for WiFi connections
@@ -122,7 +127,41 @@
       - Reboot
 
   handlers:
+    # If the hostname was changed, update our inventory file
+    # Useful for setting up a new pi with the `raspberrypi`
+    # default hostname, and then automatically updating it to
+    # the newly set hostname
+    #
+    # Therefore, initial setup of Pis should be done one at a time,
+    # unless the hostname has already been updated to a new unique value
+    - name: Update inventory with new hostname
+      delegate_to: localhost
+      ansible.builtin.lineinfile:
+        path: "{{ inventory_file }}"
+        regexp: '^(\s*){{ inventory_hostname }}:$'
+        line: '\1{{ pi_hostname }}:'
+        backrefs: true
+      notify: Reboot (hostname change)
+
+    - name: Reboot (hostname change)
+      ansible.builtin.reboot:
+      poll: 0
+      ignore_errors: true
+      notify: Wait for host to return with new hostname
+
+    - name: Wait for host to return with new hostname
+      delegate_to: localhost
+      ansible.builtin.wait_for:
+        host: "{{ pi_hostname }}"
+        port: 22
+        state: started
+        timeout: 300
+      notify: Refresh inventory
+
+    - name: Refresh inventory
+      ansible.builtin.meta: refresh_inventory
+
     - name: Reboot
       become: true
       ansible.builtin.reboot:
-        connect_timeout: 600
+        connect_timeout: 300
