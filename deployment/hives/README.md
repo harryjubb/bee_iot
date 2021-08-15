@@ -29,7 +29,21 @@ source ansible/bin/activate
 ansible-playbook -i inventory/static.yml -v playbooks/hive.yml
 ```
 
-## Removing remote.it
+## Notes
+
+### WiFi config updates
+
+- The playbook sets `update_config=0` in `/etc/wpa_supplicant/wpa_supplicant.conf`. This means that the system will no longer make changes to the file. Changes going forward should be managed only by Ansible.
+
+See https://raspberrypi.stackexchange.com/a/105558/37503
+
+### Removing WiFi networks
+
+WiFi networks are not automatically removed if removed from `group_wifi_networks` and `hive_wifi_networks` Ansible variables.
+
+To remove a WiFi network, remove it from the Ansible variables and delete its entry from `/etc/wpa_supplicant/wpa_supplicant.conf`.
+
+### Removing remote.it
 
 If remote.it was enabled, to remove it is currently a manual step on hive Pis:
 
