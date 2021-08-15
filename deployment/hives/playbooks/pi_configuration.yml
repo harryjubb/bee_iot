@@ -55,7 +55,17 @@
     when: existing_hostname.stdout != pi_hostname
     become: true
     ansible.builtin.command: raspi-config nonint do_hostname {{ pi_hostname | quote }}
-    register: existing_hostname
+
+  # WiFi country
+  - name: Get WiFi country
+    changed_when: false
+    become: true
+    ansible.builtin.command: raspi-config nonint get_wifi_country
+    register: existing_wifi_country
+  - name: Set WiFi country
+    when: existing_wifi_country.stdout != wpa_wifi_country
+    become: true
+    ansible.builtin.command: raspi-config nonint do_wifi_country {{ wpa_wifi_country | quote }}
 
   # Camera setup
   - name: Get camera enabled / disabled status

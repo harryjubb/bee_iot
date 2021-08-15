@@ -24,6 +24,7 @@ hives:
       hive_influxdb_url: https://influxdb.example.com
   vars:
     ansible_user: pi
+    wpa_wifi_country: GB
     remoteid_access_key: example
     remoteid_access_key_secret: example
     remoteid_api_key: example
