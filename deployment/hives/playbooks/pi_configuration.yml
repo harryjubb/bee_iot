@@ -67,20 +67,43 @@
     become: true
     ansible.builtin.command: raspi-config nonint do_wifi_country {{ wpa_wifi_country | quote }}
 
-    # Set up the WPA supplicant file for WiFi connections
-  - name: Set up the WPA supplicant file for WiFi connections
+  # Set up the WPA supplicant file for WiFi connections
+  # Due to some weirdness with updating the wpa_supplicant.conf
+  # directly in /etc/wpa_supplicant being non-idempotent,
+  # the config is sorted in the pi user's directory,
+  # and then copied back to /etc/wpa_supplicant
+  - name: Copy wpa_supplicant.conf to Pi user's home
     become: true
+    ansible.builtin.copy:
+      remote_src: true
+      src: /etc/wpa_supplicant/wpa_supplicant.conf
+      dest: /home/pi/wpa_supplicant.conf
+      mode: 0644
+      owner: pi
+      group: pi
+
+  - name: Set up the WPA supplicant file for WiFi connections
     with_items: "{{ group_wifi_networks + hive_wifi_networks }}"
     ansible.builtin.blockinfile:
-      path: /etc/wpa_supplicant/wpa_supplicant.conf
+      path: /home/pi/wpa_supplicant.conf
       block: |
         network={
-          ssid="{{ item.ssid }}"
-          psk="{{ item.psk }}"
-          id_str="{{ item.id_str }}"
+                ssid="{{ item.ssid }}"
+                psk="{{ item.psk }}"
+                id_str="{{ item.id_str }}"
         }
       marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item.id_str }}"
-    notify: Reload WiFi configuration
+
+  - name: Copy wpa_supplicant.conf back to /etc/wpa_supplicant
+    become: true
+    ansible.builtin.copy:
+      remote_src: true
+      src: /home/pi/wpa_supplicant.conf
+      dest: /etc/wpa_supplicant/wpa_supplicant.conf
+      mode: 0644
+      owner: root
+      group: root
+    notify: Reboot
 
   # Camera setup
   - name: Get camera enabled / disabled status
@@ -113,6 +136,3 @@
       become: true
       ansible.builtin.reboot:
         connect_timeout: 600
-    - name: Reload WiFi configuration
-      become: true
-      ansible.builtin.command: wpa_cli -i wlan0 reconfigure
