@@ -7,6 +7,13 @@
   - name: Test connection
     ansible.builtin.ping:
 
+  # Set up public key auth
+  - name: Set up public key auth
+    ansible.posix.authorized_key:
+      user: pi
+      state: present
+      key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+
   # Set the `pi` user password
   # Creates password salts that are idempotent between runs
   # https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html#encrypting-and-checksumming-strings-and-passwords

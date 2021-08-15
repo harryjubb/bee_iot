@@ -5,6 +5,9 @@ Deployment automation for hive Raspberry Pis using [Ansible](https://docs.ansibl
 ## Requirements
 
 - Python 3
+- `sshpass`
+  - Debian-like: `sudo apt-get install sshpass`
+  - On OS X: `brew install hudochenkov/sshpass/sshpass`
 
 ## Setup
 

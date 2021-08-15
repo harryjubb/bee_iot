@@ -32,6 +32,15 @@ hives:
       hive_influxdb_url: https://influxdb.example.com
   vars:
     ansible_user: pi
+    # When setting up Pis, the default is no public-key auth and the default
+    # password of `raspberry`
+    #
+    # Ansible will prefer public key auth (set up on first run)
+    # after using password auth the first time. The Pi password is then
+    # immediately changed to the value in `pi_password` in the first run
+    #
+    # `sshpass` must be installed for this to work
+    ansible_ssh_pass: raspberry
     ansible_python_interpreter: python3
     wpa_wifi_country: GB
     group_wifi_networks:
