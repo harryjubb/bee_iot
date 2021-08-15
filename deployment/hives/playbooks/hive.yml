@@ -9,4 +9,4 @@
   import_playbook: run_hive_software.yml
 
 # TODO:
-# - Microphone setup
+# - Detect mic sound card automatically

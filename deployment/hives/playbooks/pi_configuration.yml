@@ -116,6 +116,18 @@
     notify:
       - Reboot
 
+  # Microphone volume adjustment
+  - name: Get given sound card number from config
+    set_fact:
+      alsa_device_number: "{{ hive_alsa_device.split(':')[1].split(',')[0] }}"
+  - name: Get microphone volume
+    changed_when: false
+    ansible.builtin.command: amixer -c {{ alsa_device_number }} sget Mic
+    register: mic_volume
+  - name: Set microphone volume
+    when: not (mic_volume | regex_search('Capture\s\d+\s\[80%\]'))
+    ansible.builtin.command: amixer -c {{ alsa_device_number }} sset Mic 80%
+
   handlers:
     - name: Reboot
       become: true
