@@ -1,0 +1,65 @@
+#!/bin/sh
+#  connectd_register
+#  for repetitive mfg line configuration of services
+#
+#  Adapted from https://github.com/remoteit/installer/blob/master/connectd/usr/bin/connectd_register
+#
+
+# For production:
+# remot3.it, Inc. recommends running this script (with real username/password filled in below) from /tmp folder.
+# e.g. use wget to copy this script to /tmp from a local web server on your LAN, then run it.
+# on next boot, /tmp folder is erased, so there is no trace of account credentials left over.
+
+# Include all of the registration functions
+. /usr/bin/connectd_library
+
+ACCESSKEY="{{ remoteid_access_key }}"
+KEYSECRET="{{ remoteid_access_key_secret }}"
+APIKEY="{{ remoteid_api_key }}"
+
+displayVersion
+platformDetection
+echo "Platform = " $PLATFORM
+
+userLogin key
+testLogin
+
+# $SERVICEBASENAME is the base name of all installed services installed
+# with connectd_register
+#
+# By default, we are setting SERVICEBASENAME to $mac
+# This forms the first part of the displayed service name.
+# OEM can supply some other expression for SERVICEBASENAME here
+# but it must be unique per device.
+#
+# See /usr/bin/connectd_options for the definition of the "mac" variable.
+
+#SERVICEBASENAME="$(echo $mac | sed $HWIDSEDSTRING)"
+
+SERVICEBASENAME="{{ hive_name }}-$(echo $mac | sed $HWIDSEDSTRING)"
+echo "SERVICEBASENAME = $SERVICEBASENAME"
+echo
+
+# =============================================
+#
+# ----- Edit the lines below to specify which services you want to have installed
+#
+# line syntax is:
+# makeConnection <protocol> <port> <serviceName>
+# <protocol> should be one of: ssh, web, webp, vnc, tcp, rmt3
+# rmt3 is used to supply the "Device Name"
+#
+# <port> is the port number of the service you wish to connect to
+# except for rmt3, in which case set <port> to 65535
+#
+# <protocol> and <port> should be unique for each entry, i.e. you cannot have multiple
+# entries which are "ssh 22" but you could have "ssh 22", "ssh 23", "tcp 22".
+#
+# <name> is a quote-enclosed expression which should be unique for every device
+#
+# =============================================
+makeConnection rmt3 65535 "$SERVICEBASENAME-rmt3"
+makeConnection ssh 22 "$SERVICEBASENAME-ssh-22"
+# =============================================
+
+echo

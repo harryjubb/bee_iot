@@ -17,6 +17,14 @@
       password: "{{ pi_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}"
       update_password: always
 
+  # Prevent remote.it connectd from being upgraded
+  # https://support.remote.it/hc/en-us/articles/360051668711
+  - name: Prevent connectd from being upgraded
+    become: true
+    dpkg_selections:
+      name: connectd
+      selection: hold
+
   # Apt update / upgrade
   - name: Package updates
     become: true
@@ -60,7 +68,7 @@
     become: true
     ansible.builtin.command: raspi-config nonint do_camera 0
     notify:
-      - Reboot on config changes
+      - Reboot
 
   # I2C setup
   - name: Get I2C enabled / disabled status
@@ -73,10 +81,10 @@
     become: true
     ansible.builtin.command: raspi-config nonint do_i2c 0
     notify:
-      - Reboot on config changes
+      - Reboot
 
   handlers:
-    - name: Reboot on config changes
+    - name: Reboot
       become: true
       ansible.builtin.reboot:
         connect_timeout: 600
