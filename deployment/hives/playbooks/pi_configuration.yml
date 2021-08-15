@@ -60,6 +60,7 @@
     when: existing_hostname.stdout != pi_hostname
     become: true
     ansible.builtin.command: raspi-config nonint do_hostname {{ pi_hostname | quote }}
+    notify: Reboot
 
   # WiFi country
   - name: Get WiFi country
@@ -71,6 +72,7 @@
     when: existing_wifi_country.stdout != wpa_wifi_country
     become: true
     ansible.builtin.command: raspi-config nonint do_wifi_country {{ wpa_wifi_country | quote }}
+    notify: Reboot
 
   # Ensure wpa_supplicant.conf doesn't get updated elsewhere
   - name: Ensure wpa_supplicant.conf doesn't get updated elsewhere
@@ -79,6 +81,7 @@
       path: /etc/wpa_supplicant/wpa_supplicant.conf
       regexp: '^update_config='
       line: update_config=0
+    notify: Reboot
 
   # Set up the WPA supplicant file for WiFi connections
   - name: Set up the WPA supplicant file for WiFi connections
