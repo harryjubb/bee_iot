@@ -7,6 +7,11 @@ hives:
       pi_password: thepassword
       # remote.it setup
       remoteit_enabled: true
+      # WiFi networks to connect this hive to
+      hive_wifi_networks:
+        - ssid: example_ssid
+          psk: example_passcode
+          id_str: example_network
       # Hive environment variables for this hive
       # Used to set the environment for Dockerised hive services
       # Details of how to set values in bee_iot/hive/.env.example
@@ -25,6 +30,13 @@ hives:
   vars:
     ansible_user: pi
     wpa_wifi_country: GB
+    group_wifi_networks:
+      - ssid: example_ssid
+        psk: example_passcode
+        id_str: example_network
+      - ssid: example_ssid_2
+        psk: example_passcode_2
+        id_str: example_network_2
     remoteid_access_key: example
     remoteid_access_key_secret: example
     remoteid_api_key: example

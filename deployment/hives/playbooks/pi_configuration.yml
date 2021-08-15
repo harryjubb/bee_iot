@@ -67,6 +67,21 @@
     become: true
     ansible.builtin.command: raspi-config nonint do_wifi_country {{ wpa_wifi_country | quote }}
 
+    # Set up the WPA supplicant file for WiFi connections
+  - name: Set up the WPA supplicant file for WiFi connections
+    become: true
+    with_items: "{{ group_wifi_networks + hive_wifi_networks }}"
+    ansible.builtin.blockinfile:
+      path: /etc/wpa_supplicant/wpa_supplicant.conf
+      block: |
+        network={
+          ssid="{{ item.ssid }}"
+          psk="{{ item.psk }}"
+          id_str="{{ item.id_str }}"
+        }
+      marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item.id_str }}"
+    notify: Reload WiFi configuration
+
   # Camera setup
   - name: Get camera enabled / disabled status
     changed_when: false
@@ -98,3 +113,6 @@
       become: true
       ansible.builtin.reboot:
         connect_timeout: 600
+    - name: Reload WiFi configuration
+      become: true
+      ansible.builtin.command: wpa_cli -i wlan0 reconfigure
