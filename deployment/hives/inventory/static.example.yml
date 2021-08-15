@@ -16,8 +16,8 @@ hives:
       # Used to set the environment for Dockerised hive services
       # Details of how to set values in bee_iot/hive/.env.example
       hive_name: hivename
-      hive_streaming_enabled: true
-      hive_environment_enabled: true
+      hive_streaming_enabled: "true"
+      hive_environment_enabled: "true"
       hive_alsa_device: hw:1,0
       hive_audio_channels: "1"
       hive_rtmp_url: rtmps://example.com:1935/publish
@@ -29,6 +29,7 @@ hives:
       hive_influxdb_url: https://influxdb.example.com
   vars:
     ansible_user: pi
+    ansible_python_interpreter: python3
     wpa_wifi_country: GB
     group_wifi_networks:
       - ssid: example_ssid

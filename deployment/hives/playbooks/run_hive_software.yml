@@ -11,4 +11,13 @@
       dest: /home/pi/bee_iot/hive/.env
       mode: 0644
 
-  # TODO: Run compose; force recreate if env has changed (Ansible when)
+  # Run compose. Force recreate if env has changed
+  - name: Run hive software
+    # when: env_file.changed
+    community.docker.docker_compose:
+      project_src: /home/pi/bee_iot/hive
+      state: present
+      pull: true
+      build: true
+      remove_orphans: true
+      recreate: smart
