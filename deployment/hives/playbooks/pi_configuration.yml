@@ -4,8 +4,6 @@
   remote_user: pi
 
   tasks:
-  - name: Test connection
-    ansible.builtin.ping:
 
   # Set up public key auth
   - name: Set up public key auth
