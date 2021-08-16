@@ -19,7 +19,7 @@
     become: true
     ansible.builtin.user:
       name: pi
-      password: "{{ pi_password | password_hash('sha512', 65534 | random(seed=inventory_hostname) | string) }}"
+      password: "{{ pi_password | password_hash('sha512', 65534 | random(seed=pi_hostname) | string) }}"
       update_password: always
 
   # Prevent remote.it connectd from being upgraded
