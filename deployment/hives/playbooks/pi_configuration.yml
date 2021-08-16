@@ -62,7 +62,8 @@
     ansible.builtin.command: raspi-config nonint do_hostname {{ pi_hostname | quote }}
     notify:
       - Update inventory with new hostname
-      - Reboot
+      - Alert to required re-run
+      - Hostname change reboot
 
   # WiFi country
   - name: Get WiFi country
@@ -141,27 +142,35 @@
         regexp: '^(\s*){{ inventory_hostname }}:$'
         line: '\1{{ pi_hostname }}:'
         backrefs: true
-      notify: Reboot (hostname change)
 
-    - name: Reboot (hostname change)
+    - name: Alert to required re-run
+      ansible.builtin.debug:
+        verbosity: 0
+        msg:
+          - ""
+          - ""
+          - "!!! ATTENTION !!!"
+          - ""
+          - "*** Hostname was changed! ***"
+          - ""
+          - "{{ inventory_hostname }} -> {{ pi_hostname }}"
+          - ""
+          - "The Ansible inventory file has been updated"
+          - ""
+          - "The next handler will reboot the Pi: it will fail"
+          - ""
+          - "Then re-run the playbook to continue"
+          - ""
+          - ""
+
+    - name: Hostname change reboot
+      become: true
       ansible.builtin.reboot:
-      poll: 0
-      ignore_errors: true
-      notify: Wait for host to return with new hostname
-
-    - name: Wait for host to return with new hostname
-      delegate_to: localhost
-      ansible.builtin.wait_for:
-        host: "{{ pi_hostname }}"
-        port: 22
-        state: started
-        timeout: 300
-      notify: Refresh inventory
-
-    - name: Refresh inventory
-      ansible.builtin.meta: refresh_inventory
+        connect_timeout: 300
+        reboot_timeout: 5
 
     - name: Reboot
       become: true
       ansible.builtin.reboot:
         connect_timeout: 300
+        reboot_timeout: 600
