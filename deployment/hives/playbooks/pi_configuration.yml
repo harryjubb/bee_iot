@@ -161,6 +161,11 @@
           - ""
           - "Then re-run the playbook to continue"
           - ""
+          - "It may take a few minutes for the Pi to come online"
+          - "with the new hostname"
+          - ""
+          - "Keep retrying the playbook until the Pi is back"
+          - ""
           - ""
 
     - name: Hostname change reboot
