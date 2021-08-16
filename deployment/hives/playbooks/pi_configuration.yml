@@ -60,7 +60,10 @@
     when: existing_hostname.stdout != pi_hostname
     become: true
     ansible.builtin.command: raspi-config nonint do_hostname {{ pi_hostname | quote }}
-    notify: Reboot
+    notify:
+      - Update inventory with new hostname
+      - Alert to required re-run
+      - Hostname change reboot
 
   # WiFi country
   - name: Get WiFi country
@@ -125,7 +128,49 @@
       - Reboot
 
   handlers:
+    # If the hostname was changed, update our inventory file
+    # Useful for setting up a new pi with the `raspberrypi`
+    # default hostname, and then automatically updating it to
+    # the newly set hostname
+    #
+    # Therefore, initial setup of Pis should be done one at a time,
+    # unless the hostname has already been updated to a new unique value
+    - name: Update inventory with new hostname
+      delegate_to: localhost
+      ansible.builtin.lineinfile:
+        path: "{{ inventory_file }}"
+        regexp: '^(\s*){{ inventory_hostname }}:$'
+        line: '\1{{ pi_hostname }}:'
+        backrefs: true
+
+    - name: Alert to required re-run
+      ansible.builtin.debug:
+        verbosity: 0
+        msg:
+          - ""
+          - ""
+          - "!!! ATTENTION !!!"
+          - ""
+          - "*** Hostname was changed! ***"
+          - ""
+          - "{{ inventory_hostname }} -> {{ pi_hostname }}"
+          - ""
+          - "The Ansible inventory file has been updated"
+          - ""
+          - "The next handler will reboot the Pi: it will fail"
+          - ""
+          - "Then re-run the playbook to continue"
+          - ""
+          - ""
+
+    - name: Hostname change reboot
+      become: true
+      ansible.builtin.reboot:
+        connect_timeout: 300
+        reboot_timeout: 5
+
     - name: Reboot
       become: true
       ansible.builtin.reboot:
-        connect_timeout: 600
+        connect_timeout: 300
+        reboot_timeout: 600
