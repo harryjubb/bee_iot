@@ -13,6 +13,12 @@
       name: connectd
       selection: hold
 
+  - name: Prevent remoteit from being upgraded
+    become: true
+    dpkg_selections:
+      name: remoteit
+      selection: hold
+
   # Install connectd
   - name: Install connectd
     when: remoteit_enabled

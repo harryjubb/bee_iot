@@ -30,6 +30,12 @@
       name: connectd
       selection: hold
 
+  - name: Prevent remoteit from being upgraded
+    become: true
+    dpkg_selections:
+      name: remoteit
+      selection: hold
+
   # Apt update / upgrade
   - name: Package updates
     become: true
