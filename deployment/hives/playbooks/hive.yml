@@ -1,6 +1,8 @@
 ---
 - name: Configure Raspberry Pis for hive usage
   import_playbook: pi_configuration.yml
+- name: Set up remote.it
+  import_playbook: remoteit_setup.yml
 - name: Set up Docker on Raspberry Pis
   import_playbook: docker_setup.yml
 - name: Checkout the latest bee_iot codebase
