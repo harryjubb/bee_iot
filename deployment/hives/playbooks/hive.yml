@@ -1,6 +1,8 @@
 ---
 - name: Configure Raspberry Pis for hive usage
   import_playbook: pi_configuration.yml
+- name: Set up software for i2s microphones
+  import_playbook: i2s_mic_setup.yml
 - name: Set up Docker on Raspberry Pis
   import_playbook: docker_setup.yml
 - name: Checkout the latest bee_iot codebase

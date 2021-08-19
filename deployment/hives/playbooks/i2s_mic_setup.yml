@@ -1,0 +1,60 @@
+---
+- name: i2s microphone setup
+  hosts: hives
+  remote_user: pi
+
+  tasks:
+
+  - name: Package installs for i2s microphone setup
+    become: true
+    ansible.builtin.apt:
+      name:
+        - python3
+        - python3-pip
+      state: present
+
+  # Adafruit Python shell
+  - name: Install Adafruit Python shell
+    ansible.builtin.pip:
+      name:
+        - adafruit-python-shell
+      executable: pip3
+      state: present
+
+  # i2s mic setup scripts
+  - name: Check if script is installed
+    ansible.builtin.stat:
+      path: /home/pi/i2smic.py
+    register: i2smic_stat
+  - name: Get i2smic install script
+    when: not i2smic_stat.stat.exists
+    ansible.builtin.get_url:
+      url: https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/i2smic.py
+      dest: /home/pi/i2smic.py
+
+  - name: Alert to required re-run
+    ansible.builtin.debug:
+      verbosity: 0
+      msg:
+        - ""
+        - ""
+        - "!!! ATTENTION !!!"
+        - ""
+        - "*** i2s microphone install script is about to run! ***"
+        - ""
+        - "The script will reboot the Pi: the next task may fail because of this"
+        - ""
+        - "Re-run the playbook to continue"
+        - ""
+        - "It may take a few minutes for the Pi to come online"
+        - ""
+        - "Keep retrying the playbook until the Pi is back"
+        - ""
+        - ""
+
+  - name: Run the i2s microphone install script
+    when: not i2smic_stat.stat.exists
+    become: true
+    ansible.builtin.command:
+      cmd: yes | python3 i2smic.py
+      chdir: /home/pi

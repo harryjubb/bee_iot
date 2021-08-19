@@ -60,13 +60,25 @@
 
   # buster-backports libseccomp2 for Alpine Docker images
   # https://blog.samcater.com/fix-workaround-rpi4-docker-libseccomp2-docker-20/
+  #
+  # TODO: See if avoidable long term: not ideal
+  # See: https://www.raspberrypi.org/forums/viewtopic.php?t=310387#p1856516
   - name: Add an apt key for buster-backports, needed for libseccomp2 for Alpine Docker images
+    become: true
     ansible.builtin.apt_key:
       keyserver: keyserver.ubuntu.com
-      id: 04EE7237B7D453EC648ACFD622F3D138
+      id: 648ACFD622F3D138
       state: present
 
-  - name: Add specified repository into sources list
+  - name: Add an apt key for buster-backports, needed for libseccomp2 for Alpine Docker images
+    become: true
+    ansible.builtin.apt_key:
+      keyserver: keyserver.ubuntu.com
+      id: 04EE7237B7D453EC
+      state: present
+
+  - name: Add buster-backports into sources list
+    become: true
     ansible.builtin.apt_repository:
       repo: deb http://httpredir.debian.org/debian buster-backports main contrib non-free
       state: present
