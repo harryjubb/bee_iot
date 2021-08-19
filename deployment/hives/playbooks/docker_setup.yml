@@ -18,7 +18,7 @@
   - name: Install Docker
     when: not docker_stat.stat.exists
     become: true
-    command: sh /home/pi/get-docker.sh
+    ansible.builtin.command: sh /home/pi/get-docker.sh
 
   - name: Install docker-compose and community.docker.docker_compose dependencies
     ansible.builtin.pip:

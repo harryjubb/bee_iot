@@ -49,11 +49,35 @@
     ansible.builtin.apt:
       name:
         - curl
+        - git
+        - vim
         - libffi-dev
         - python
         - python-pip
         - python3
         - python3-pip
+      state: present
+
+  # buster-backports libseccomp2 for Alpine Docker images
+  # https://blog.samcater.com/fix-workaround-rpi4-docker-libseccomp2-docker-20/
+  - name: Add an apt key for buster-backports, needed for libseccomp2 for Alpine Docker images
+    ansible.builtin.apt_key:
+      keyserver: keyserver.ubuntu.com
+      id: 04EE7237B7D453EC648ACFD622F3D138
+      state: present
+
+  - name: Add specified repository into sources list
+    ansible.builtin.apt_repository:
+      repo: deb http://httpredir.debian.org/debian buster-backports main contrib non-free
+      state: present
+      update_cache: true
+
+  - name: libseccomp2 for Alpine Docker images
+    become: true
+    ansible.builtin.apt:
+      name:
+        - libseccomp2
+      default_release: buster-backports
       state: present
 
   # Hostname
