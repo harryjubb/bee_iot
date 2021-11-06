@@ -108,11 +108,11 @@
   - name: libseccomp2 for Alpine Docker images
     become: true
     ansible.builtin.apt:
-      name:
-        - libseccomp2
+      name: libseccomp2
+      update_cache: true
       default_release: buster-backports
-      state: present
-      upgrade: safe
+      state: latest
+      only_upgrade: true
 
   # WiFi country
   - name: Get WiFi country
