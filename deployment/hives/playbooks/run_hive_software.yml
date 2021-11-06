@@ -62,13 +62,25 @@
     when: hive_streaming_enabled == "true" and alsa_device_type == "USB" and (not (mic_volume | regex_search('Capture\s\d+\s\[80%\]')))
     ansible.builtin.command: amixer -c {{ alsa_card_number }} sset Mic 80%
 
+  - name: Copy .asoundrc for use in containers (I2S mic)
+    when: hive_streaming_enabled == "true" and alsa_device_type == "I2S"
+    ansible.builtin.copy:
+      src: /home/pi/.asoundrc
+      dest: /home/pi/bee_iot/hive/services/av_streaming/picam/asoundrc
+      remote_src: true
+      mode: 0755
+
   # Set the `hive_alsa_device` if it hasn't been set by a variable
   # Ansible variables take precedence over facts:
   # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/set_fact_module.html
   - name: Set microphone ALSA device string (streaming enabled, I2S mic)
     when: hive_streaming_enabled == "true" and alsa_device_type == "I2S"
     set_fact:
-      hive_alsa_device: 'dmic_sv'
+      # hive_alsa_device: 'dmic_hw'
+      # hive_alsa_device: 'pcm.dmic_hw'
+      hive_alsa_device: 'pcm.dmic_sv'
+      # hive_alsa_device: 'hw:dmic_hw'
+      # hive_alsa_device: "hw:{{ alsa_card_number }},{{ alsa_device_number }}"
       hive_audio_channels: '2'
 
   - name: Set microphone ALSA device string (streaming enabled, USB mic)
