@@ -76,12 +76,7 @@
   - name: Set microphone ALSA device string (streaming enabled, I2S mic)
     when: hive_streaming_enabled == "true" and alsa_device_type == "I2S"
     set_fact:
-      # hive_alsa_device: 'dmic_hw'
-      # hive_alsa_device: 'pcm.dmic_hw'
-      # hive_alsa_device: 'pcm.dmic_sv'
       hive_alsa_device: 'plug:dmic_sv'
-      # hive_alsa_device: 'hw:dmic_hw'
-      # hive_alsa_device: "hw:{{ alsa_card_number }},{{ alsa_device_number }}"
       hive_audio_channels: '2'
 
   - name: Set microphone ALSA device string (streaming enabled, USB mic)
