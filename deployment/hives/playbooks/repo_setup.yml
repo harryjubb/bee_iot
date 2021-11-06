@@ -9,7 +9,8 @@
     ansible.builtin.git:
       repo: 'https://github.com/harryjubb/bee_iot.git'
       dest: /home/pi/bee_iot
-      version: HEAD
+      single_branch: true
+      version: i2s
     notify: Copy libraries for picam
 
   handlers:
