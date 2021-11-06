@@ -6,7 +6,7 @@
 
 pcm.dmic_hw {
 	type hw
-	card {{ i2s_card_name }}
+	card {{ alsa_card_name }}
 	channels 2
 	format S32_LE
 }
@@ -24,7 +24,7 @@ pcm.dmic_sv {
 	slave.pcm dmic_hw
 	control {
 		name "Boost Capture Volume"
-		card {{ i2s_card_name }}
+		card {{ alsa_card_name }}
 	}
 	min_dB -3.0
 	max_dB 30.0

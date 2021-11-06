@@ -11,33 +11,77 @@
     changed_when: false
     ansible.builtin.command: arecord -l
     register: capture_devices
-  - name: Get USB audio device number
+
+  - name: Get I2S audio device info
     when: hive_streaming_enabled == "true"
     set_fact:
-      alsa_device_number: '{{ capture_devices.stdout | regex_search("card (\d+): Device \[USB.*", "\1", multiline=True) | first }}'
-      alsa_card_number: '{{ capture_devices.stdout | regex_search("card \d+: Device \[USB.*device (\d+)", "\1", multiline=True) | first }}'
-      hive_audio_channels: "1"
-  - name: Get microphone volume
-    when: hive_streaming_enabled == "true"
+      alsa_device_type: "I2S"
+      alsa_card_number: '{{ capture_devices.stdout | regex_search("card (\d+): sndrpii2scard \[snd_rpi_.*", "\1", multiline=True) | first }}'
+      alsa_device_number: '{{ capture_devices.stdout | regex_search("card \d+: sndrpii2scard \[snd_rpi_.*device (\d+)", "\1", multiline=True) | first }}'
+      alsa_card_name: sndrpii2scard
+      hive_audio_channels: "2"
+
+  # Fallback from looking for an I2S mic to a USB mic
+  - name: Get USB audio device info
+    when: hive_streaming_enabled == "true" and alsa_card_number == "" and alsa_device_number == ""
+    set_fact:
+      alsa_device_type: 'USB'
+      alsa_card_number: '{{ capture_devices.stdout | regex_search("card (\d+): Device \[USB.*", "\1", multiline=True) | first }}'
+      alsa_device_number: '{{ capture_devices.stdout | regex_search("card \d+: Device \[USB.*device (\d+)", "\1", multiline=True) | first }}'
+      hive_audio_channels: '1'
+
+  # Set up .asoundrc if it's an I2S mic
+  - name: Set up .asoundrc
+    when: hive_streaming_enabled == "true" and alsa_device_type == "I2S"
+    ansible.builtin.template:
+      src: asoundrc.j2
+      dest: /home/pi/.asoundrc
+      mode: 0755
+
+  # Use the virtual Alsa device if it's an I2S mic
+  # https://learn.adafruit.com/adafruit-i2s-mems-microphone-breakout/raspberry-pi-wiring-test#adding-volume-control-3061641-42
+  - name: Use the I2S mic to confirm setup
+    when: hive_streaming_enabled == "true" and alsa_device_type == "I2S"
+    ansible.builtin.command: arecord -d 1 -D dmic_sv -c2 -r 44100 -f S32_LE -t wav -V mono -v file.wav
+
+  - name: Get microphone volume (I2S)
+    when: hive_streaming_enabled == "true" and alsa_device_type == "I2S"
     changed_when: false
-    ansible.builtin.command: amixer -c {{ alsa_device_number }} sget Mic
+    ansible.builtin.command: amixer -c {{ alsa_card_number }} sget Boost
     register: mic_volume
-  - name: Set microphone volume
-    when: hive_streaming_enabled == "true" and (not (mic_volume | regex_search('Capture\s\d+\s\[80%\]')))
-    ansible.builtin.command: amixer -c {{ alsa_device_number }} sset Mic 80%
+  - name: Set microphone volume (I2S)
+    when: hive_streaming_enabled == "true" and alsa_device_type == "I2S" and (not (mic_volume | regex_search('Capture\s\d+\s\[80%\]')))
+    ansible.builtin.command: amixer -c {{ alsa_card_number }} sset Boost 80%
+
+  - name: Get microphone volume (USB)
+    when: hive_streaming_enabled == "true" and alsa_device_type == "USB"
+    changed_when: false
+    ansible.builtin.command: amixer -c {{ alsa_card_number }} sget Mic
+    register: mic_volume
+  - name: Set microphone volume (USB)
+    when: hive_streaming_enabled == "true" and alsa_device_type == "USB" and (not (mic_volume | regex_search('Capture\s\d+\s\[80%\]')))
+    ansible.builtin.command: amixer -c {{ alsa_card_number }} sset Mic 80%
 
   # Set the `hive_alsa_device` if it hasn't been set by a variable
   # Ansible variables take precedence over facts:
   # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/set_fact_module.html
-  - name: Set microphone ALSA device string (streaming enabled)
-    when: hive_streaming_enabled == "true"
+  - name: Set microphone ALSA device string (streaming enabled, I2S mic)
+    when: hive_streaming_enabled == "true" and alsa_device_type == "I2S"
     set_fact:
-      hive_alsa_device: "hw:{{ alsa_device_number }},{{ alsa_card_number }}"
+      hive_alsa_device: 'dmic_sv'
+      hive_audio_channels: '2'
+
+  - name: Set microphone ALSA device string (streaming enabled, USB mic)
+    when: hive_streaming_enabled == "true" and alsa_device_type == "USB"
+    set_fact:
+      hive_alsa_device: "hw:{{ alsa_card_number }},{{ alsa_device_number }}"
+      hive_audio_channels: '1'
+
   - name: Set microphone ALSA device string (streaming not enabled)
     when: hive_streaming_enabled != "true"
     set_fact:
       hive_alsa_device: "None"
-      hive_audio_channels: "1"
+      hive_audio_channels: '1'
 
   - name: Set up .env file for the hive
     ansible.builtin.template:
