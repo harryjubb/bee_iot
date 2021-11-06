@@ -39,12 +39,18 @@
   # Apt update / upgrade
   - name: Package updates
     become: true
+    register: package_updates
     ansible.builtin.apt:
       update_cache: true
       upgrade: safe
-    notify:
-      - Warn that package updates will cause reboot
-      - Package update reboot
+
+  # Reboot after apt update / upgrade
+  # Required for i2s mic software setup
+  - name: Reboot after package updates
+    become: true
+    when: package_updates.changed
+    reboot:
+      reboot_timeout: 600
 
   # Ensure required packages are installed
   - name: Package installs
@@ -96,21 +102,6 @@
   #       - libseccomp2
   #     default_release: buster-backports
   #     state: present
-
-  # Hostname
-  - name: Get hostname
-    changed_when: false
-    become: true
-    ansible.builtin.command: raspi-config nonint get_hostname
-    register: existing_hostname
-  - name: Set hostname
-    when: existing_hostname.stdout != pi_hostname
-    become: true
-    ansible.builtin.command: raspi-config nonint do_hostname {{ pi_hostname | quote }}
-    notify:
-      - Update inventory with new hostname
-      - Alert to required re-run
-      - Hostname change reboot
 
   # WiFi country
   - name: Get WiFi country
@@ -175,13 +166,44 @@
       - Reboot
 
   - name: Get the I2S mic installer
-    register: i2s_mic_installer
+    register: i2s_mic_installer_download
     ansible.builtin.get_url:
       url: https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/i2smic.py
       dest: /home/pi/i2smic.py
+
+  - name: Run the I2S mic installer
+    when: i2s_mic_installer_download.changed or package_updates.changed
+    become: true
+    register: i2s_mic_installer
+    ansible.builtin.expect:
+      command: python3 /home/pi/i2smic.py
+      timeout: 1200
+      responses:
+        "Auto load module at boot": "y"
+        "REBOOT NOW": "n"
+
+  # Reboot after apt update / upgrade
+  # Required for i2s mic software setup
+  - name: Reboot after I2S mic setup
+    become: true
+    when: i2s_mic_installer.changed
+    reboot:
+      reboot_timeout: 600
+
+  # Hostname
+  - name: Get hostname
+    changed_when: false
+    become: true
+    ansible.builtin.command: raspi-config nonint get_hostname
+    register: existing_hostname
+  - name: Set hostname
+    when: existing_hostname.stdout != pi_hostname
+    become: true
+    ansible.builtin.command: raspi-config nonint do_hostname {{ pi_hostname | quote }}
     notify:
-      - Warn that I2S mic installer will reboot
-      - Run the I2S mic installer
+      - Update inventory with new hostname
+      - Alert to required re-run
+      - Hostname change reboot
 
   handlers:
     # If the hostname was changed, update our inventory file
@@ -198,34 +220,6 @@
         regexp: '^(\s*){{ inventory_hostname }}:$'
         line: '\1{{ pi_hostname }}:'
         backrefs: true
-
-    - name: Warn that package updates will cause reboot
-      ansible.builtin.debug:
-        verbosity: 0
-        msg:
-          - ""
-          - ""
-          - "!!! ATTENTION !!!"
-          - ""
-          - "*** Package updates were installed! ***"
-          - ""
-          - "The next task will reboot the Pi: it will fail"
-          - ""
-          - "Then re-run the playbook to continue"
-          - ""
-          - "It may take a few minutes for the Pi to come online"
-          - ""
-          - "Keep retrying the playbook until the Pi is back"
-          - ""
-          - "This is required for i2s mic packages to work"
-          - ""
-          - ""
-
-    - name: Package update reboot
-      become: true
-      ansible.builtin.reboot:
-        connect_timeout: 300
-        reboot_timeout: 5
 
     - name: Alert to required re-run
       ansible.builtin.debug:
@@ -251,35 +245,6 @@
           - "Keep retrying the playbook until the Pi is back"
           - ""
           - ""
-
-    - name: Warn that I2S mic installer will reboot
-      ansible.builtin.debug:
-        verbosity: 0
-        msg:
-          - ""
-          - ""
-          - "!!! ATTENTION !!!"
-          - ""
-          - "*** I2S mic software is about to be installed! ***"
-          - ""
-          - "The next task will reboot the Pi: it will fail"
-          - ""
-          - "Then re-run the playbook to continue"
-          - ""
-          - "It may take a few minutes for the Pi to come online"
-          - ""
-          - "Keep retrying the playbook until the Pi is back"
-          - ""
-          - ""
-
-    - name: Run the I2S mic installer
-      become: true
-      ansible.builtin.expect:
-        command: python3 /home/pi/i2smic.py
-        timeout: 600
-        responses:
-          "Auto load module at boot": "y"
-          "REBOOT NOW": "y"
 
     - name: Hostname change reboot
       become: true
