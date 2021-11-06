@@ -16,6 +16,7 @@
     set_fact:
       alsa_device_number: '{{ capture_devices.stdout | regex_search("card (\d+): Device \[USB.*", "\1", multiline=True) | first }}'
       alsa_card_number: '{{ capture_devices.stdout | regex_search("card \d+: Device \[USB.*device (\d+)", "\1", multiline=True) | first }}'
+      hive_audio_channels: "1"
   - name: Get microphone volume
     when: hive_streaming_enabled == "true"
     changed_when: false
@@ -36,6 +37,7 @@
     when: hive_streaming_enabled != "true"
     set_fact:
       hive_alsa_device: "None"
+      hive_audio_channels: "1"
 
   - name: Set up .env file for the hive
     ansible.builtin.template:

@@ -42,6 +42,9 @@
     ansible.builtin.apt:
       update_cache: true
       upgrade: safe
+    notify:
+      - Warn that package updates will cause reboot
+      - Package update reboot
 
   # Ensure required packages are installed
   - name: Package installs
@@ -58,27 +61,41 @@
         - python3-pip
       state: present
 
+  - name: Install pexpect
+    become: true
+    ansible.builtin.pip:
+      name: pexpect
+      state: present
+      executable: pip3
+
+  - name: Install Adafruit Python Shell
+    become: true
+    ansible.builtin.pip:
+      name: adafruit-python-shell
+      state: present
+      executable: pip3
+
   # buster-backports libseccomp2 for Alpine Docker images
   # https://blog.samcater.com/fix-workaround-rpi4-docker-libseccomp2-docker-20/
-  - name: Add an apt key for buster-backports, needed for libseccomp2 for Alpine Docker images
-    ansible.builtin.apt_key:
-      keyserver: keyserver.ubuntu.com
-      id: 04EE7237B7D453EC648ACFD622F3D138
-      state: present
+  # - name: Add an apt key for buster-backports, needed for libseccomp2 for Alpine Docker images
+  #   ansible.builtin.apt_key:
+  #     keyserver: keyserver.ubuntu.com
+  #     id: 04EE7237B7D453EC648ACFD622F3D138
+  #     state: present
 
-  - name: Add specified repository into sources list
-    ansible.builtin.apt_repository:
-      repo: deb http://httpredir.debian.org/debian buster-backports main contrib non-free
-      state: present
-      update_cache: true
+  # - name: Add specified repository into sources list
+  #   ansible.builtin.apt_repository:
+  #     repo: deb http://httpredir.debian.org/debian buster-backports main contrib non-free
+  #     state: present
+  #     update_cache: true
 
-  - name: libseccomp2 for Alpine Docker images
-    become: true
-    ansible.builtin.apt:
-      name:
-        - libseccomp2
-      default_release: buster-backports
-      state: present
+  # - name: libseccomp2 for Alpine Docker images
+  #   become: true
+  #   ansible.builtin.apt:
+  #     name:
+  #       - libseccomp2
+  #     default_release: buster-backports
+  #     state: present
 
   # Hostname
   - name: Get hostname
@@ -157,6 +174,15 @@
     notify:
       - Reboot
 
+  - name: Get the I2S mic installer
+    register: i2s_mic_installer
+    ansible.builtin.get_url:
+      url: https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/i2smic.py
+      dest: /home/pi/i2smic.py
+    notify:
+      - Warn that I2S mic installer will reboot
+      - Run the I2S mic installer
+
   handlers:
     # If the hostname was changed, update our inventory file
     # Useful for setting up a new pi with the `raspberrypi`
@@ -172,6 +198,34 @@
         regexp: '^(\s*){{ inventory_hostname }}:$'
         line: '\1{{ pi_hostname }}:'
         backrefs: true
+
+    - name: Warn that package updates will cause reboot
+      ansible.builtin.debug:
+        verbosity: 0
+        msg:
+          - ""
+          - ""
+          - "!!! ATTENTION !!!"
+          - ""
+          - "*** Package updates were installed! ***"
+          - ""
+          - "The next task will reboot the Pi: it will fail"
+          - ""
+          - "Then re-run the playbook to continue"
+          - ""
+          - "It may take a few minutes for the Pi to come online"
+          - ""
+          - "Keep retrying the playbook until the Pi is back"
+          - ""
+          - "This is required for i2s mic packages to work"
+          - ""
+          - ""
+
+    - name: Package update reboot
+      become: true
+      ansible.builtin.reboot:
+        connect_timeout: 300
+        reboot_timeout: 5
 
     - name: Alert to required re-run
       ansible.builtin.debug:
@@ -197,6 +251,35 @@
           - "Keep retrying the playbook until the Pi is back"
           - ""
           - ""
+
+    - name: Warn that I2S mic installer will reboot
+      ansible.builtin.debug:
+        verbosity: 0
+        msg:
+          - ""
+          - ""
+          - "!!! ATTENTION !!!"
+          - ""
+          - "*** I2S mic software is about to be installed! ***"
+          - ""
+          - "The next task will reboot the Pi: it will fail"
+          - ""
+          - "Then re-run the playbook to continue"
+          - ""
+          - "It may take a few minutes for the Pi to come online"
+          - ""
+          - "Keep retrying the playbook until the Pi is back"
+          - ""
+          - ""
+
+    - name: Run the I2S mic installer
+      become: true
+      ansible.builtin.expect:
+        command: python3 /home/pi/i2smic.py
+        timeout: 600
+        responses:
+          "Auto load module at boot": "y"
+          "REBOOT NOW": "y"
 
     - name: Hostname change reboot
       become: true
