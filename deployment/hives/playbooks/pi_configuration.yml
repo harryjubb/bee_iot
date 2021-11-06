@@ -83,25 +83,36 @@
 
   # buster-backports libseccomp2 for Alpine Docker images
   # https://blog.samcater.com/fix-workaround-rpi4-docker-libseccomp2-docker-20/
-  # - name: Add an apt key for buster-backports, needed for libseccomp2 for Alpine Docker images
-  #   ansible.builtin.apt_key:
-  #     keyserver: keyserver.ubuntu.com
-  #     id: 04EE7237B7D453EC648ACFD622F3D138
-  #     state: present
+  - name: Add an apt key (1) for buster-backports, needed for libseccomp2 for Alpine Docker images
+    become: true
+    ansible.builtin.apt_key:
+      keyserver: keyserver.ubuntu.com
+      id: 04EE7237B7D453EC
+      state: present
 
-  # - name: Add specified repository into sources list
-  #   ansible.builtin.apt_repository:
-  #     repo: deb http://httpredir.debian.org/debian buster-backports main contrib non-free
-  #     state: present
-  #     update_cache: true
+  - name: Add an apt key (2) for buster-backports, needed for libseccomp2 for Alpine Docker images
+    become: true
+    ansible.builtin.apt_key:
+      keyserver: keyserver.ubuntu.com
+      id: 648ACFD622F3D138
+      state: present
 
-  # - name: libseccomp2 for Alpine Docker images
-  #   become: true
-  #   ansible.builtin.apt:
-  #     name:
-  #       - libseccomp2
-  #     default_release: buster-backports
-  #     state: present
+  - name: Add specified repository into sources list
+    become: true
+    ansible.builtin.apt_repository:
+      # repo: deb http://httpredir.debian.org/debian buster-backports main contrib non-free
+      repo: deb http://deb.debian.org/debian buster-backports main
+      state: present
+      update_cache: true
+
+  - name: libseccomp2 for Alpine Docker images
+    become: true
+    ansible.builtin.apt:
+      name:
+        - libseccomp2
+      default_release: buster-backports
+      state: present
+      upgrade: safe
 
   # WiFi country
   - name: Get WiFi country

@@ -18,6 +18,7 @@
   - name: Install Docker
     when: not docker_stat.stat.exists
     become: true
+    register: docker_install
     ansible.builtin.command: sh /home/pi/get-docker.sh
 
   - name: Install docker-compose and community.docker.docker_compose dependencies
@@ -34,9 +35,10 @@
       name: pi
       groups: docker
       append: true
-    notify:
-      - Logout and back in
 
-  handlers:
-    - name: Logout and back in
-      ansible.builtin.meta: reset_connection
+  # Reboot after Docker install
+  - name: Reboot after Docker install
+    become: true
+    when: docker_install.changed
+    reboot:
+      reboot_timeout: 600
