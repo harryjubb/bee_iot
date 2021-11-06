@@ -38,4 +38,6 @@ RUN ./ffmpeg --help
 
 COPY entrypoint.sh .
 
+COPY asoundrc /root/.asoundrc
+
 ENTRYPOINT ["sh", "entrypoint.sh"]
