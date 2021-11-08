@@ -78,7 +78,7 @@
     set_fact:
       hive_alsa_device: 'plug:dmic_hw'
       hive_audio_channels: '2'
-      hive_audio_volume_multiplier: '2.0'
+      hive_audio_volume_multiplier: '5.0'
 
   - name: Set microphone ALSA device string (streaming enabled, USB mic)
     when: hive_streaming_enabled == "true" and alsa_device_type == "USB"
