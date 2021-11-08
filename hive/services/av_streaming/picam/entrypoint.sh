@@ -26,4 +26,4 @@ echo '*** Starting ffmpeg in the background'
 # Fudge delay for ffmpeg to spin up before starting picam
 sleep 5
 echo '*** Starting picam'
-./picam --autoex --time --alsadev $ALSA_DEVICE -c $AUDIO_CHANNELS --tcpout tcp://127.0.0.1:8181
+./picam --autoex --time --alsadev $ALSA_DEVICE -c $AUDIO_CHANNELS --volume $AUDIO_VOLUME_MULTIPLIER --tcpout tcp://127.0.0.1:8181

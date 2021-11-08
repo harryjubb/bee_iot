@@ -78,12 +78,14 @@
     set_fact:
       hive_alsa_device: 'plug:dmic_hw'
       hive_audio_channels: '2'
+      hive_audio_volume_multiplier: '2.0'
 
   - name: Set microphone ALSA device string (streaming enabled, USB mic)
     when: hive_streaming_enabled == "true" and alsa_device_type == "USB"
     set_fact:
       hive_alsa_device: "hw:{{ alsa_card_number }},{{ alsa_device_number }}"
       hive_audio_channels: '1'
+      hive_audio_volume_multiplier: '1.0'
 
   - name: Set microphone ALSA device string (streaming not enabled)
     when: hive_streaming_enabled != "true"

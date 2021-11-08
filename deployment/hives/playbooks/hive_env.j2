@@ -22,6 +22,7 @@ ALSA_DEVICE={{ hive_alsa_device }}
 # May be able to use more for multi-channel mics, e.g. respeaker,
 # but this may not play well with picam
 AUDIO_CHANNELS={{ hive_audio_channels }}
+AUDIO_VOLUME_MULTIPLIER={{ hive_audio_volume_multiplier or "1.0" }}
 
 # RTMP endpoint to push the stream to
 RTMP_URL={{ hive_rtmp_url }}
