@@ -10,7 +10,7 @@ from pydantic import BaseSettings
 logger = logging.getLogger("environment")
 
 SENSOR_ADDRESSES = {
-    "environment_inside": bme680.I2C_ADDR_PRIMARY,
+    "environment": bme680.I2C_ADDR_PRIMARY,
     "environment_outside": bme680.I2C_ADDR_SECONDARY,
 }
 
