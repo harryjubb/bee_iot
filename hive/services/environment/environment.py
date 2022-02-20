@@ -1,3 +1,4 @@
+import logging
 import time
 from datetime import datetime, timezone
 
@@ -5,6 +6,13 @@ import bme680
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
 from pydantic import BaseSettings
+
+logger = logging.getLogger("environment")
+
+SENSOR_ADDRESSES = {
+    "environment_inside": bme680.I2C_ADDR_PRIMARY,
+    "environment_outside": bme680.I2C_ADDR_SECONDARY,
+}
 
 
 class Settings(BaseSettings):
@@ -29,69 +37,83 @@ write_api = client.write_api(write_options=SYNCHRONOUS)
 
 # BME680 setup
 # https://github.com/pimoroni/bme680-python/blob/master/examples/read-all.py
-try:
-    sensor = bme680.BME680(bme680.I2C_ADDR_PRIMARY)
-except (RuntimeError, IOError):
-    sensor = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
+sensors = {}
 
-print("Calibration data:")
-for name in dir(sensor.calibration_data):
+for sensor_name, sensor_address in SENSOR_ADDRESSES.items():
+    sensor = None
+    try:
+        sensor = bme680.BME680(sensor_address)
+        sensors[sensor_name] = sensor
+    except (RuntimeError, IOError) as error:
+        logger.error(
+            "Unable to establish sensor %s at address %s: %s",
+            sensor_name,
+            sensor_address,
+            error,
+        )
+        continue
 
-    if not name.startswith("_"):
-        value = getattr(sensor.calibration_data, name)
+    logger.info("Calibration data for %s at %s:", sensor_name, sensor_address)
+    for name in dir(sensor.calibration_data):
 
-        if isinstance(value, int):
-            print("{}: {}".format(name, value))
+        if not name.startswith("_"):
+            value = getattr(sensor.calibration_data, name)
 
-# These oversampling settings can be tweaked to
-# change the balance between accuracy and noise in
-# the data.
+            if isinstance(value, int):
+                logger.info("%s, %s", name, value)
 
-sensor.set_humidity_oversample(bme680.OS_2X)
-sensor.set_pressure_oversample(bme680.OS_4X)
-sensor.set_temperature_oversample(bme680.OS_8X)
-sensor.set_filter(bme680.FILTER_SIZE_3)
-sensor.set_gas_status(bme680.ENABLE_GAS_MEAS)
+    # These oversampling settings can be tweaked to
+    # change the balance between accuracy and noise in
+    # the data.
 
-print("\n\nInitial reading:")
-for name in dir(sensor.data):
-    value = getattr(sensor.data, name)
+    sensor.set_humidity_oversample(bme680.OS_2X)
+    sensor.set_pressure_oversample(bme680.OS_4X)
+    sensor.set_temperature_oversample(bme680.OS_8X)
+    sensor.set_filter(bme680.FILTER_SIZE_3)
+    sensor.set_gas_status(bme680.ENABLE_GAS_MEAS)
 
-    if not name.startswith("_"):
-        print("{}: {}".format(name, value))
+    logger.info("%s at %s initial reading:", sensor_name, sensor_address)
+    for name in dir(sensor.data):
+        value = getattr(sensor.data, name)
 
-sensor.set_gas_heater_temperature(320)
-sensor.set_gas_heater_duration(150)
-sensor.select_gas_heater_profile(0)
+        if not name.startswith("_"):
+            logger.info("%s, %s", name, value)
+
+    sensor.set_gas_heater_temperature(320)
+    sensor.set_gas_heater_duration(150)
+    sensor.select_gas_heater_profile(0)
 
 # Sensor reading loop
 try:
     while 1:
 
-        # Get raw sensor readings
-        print("Attempting to send sensor readings")
-        if sensor.get_sensor_data():
+        for sensor_name, sensor in sensors.items():
+            # Get raw sensor readings
+            logger.info("Attempting to send sensor readings")
+            if sensor.get_sensor_data():
 
-            readings = ["temperature", "pressure", "humidity"] + (
-                ["gas_resistance"] if sensor.data.heat_stable else []
-            )
-
-            for reading in readings:
-                value = getattr(sensor.data, reading)
-
-                print(f"{reading}: {value}")
-
-                # Send sensor reading to InfluxDB
-                point = (
-                    Point("environment")
-                    .tag("hive", settings.hive_name)
-                    .field(reading, value)
-                    .time(datetime.now(timezone.utc), WritePrecision.S)
+                readings = ["temperature", "pressure", "humidity"] + (
+                    ["gas_resistance"] if sensor.data.heat_stable else []
                 )
 
-                write_api.write(settings.bucket, settings.org, point)
+                for reading in readings:
+                    value = getattr(sensor.data, reading)
 
-            print("Readings sent")
+                    logger.info("%s: %s", reading, value)
+
+                    # Send sensor reading to InfluxDB
+                    point = (
+                        Point(sensor_name)
+                        .tag("hive", settings.hive_name)
+                        .field(reading, value)
+                        .time(datetime.now(timezone.utc), WritePrecision.S)
+                    )
+
+                    write_api.write(settings.bucket, settings.org, point)
+
+                logger.info("Readings sent (%s)", sensor_name)
+            else:
+                logger.warn("Unable to get sensor data for %s", sensor_name)
 
         time.sleep(30)
 
