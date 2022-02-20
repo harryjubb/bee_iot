@@ -10,7 +10,7 @@
       repo: 'https://github.com/harryjubb/bee_iot.git'
       dest: /home/pi/bee_iot
       single_branch: true
-      version: i2s
+      version: master
       force: true
     notify: Copy libraries for picam
 
