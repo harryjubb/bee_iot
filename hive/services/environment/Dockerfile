@@ -8,4 +8,6 @@ RUN pip install -r requirements.txt
 
 COPY environment.py entrypoint.sh ./
 
+ENV PYTHONUNBUFFERED 1
+
 ENTRYPOINT [ "sh", "/app/entrypoint.sh" ]
