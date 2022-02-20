@@ -1,4 +1,5 @@
 import logging
+import sys
 import time
 from datetime import datetime, timezone
 
@@ -7,8 +8,16 @@ from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
 from pydantic import BaseSettings
 
+stdout_handler = logging.StreamHandler(sys.stdout)
+handlers = [stdout_handler]
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s",
+    handlers=handlers,
+)
+
 logger = logging.getLogger("environment")
-logger.setLevel(logging.DEBUG)
 
 SENSOR_ADDRESSES = {
     "environment": bme680.I2C_ADDR_PRIMARY,
