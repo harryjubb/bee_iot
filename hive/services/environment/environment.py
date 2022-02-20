@@ -113,7 +113,7 @@ try:
 
                 logger.info("Readings sent (%s)", sensor_name)
             else:
-                logger.warn("Unable to get sensor data for %s", sensor_name)
+                logger.warning("Unable to get sensor data for %s", sensor_name)
 
         time.sleep(30)
 
