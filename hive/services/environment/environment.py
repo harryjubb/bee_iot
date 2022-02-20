@@ -8,6 +8,7 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 from pydantic import BaseSettings
 
 logger = logging.getLogger("environment")
+logger.setLevel(logging.DEBUG)
 
 SENSOR_ADDRESSES = {
     "environment": bme680.I2C_ADDR_PRIMARY,
