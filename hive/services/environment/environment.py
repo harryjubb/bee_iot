@@ -99,7 +99,7 @@ try:
 
         for sensor_name, sensor in sensors.items():
             # Get raw sensor readings
-            logger.info("Attempting to send sensor readings")
+            logger.info("Attempting to send sensor readings: %s", sensor_name)
             if sensor.get_sensor_data():
 
                 readings = ["temperature", "pressure", "humidity"] + (
