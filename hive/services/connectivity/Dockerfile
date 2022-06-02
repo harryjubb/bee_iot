@@ -1,10 +1,10 @@
-FROM python:3.9.6
+FROM raspbian/stretch
 
 RUN mkdir /app
 WORKDIR /app
 
 RUN apt-get update && \
-    apt-get install python-rpi.gpio python3-rpi.gpio \
+    apt-get install python3 python3-pip python-rpi.gpio python3-rpi.gpio \
      && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt ./
