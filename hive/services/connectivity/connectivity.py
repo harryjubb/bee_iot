@@ -95,7 +95,7 @@ while 1:
         logger.info("Have internet, putting 5,0 on queue")
         # GPIO.output(PIN, GPIO.HIGH)
         # Fix LED solid
-        thread_queue.put([5, 0])
+        thread_queue.put([1, 1])
 
     # elif have_local_network:
     #     ...
