@@ -44,7 +44,7 @@ GPIO.setup(PIN, GPIO.OUT, initial=GPIO.LOW)
 #         GPIO.output(PIN, GPIO.LOW)
 #         time.sleep(seconds_off)
 
-def led(queue):
+def led(thread_queue):
 
     seconds_on = 1
     seconds_off = 0
@@ -54,7 +54,7 @@ def led(queue):
         message = None
 
         try:
-            message = queue.get(False)
+            message = thread_queue.get(False)
             logger.info("Thread got queue message: %s", message)
         except queue.Empty:
             pass
@@ -68,9 +68,9 @@ def led(queue):
         time.sleep(seconds_off)
 
 
-queue = Queue()
-queue.put([1, 0])
-thread = Thread(target=led, args=(queue,))
+thread_queue = Queue()
+thread_queue.put([1, 0])
+thread = Thread(target=led, args=(thread_queue,))
 thread.start()
 
 while 1:
@@ -95,7 +95,7 @@ while 1:
         logger.info("Have internet, putting 5,0 on queue")
         # GPIO.output(PIN, GPIO.HIGH)
         # Fix LED solid
-        queue.put([5, 0])
+        thread_queue.put([5, 0])
 
     # elif have_local_network:
     #     ...
@@ -105,7 +105,7 @@ while 1:
     else:
         # Blink every second for 60 seconds then check again
         logger.warn("No internet, 1,1 on queue")
-        queue.put([1, 1])
+        thread_queue.put([1, 1])
 
     logger.info("Sleeping")
     time.sleep(15)
