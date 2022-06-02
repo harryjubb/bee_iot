@@ -4,7 +4,8 @@ Flashes a status LED to show power / network connectivity to the hive
 
 import functools
 import logging
-from multiprocessing import Process, Queue
+from queue import Queue
+from threading import Thread
 import queue
 import sys
 import time
@@ -54,7 +55,7 @@ def led(queue):
 
         try:
             message = queue.get(False)
-            logger.info("Got queue message: %s", message)
+            logger.info("Thread got queue message: %s", message)
         except queue.Empty:
             pass
 
@@ -67,9 +68,9 @@ def led(queue):
         time.sleep(seconds_off)
 
 
-# queue = Queue()
-# queue.put([1, 0])
-# process = Process(target=led, args=(queue,))
+queue = Queue()
+queue.put([1, 0])
+thread = Thread(target=led, args=(queue,))
 
 while 1:
 
@@ -91,9 +92,9 @@ while 1:
 
     if have_internet:
         logger.info("Have internet, putting 5,0 on queue")
-        GPIO.output(PIN, GPIO.HIGH)
+        # GPIO.output(PIN, GPIO.HIGH)
         # Fix LED solid
-        # queue.put([5, 0])
+        queue.put([5, 0])
 
     # elif have_local_network:
     #     ...
