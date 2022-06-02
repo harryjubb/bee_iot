@@ -95,7 +95,7 @@ while 1:
         logger.info("Have internet, putting 5,0 on queue")
         # GPIO.output(PIN, GPIO.HIGH)
         # Fix LED solid
-        thread_queue.put([1, 1])
+        thread_queue.put([5, 0])
 
     # elif have_local_network:
     #     ...
@@ -104,8 +104,8 @@ while 1:
 
     else:
         # Blink every second for 60 seconds then check again
-        logger.warn("No internet, 1,1 on queue")
-        thread_queue.put([1, 1])
+        logger.warn("No internet, on queue")
+        thread_queue.put([0.5, 0.5])
 
     logger.info("Sleeping")
     time.sleep(15)
