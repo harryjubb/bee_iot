@@ -54,6 +54,7 @@ def led(queue):
 
         try:
             message = queue.get(False)
+            logger.info("Got queue message: %s", message)
         except queue.Empty:
             pass
 
@@ -67,9 +68,12 @@ def led(queue):
 
 
 queue = Queue()
+queue.put([1, 0])
 process = Process(target=led, args=(queue,))
 
 while 1:
+
+    logger.info("Connectivity check loop")
 
     have_internet = True
     # have_local_network = False
@@ -80,11 +84,13 @@ while 1:
     try:
         response.raise_for_status()
     except Exception as error:
+        logger.warn("Raised for status")
         have_internet = False
 
     # TODO: Local network connectivity check
 
     if have_internet:
+        logger.info("Have internet, putting 5,0 on queue")
         # Fix LED solid
         queue.put([5, 0])
 
@@ -95,8 +101,10 @@ while 1:
 
     else:
         # Blink every second for 60 seconds then check again
+        logger.warn("No internet, 1,1 on queue")
         queue.put([1, 1])
 
-    time.sleep(60)
+    logger.info("Sleeping")
+    time.sleep(15)
 
 
