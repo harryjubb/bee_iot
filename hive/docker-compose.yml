@@ -9,6 +9,13 @@ services:
     # Required for GPIO access
     privileged: true
 
+  connectivity:
+    build: ./services/connectivity
+    restart: always
+    env_file: .env
+    # Required for GPIO access
+    privileged: true
+
   av_streaming_picam:
     build: ./services/av_streaming/picam
     privileged: true
