@@ -29,7 +29,7 @@ session.request = functools.partial(session.request, timeout=15)
 
 PIN = 12
 
-GPIO.setwarnings(False)  # Ignore warnings
+# GPIO.setwarnings(False)  # Ignore warnings
 GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
 GPIO.setup(PIN, GPIO.OUT, initial=GPIO.LOW)
 
@@ -67,9 +67,9 @@ def led(queue):
         time.sleep(seconds_off)
 
 
-queue = Queue()
-queue.put([1, 0])
-process = Process(target=led, args=(queue,))
+# queue = Queue()
+# queue.put([1, 0])
+# process = Process(target=led, args=(queue,))
 
 while 1:
 
@@ -91,8 +91,9 @@ while 1:
 
     if have_internet:
         logger.info("Have internet, putting 5,0 on queue")
+        GPIO.output(PIN, GPIO.HIGH)
         # Fix LED solid
-        queue.put([5, 0])
+        # queue.put([5, 0])
 
     # elif have_local_network:
     #     ...
