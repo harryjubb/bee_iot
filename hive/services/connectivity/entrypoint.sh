@@ -11,4 +11,4 @@ if [ "$HIVE_CONNECTIVITY_CHECKING_ENABLED" != "true" ] ; then
     done
 fi
 
-python -u environment.py
+python -u connectivity.py
