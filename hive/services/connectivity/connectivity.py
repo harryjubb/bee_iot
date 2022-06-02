@@ -71,6 +71,7 @@ def led(queue):
 queue = Queue()
 queue.put([1, 0])
 thread = Thread(target=led, args=(queue,))
+thread.start()
 
 while 1:
 
