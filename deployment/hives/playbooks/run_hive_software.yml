@@ -5,6 +5,18 @@
 
   tasks:
 
+  # Stop compose, to avoid using the mic while updating
+  # This can be removed after moving to a virtual device that can be used
+  # by multiple programs
+  - name: Run hive software
+    community.docker.docker_compose:
+      project_src: /home/pi/bee_iot/hive
+      state: absent
+      pull: true
+      build: true
+      remove_orphans: true
+      recreate: smart
+
   # Microphone device / card number and volume adjustment if we're A/V streaming
   - name: List audio capture devices
     when: hive_streaming_enabled == "true"
