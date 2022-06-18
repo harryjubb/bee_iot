@@ -13,6 +13,8 @@ import time
 import requests
 import RPi.GPIO as GPIO
 
+CONNECTION_CHECK_URL = "https://google.com"
+
 stdout_handler = logging.StreamHandler(sys.stdout)
 handlers = [stdout_handler]
 
@@ -26,7 +28,7 @@ logger = logging.getLogger("connectivity")
 
 session = requests.Session()
 
-session.request = functools.partial(session.request, timeout=15)
+session.request = functools.partial(session.request, timeout=(3.05, 15))
 
 PIN = 12
 
@@ -54,7 +56,7 @@ def led(thread_queue):
         message = None
 
         try:
-            message = thread_queue.get(False)
+            message = thread_queue.get(block=False)
             logger.info("Thread got queue message: %s", message)
         except queue.Empty:
             pass
@@ -81,13 +83,16 @@ while 1:
     # have_local_network = False
 
     # Internet connectivity check
-    response = session.get("https://google.com")
+    try:
+        response = session.get(CONNECTION_CHECK_URL)
+    except Exception as error:
+        logger.warn("Unable to make a request")
+        have_internet = False
 
     try:
         response.raise_for_status()
     except Exception as error:
         logger.warn("Raised for status")
-        have_internet = False
 
     # TODO: Local network connectivity check
 
