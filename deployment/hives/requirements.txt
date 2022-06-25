@@ -1,3 +1,4 @@
-ansible==4.4.0
-paramiko==2.7.2
+ansible==5.9.0
+jmespath==1.0.1
+paramiko==2.11.0
 passlib==1.7.4

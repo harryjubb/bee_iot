@@ -14,7 +14,7 @@ Deployment automation for hive Raspberry Pis using [Ansible](https://docs.ansibl
 - One time: create a virtualenv to use Ansible with:
 
 ```shell
-python3 -m venv ansible && source ansible/bin/activate && pip3 install -r requirements.txt
+python3 -m venv ansible && source ansible/bin/activate && python3 -m pip install --upgrade pip && pip3 install -r requirements.txt && ansible-galaxy collection install community.general
 ```
 
 - Run `source ansible/bin/activate` to activate the virtualenv and make Ansible available

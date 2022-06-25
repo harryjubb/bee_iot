@@ -5,89 +5,57 @@
 
   tasks:
 
-  # Prevent remote.it connectd from being upgraded
-  # https://support.remote.it/hc/en-us/articles/360051668711
-  - name: Prevent connectd from being upgraded
-    become: true
-    dpkg_selections:
-      name: connectd
-      selection: hold
-
-  - name: Prevent remoteit from being upgraded
-    become: true
-    dpkg_selections:
-      name: remoteit
-      selection: hold
-
-  # Install connectd
-  - name: Install connectd
-    when: remoteit_enabled
-    become: true
-    ansible.builtin.apt:
-      update_cache: true
-      name: connectd
-      state: present
-    register: connectd_install
-
-  # Copy over the registration script
-  # *** Registration only runs the first time we install connectd
-  - name: Copy over the registration script
-    when: remoteit_enabled and connectd_install.changed
-    ansible.builtin.template:
-      src: connectd_register.j2
-      dest: /tmp/connectd_register.sh
-      mode: 0600
-    register: registration_script
-
-  # Register this Pi with remote.it
-  - name: Register this Pi with remote.it
-    when: remoteit_enabled and registration_script.changed
-    become: true
-    ansible.builtin.command: sh /tmp/connectd_register.sh
-
-    # Set up cron entries to keep connectd running
-    # https://support.remote.it/hc/en-us/articles/360053139091-Keeping-your-services-running-connectd-package-
-  - name: Ensure connectd doesn't drop
-    become: true
-    when: remoteit_enabled
-    ansible.builtin.cron:
-      user: root
-      name: "start connectd"
-      minute: "5"
-      job: "/usr/bin/connectd start"
-      cron_file: start_connectd
-
-  - name: Ensure connectd_schannel doesn't drop
-    become: true
-    when: remoteit_enabled
-    ansible.builtin.cron:
-      user: root
-      name: "start connectd_schannel"
-      minute: "5"
-      job: "/usr/bin/connectd_schannel start"
-      cron_file: start_connectd_schannel
-
-  # Remove cron entries if we're not running remote.it
-  - name: Remove connectd cron job
-    become: true
-    when: not remoteit_enabled
-    ansible.builtin.cron:
-      user: root
-      name: "start connectd"
-      cron_file: start_connectd
-      state: absent
-
-  - name: Remove connectd_schannel cron job
-    become: true
-    when: not remoteit_enabled
-    ansible.builtin.cron:
-      user: root
-      name: "start connectd_schannel"
-      cron_file: start_connectd_schannel
-      state: absent
-
-  # Ensure the registration script containing credentials is removed
-  - name: Remove the registration script
+  # Set up the remoteit credentials file
+  - name: Make sure remoteit config dir exists
     ansible.builtin.file:
-      path: /tmp/connectd_register.sh
-      state: absent
+      path: /home/pi/.remoteit
+      state: directory
+      mode: 0700
+
+  - name: Copy over the remoteit credentials file
+    when: remoteit_enabled
+    ansible.builtin.template:
+      src: remoteit_credentials.j2
+      dest: /home/pi/.remoteit/credentials
+      mode: 0600
+    register: remoteit_credentials
+
+  # Download the remoteit CLI
+  - name: Get the remoteit CLI
+    become: true
+    register: remoteit_cli_download
+    ansible.builtin.get_url:
+      url: https://downloads.remote.it/cli/v1.8.8/remoteit.arm-v6-linux
+      dest: /usr/local/bin/remoteit
+      mode: 0755
+
+  # Install the remoteit agent
+  - name: Install the remoteit agent
+    become: true
+    when: remoteit_cli_download.changed
+    ansible.builtin.command: remoteit agent install
+
+  # Configure remoteit
+  - name: Configure remoteit
+    ansible.builtin.command: remoteit configure --profile default --enabled
+
+  # Get remoteit status
+  - name: Remoteit status
+    become: true
+    ansible.builtin.command: remoteit status --json
+    register: remoteit_status
+
+  # Register this device
+  - name: Remoteit registration
+    ansible.builtin.command: remoteit register --name {{ pi_hostname }}-{{ ansible_default_ipv4.macaddress }}-{{ ansible_date_time.iso8601 }}
+    when: remoteit_status.stdout | community.general.json_query('data.device.id') == ""
+
+  # log
+  - name: Log services
+    ansible.builtin.debug:
+      var: remoteit_status.stdout | community.general.json_query('data.services[*]')
+
+#  # Add the SSH service
+#  - name: Add the SSH service
+#    ansible.builtin.command: remoteit add --name "SSH" --port 22 --type 28
+#    when: remoteit_status.stdout | Community.general.json_query('data.services')
