@@ -2,11 +2,12 @@ hives:
   hosts:
     currenthostname:
       # Hostname to set this Pi to
+      # *** Must be unique per-hive: lowercase, no spaces or special characters
       pi_hostname: desiredhostname
       # Password for the pi user
       pi_password: thepassword
       # remote.it setup
-      remoteit_enabled: true
+      remoteit_enabled: false
       # WiFi networks to connect this hive to
       hive_wifi_networks:
         - ssid: example_ssid
@@ -15,15 +16,14 @@ hives:
       # Hive environment variables for this hive
       # Used to set the environment for Dockerised hive services
       # Details of how to set values in bee_iot/hive/.env.example
+      # *** Suggested: keep the hive_name and pi_hostname the same
       hive_name: hivename
       hive_streaming_enabled: "true"
       hive_environment_enabled: "true"
       # `hive_alsa_device` is auto-detected if not set
-      # Must have a USB sound card with capture capability
-      # plugged in to the Pi
-      # hive_alsa_device: hw:1,0
-      hive_audio_channels: "1"
+      # Must have a I2S mic plugged in to the Pi
       hive_rtmp_url: rtmps://example.com:1935/publish
+      # *** Suggested: keep the stream key and hive_name the same
       hive_stream_key: hivename
       hive_stream_secret_key: secretkey
       hive_influxdb_api_token: yourtoken
@@ -42,6 +42,7 @@ hives:
     # `sshpass` must be installed for this to work
     ansible_ssh_pass: raspberry
     ansible_python_interpreter: python3
+    hive_led_pin: "16"
     wpa_wifi_country: GB
     group_wifi_networks:
       - ssid: example_ssid
