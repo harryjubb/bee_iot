@@ -4,6 +4,7 @@ Flashes a status LED to show power / network connectivity to the hive
 
 import functools
 import logging
+import os
 from queue import Queue
 from threading import Thread
 import queue
@@ -30,21 +31,11 @@ session = requests.Session()
 
 session.request = functools.partial(session.request, timeout=(3.05, 15))
 
-PIN = 12
+PIN = os.environ.get("HIVE_LED_PIN", 16)
 
 # GPIO.setwarnings(False)  # Ignore warnings
 GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
 GPIO.setup(PIN, GPIO.OUT, initial=GPIO.LOW)
-
-# def set_led_solid():
-#     GPIO.output(PIN, GPIO.HIGH)
-
-# def blink_led(seconds_on=1, seconds_off=1):
-#     while 1:
-#         GPIO.output(PIN, GPIO.HIGH)
-#         time.sleep(seconds_on)
-#         GPIO.output(PIN, GPIO.LOW)
-#         time.sleep(seconds_off)
 
 def led(thread_queue):
 
@@ -80,7 +71,6 @@ while 1:
     logger.info("Connectivity check loop")
 
     have_internet = True
-    # have_local_network = False
 
     # Internet connectivity check
     try:
@@ -94,18 +84,11 @@ while 1:
     except Exception as error:
         logger.warn("Raised for status")
 
-    # TODO: Local network connectivity check
-
     if have_internet:
         logger.info("Have internet, putting 5,0 on queue")
-        # GPIO.output(PIN, GPIO.HIGH)
+
         # Fix LED solid
         thread_queue.put([5, 0])
-
-    # elif have_local_network:
-    #     ...
-
-    #     # TODO: Blink every 5 seconds
 
     else:
         # Blink every second for 60 seconds then check again
