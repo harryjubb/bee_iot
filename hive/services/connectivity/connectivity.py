@@ -31,7 +31,7 @@ session = requests.Session()
 
 session.request = functools.partial(session.request, timeout=(3.05, 15))
 
-PIN = os.environ.get("HIVE_LED_PIN", 16)
+PIN = int(os.environ.get("HIVE_LED_PIN", 16))
 
 # GPIO.setwarnings(False)  # Ignore warnings
 GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
