@@ -1,3 +1,4 @@
+plugin: remoteit
 hives:
   hosts:
     currenthostname:
@@ -51,6 +52,6 @@ hives:
       - ssid: example_ssid_2
         psk: example_passcode_2
         id_str: example_network_2
-    remoteid_access_key: example
-    remoteid_access_key_secret: example
-    remoteid_api_key: example
+    remoteit_access_key: example
+    remoteit_access_key_secret: example
+    remoteit_api_key: example

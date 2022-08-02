@@ -212,26 +212,10 @@
     become: true
     ansible.builtin.command: raspi-config nonint do_hostname {{ pi_hostname | quote }}
     notify:
-      - Update inventory with new hostname
       - Alert to required re-run
       - Hostname change reboot
 
   handlers:
-    # If the hostname was changed, update our inventory file
-    # Useful for setting up a new pi with the `raspberrypi`
-    # default hostname, and then automatically updating it to
-    # the newly set hostname
-    #
-    # Therefore, initial setup of Pis should be done one at a time,
-    # unless the hostname has already been updated to a new unique value
-    - name: Update inventory with new hostname
-      delegate_to: localhost
-      ansible.builtin.lineinfile:
-        path: "{{ inventory_file }}"
-        regexp: '^(\s*){{ inventory_hostname }}:$'
-        line: '\1{{ pi_hostname }}:'
-        backrefs: true
-
     - name: Alert to required re-run
       ansible.builtin.debug:
         verbosity: 0
@@ -242,11 +226,11 @@
           - ""
           - "*** Hostname was changed! ***"
           - ""
-          - "{{ inventory_hostname }} -> {{ pi_hostname }}"
+          - "New hostname: {{ pi_hostname }}"
           - ""
-          - "The Ansible inventory file has been updated"
+          - "The next handler will reboot the Pi: it may fail"
           - ""
-          - "The next handler will reboot the Pi: it will fail"
+          - "*** Stop the run with ctrl-C ***"
           - ""
           - "Then re-run the playbook to continue"
           - ""
