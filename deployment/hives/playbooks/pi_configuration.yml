@@ -81,6 +81,20 @@
       state: present
       executable: pip3
 
+  - name: Install Adafruit Blinka
+    become: true
+    ansible.builtin.pip:
+      name: adafruit-blinka
+      state: forcereinstall
+      executable: pip3
+
+  - name: Install Adafruit Platform Detect
+    become: true
+    ansible.builtin.pip:
+      name: Adafruit-PlatformDetect
+      state: forcereinstall
+      executable: pip3
+
   # buster-backports libseccomp2 for Alpine Docker images
   # https://blog.samcater.com/fix-workaround-rpi4-docker-libseccomp2-docker-20/
   - name: Add an apt key (1) for buster-backports, needed for libseccomp2 for Alpine Docker images
