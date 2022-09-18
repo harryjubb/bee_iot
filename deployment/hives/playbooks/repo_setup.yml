@@ -15,6 +15,12 @@
       force: true
     notify: Copy libraries for picam
 
+  - name: Ensure .env file exists
+    ansible.builtin.file:
+      path: /home/pi/bee_iot/hive/.env
+      state: touch
+      mode: u=rw,g=r,o=r
+
   handlers:
     - name: Copy libraries for picam
       ansible.builtin.command:
