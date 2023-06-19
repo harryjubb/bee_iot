@@ -65,3 +65,11 @@ For more info:
 
 - https://support.remote.it/hc/en-us/articles/360054546151-Remove-all-remote-it-Services
 - https://support.remote.it/hc/en-us/articles/360061289671-Removing-the-connectd-package
+
+### Buster backports GPG keys
+
+If `apt` updates fail due to GPG signature verification:
+
+```
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9 6ED0E7B82643E131
+```
