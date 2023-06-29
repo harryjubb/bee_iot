@@ -78,7 +78,7 @@
     become: true
     ansible.builtin.pip:
       name: adafruit-python-shell
-      state: present
+      state: forcereinstall
       executable: pip3
 
   - name: Install Adafruit Blinka
