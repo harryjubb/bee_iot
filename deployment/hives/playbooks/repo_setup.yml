@@ -2,6 +2,7 @@
 - name: bee_iot repository setup
   hosts: hives
   remote_user: pi
+  gather_facts: false
 
   tasks:
 

@@ -2,6 +2,7 @@
 - name: Pi configuration
   hosts: hives
   remote_user: pi
+  gather_facts: false
 
   tasks:
 
