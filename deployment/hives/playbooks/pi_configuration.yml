@@ -2,9 +2,13 @@
 - name: Pi configuration
   hosts: hives
   remote_user: pi
-  gather_facts: false
+  gather_facts: true
 
   tasks:
+
+  - name: Print hostname
+    ansible.builtin.debug:
+      msg: "Hostname is {{ ansible_facts['hostname'] }}"
 
   # Set up public key auth
   - name: Set up public key auth
@@ -23,6 +27,29 @@
       password: "{{ pi_password | password_hash('sha512', 65534 | random(seed=pi_hostname) | string) }}"
       update_password: always
 
+  - name: Check disk usage
+    ansible.builtin.shell: df -h | grep '/dev/root' | awk '{print $5}'
+    register: disk_usage
+    changed_when: false
+
+  - name: Log disk usage
+    ansible.builtin.debug:
+      msg: "Disk usage of /dev/root on {{ inventory_hostname }} is {{ disk_usage.stdout.strip() }}"
+
+  - name: Fail if /dev/root is at 100% usage
+    fail:
+      msg: "/dev/root is at 100% usage on {{ inventory_hostname }}"
+    when: disk_usage.stdout.strip() == '100%'
+
+  - name: Add APT keys
+    become: true
+    ansible.builtin.apt_key:
+      keyserver: keyserver.ubuntu.com
+      id: "{{ item }}"
+    loop:
+      - 0E98404D386FA1D9
+      - 6ED0E7B82643E131
+
   # Prevent remote.it connectd from being upgraded
   # https://support.remote.it/hc/en-us/articles/360051668711
   - name: Prevent connectd from being upgraded
@@ -37,6 +64,30 @@
       name: remoteit
       selection: hold
 
+  - name: Check if application directory exists
+    ansible.builtin.stat:
+      path: /home/pi/bee_iot/hive
+    register: hive_directory
+
+  # Perform a dry run to check if any packages would be upgraded
+  - name: Check for packages to be upgraded (dry-run)
+    become: true
+    ansible.builtin.apt:
+      update_cache: true
+      upgrade: safe
+    check_mode: true
+    register: apt_check
+
+  - name: Bring the application down if it is running
+    community.docker.docker_compose:
+      project_src: /home/pi/bee_iot/hive
+      state: absent
+    when:
+      - hive_directory.stat.exists
+      - apt_check.changed
+    register: hive_was_running
+    ignore_errors: true
+
   # Apt update / upgrade
   - name: Package updates
     become: true
@@ -44,6 +95,20 @@
     ansible.builtin.apt:
       update_cache: true
       upgrade: safe
+    when: apt_check.changed
+
+
+  - name: Bring the application back up if it was running
+    community.docker.docker_compose:
+      project_src: /home/pi/bee_iot/hive
+      state: present
+      pull: true
+      build: true
+      remove_orphans: true
+      recreate: smart
+    when:
+      - hive_directory.stat.exists
+      - apt_check.changed
 
   # Reboot after apt update / upgrade
   # Required for i2s mic software setup
@@ -197,8 +262,19 @@
       url: https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/i2smic.py
       dest: /home/pi/i2smic.py
 
+  - name: Run `arecord -l`
+    ansible.builtin.command:
+      cmd: arecord -l
+    register: arecord_output
+    ignore_errors: true
+    changed_when: false
+
+  - name: Check if `sndrpii2scard` is in the output
+    set_fact:
+      is_sndrpii2scard_present: "{{ 'sndrpii2scard' in arecord_output.stdout }}"
+
   - name: Run the I2S mic installer
-    when: i2s_mic_installer_download.changed or package_updates.changed
+    when: (not is_sndrpii2scard_present) and (i2s_mic_installer_download.changed or package_updates.changed)
     become: true
     register: i2s_mic_installer
     ansible.builtin.expect:
