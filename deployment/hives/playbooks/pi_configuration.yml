@@ -181,7 +181,8 @@
     become: true
     ansible.builtin.apt_repository:
       # repo: deb http://httpredir.debian.org/debian buster-backports main contrib non-free
-      repo: deb http://deb.debian.org/debian buster-backports main
+      # repo: deb http://deb.debian.org/debian buster-backports main
+      repo: deb http://archive.debian.org/debian buster-backports main
       state: present
       update_cache: true
 
