@@ -13,6 +13,9 @@ RUN ./ffmpeg/ffmpeg --help
 RUN wget https://github.com/iizukanao/picam/releases/download/v1.4.11/picam-1.4.11-binary.tar.xz
 RUN tar xvf picam-1.4.11-binary.tar.xz
 
+# Change Debian Stretch sources to legacy
+RUN sed -i 's/archive/legacy/g' /etc/apt/sources.list
+
 RUN apt-get update -y && apt-get install -y \
   libharfbuzz0b libfontconfig1 libgles2-mesa-dev \
   wget xz-utils libasound2 libasound-dev curl nscd psmisc
