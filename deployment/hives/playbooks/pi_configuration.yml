@@ -69,6 +69,14 @@
       path: /home/pi/bee_iot/hive
     register: hive_directory
 
+  - name: Update URL for buster-backports
+    become: true
+    ansible.builtin.replace:
+      # Replace https://deb with https://archive in /etc/apt/sources.list.d/deb_debian_org_debian.list
+      path: /etc/apt/sources.list.d/deb_debian_org_debian.list
+      regexp: http://deb.debian.org/debian
+      replace: http://archive.debian.org/debian
+
   # Perform a dry run to check if any packages would be upgraded
   - name: Check for packages to be upgraded (dry-run)
     become: true
