@@ -1,0 +1,19 @@
+---
+- name: Pi configuration
+  hosts: hives
+  remote_user: pi
+  gather_facts: true
+
+  tasks:
+    - name: Expand filesystem
+      become: true
+      ansible.builtin.shell: raspi-config --expand-rootfs
+
+    - name: Reboot the system
+      ansible.builtin.reboot:
+        msg: "Rebooting for filesystem expansion"
+        connect_timeout: 5
+        reboot_timeout: 300
+        pre_reboot_delay: 0
+        post_reboot_delay: 60
+        test_command: uptime

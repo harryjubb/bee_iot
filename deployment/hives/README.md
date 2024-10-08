@@ -26,6 +26,11 @@ python3 -m venv ansible && source ansible/bin/activate && pip3 install -r requir
 # Activate the virtualenv if not done already
 source ansible/bin/activate
 
+# First time only: and only if restoring from a cloned microSD card
+# Expand the root filesystem
+# Change `ansible_hostname` to the Ansible host in the inventory file
+ansible-playbook -i inventory/static.yml --limit ansible_hostname -v platbooks/expand_filesystem.yml
+
 # Run the playbook
 # Assuming an inventory of Pis has been set up at inventory/static.yml
 # see inventory/static.example.yml
